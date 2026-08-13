@@ -23,15 +23,18 @@ services:
       - construction-btp-network
     restart: unless-stopped
 
-  # Points at the native MySQL (construction_material_db), NOT the
-  # dockerized easycom-mysql - separate from the existing easycom-phpmyadmin,
-  # which only knows about easycom's own database. Login with the
-  # construction_btp / DB_PASSWORD credentials from deploy/mysql-bootstrap.sql.
+  # One phpMyAdmin, both MySQL instances: PMA_HOSTS/PMA_PORTS (plural) make
+  # it show a server-picker dropdown at login instead of connecting to a
+  # single fixed server. Server 1 = native MySQL (construction_material_db,
+  # login with construction_btp / DB_PASSWORD from deploy/mysql-bootstrap.sql).
+  # Server 2 = the dockerized easycom-mysql (reachable via its host-published
+  # port 3307, same as the existing easycom-phpmyadmin uses) - login with
+  # whatever credentials that stack already uses.
   phpmyadmin:
     image: phpmyadmin:latest
     environment:
-      PMA_HOST: host.docker.internal
-      PMA_PORT: 3306
+      PMA_HOSTS: host.docker.internal,host.docker.internal
+      PMA_PORTS: 3306,3307
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:

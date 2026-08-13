@@ -3,7 +3,7 @@
 Application conteneurisée (backend Spring Boot + frontend Angular servi par nginx), déployée aux côtés de la stack easycom existante sur le même serveur, sans y toucher.
 
 - Port public app : **8082** (tout le trafic, frontend + `/api/*`, passe par le nginx du conteneur `frontend`).
-- Port public phpMyAdmin dédié : **8083** (pointe sur le MySQL natif — voir plus bas, ne pas confondre avec le phpMyAdmin existant d'easycom sur 8090 qui pointe sur une autre base).
+- Port public phpMyAdmin : **8083** — un seul phpMyAdmin, menu déroulant au login pour choisir entre les deux MySQL du serveur (natif = notre base, dockerisé = celle d'easycom). Distinct du phpMyAdmin existant d'easycom sur 8090 (celui-là ne connaît que sa propre base).
 - Base de données : MySQL **natif** du serveur (port 3306, différent du MySQL dockerisé d'easycom sur 3307).
 
 ## Premier déploiement (une seule fois)
@@ -43,7 +43,11 @@ Application conteneurisée (backend Spring Boot + frontend Angular servi par ngi
    ```
    Puis se connecter depuis un navigateur sur `http://169.58.128.44:8082` avec `superadmin` / le mot de passe défini dans `.env`.
 
-6. **Accès à la base via phpMyAdmin** : `http://169.58.128.44:8083`, se connecter avec `construction_btp` / le mot de passe défini à l'étape 1 (ou `root` / le mot de passe root du MySQL natif pour un accès complet). Ce phpMyAdmin est dédié à `construction_material_db` — distinct de celui d'easycom sur le port 8090.
+6. **Accès aux bases via phpMyAdmin** : `http://169.58.128.44:8083`. Un menu déroulant propose deux serveurs au login :
+   - **Serveur 1** (MySQL natif, notre base) : `construction_btp` / le mot de passe défini à l'étape 1 (ou `root` / mot de passe root du MySQL natif pour un accès complet).
+   - **Serveur 2** (MySQL dockerisé, base easycom existante) : les identifiants déjà utilisés sur le phpMyAdmin easycom (port 8090).
+
+   Distinct du phpMyAdmin easycom sur le port 8090, qui ne voit que sa propre base.
 
 ## Mises à jour suivantes
 
