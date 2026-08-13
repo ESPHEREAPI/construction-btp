@@ -16,6 +16,7 @@ import com.construction.material.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,6 @@ public class DataInitializer implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
     private static final String SUPER_ADMIN_USERNAME = "superadmin";
-    private static final String SUPER_ADMIN_DEFAULT_PASSWORD = "00000000";
 
     private final PermissionRepository permissionRepository;
     private final RoleRepository roleRepository;
@@ -49,6 +49,15 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final MaterialRepository materialRepository;
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * No default here on purpose: this repo is public, so a hardcoded initial
+     * password would let anyone race the real admin's first login on a fresh
+     * deployment. Local dev gets its value from application-local.properties
+     * (gitignored); every other environment must set SUPERADMIN_INITIAL_PASSWORD.
+     */
+    @Value("${app.superadmin.initial-password}")
+    private String superAdminInitialPassword;
 
     @Override
     @Transactional
@@ -159,7 +168,7 @@ public class DataInitializer implements CommandLineRunner {
         User superAdmin = User.builder()
                 .username(SUPER_ADMIN_USERNAME)
                 .email("superadmin@platform.local")
-                .password(passwordEncoder.encode(SUPER_ADMIN_DEFAULT_PASSWORD))
+                .password(passwordEncoder.encode(superAdminInitialPassword))
                 .firstName("Super")
                 .lastName("Admin")
                 .active(true)
@@ -170,8 +179,8 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
         userRepository.save(superAdmin);
 
-        log.warn("Seeded Super Admin account -> username: '{}', password: '{}' (must be changed on first login)",
-                SUPER_ADMIN_USERNAME, SUPER_ADMIN_DEFAULT_PASSWORD);
+        log.warn("Seeded Super Admin account -> username: '{}' (password from app.superadmin.initial-password, must be changed on first login)",
+                SUPER_ADMIN_USERNAME);
     }
 
     /**
