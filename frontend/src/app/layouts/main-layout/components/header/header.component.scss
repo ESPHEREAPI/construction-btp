@@ -1,0 +1,151 @@
+.header {
+  background: #fff;
+  height: 60px;
+  padding: 0 20px;
+  box-shadow: 0px 0 20px rgba(1, 41, 112, 0.1);
+  z-index: 997;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #012970;
+  text-decoration: none;
+  margin-right: 30px;
+}
+
+.toggle-sidebar-btn {
+  font-size: 32px;
+  padding-left: 10px;
+  cursor: pointer;
+  color: #012970;
+}
+
+.nav-link {
+  color: #012970;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.header-nav ul,
+.header-nav li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-context {
+  gap: 8px;
+}
+
+.license-alert {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  background: #fff3f3;
+  color: #d63939;
+  border: 1px solid #f8d7da;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+  animation: license-alert-blink 1.6s ease-in-out infinite;
+}
+
+.license-alert:hover {
+  color: #d63939;
+  background: #ffe3e3;
+}
+
+@keyframes license-alert-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.context-badge {
+  background: #f6f9ff;
+  color: #4154f1;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.nav-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 20px;
+  transition: background 0.2s ease;
+}
+
+.lang-code {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.nav-icon:hover {
+  background: #f6f9ff;
+}
+
+.lang-menu {
+  min-width: 200px;
+  padding: 8px;
+  margin-top: 12px !important;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(1, 41, 112, 0.12);
+}
+
+.lang-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.lang-item:hover {
+  background: #f6f9ff;
+  color: #4154f1;
+}
+
+.lang-item.active {
+  background: #eef1ff;
+  color: #4154f1;
+  font-weight: 600;
+}
+
+.lang-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.lang-name {
+  flex: 1;
+}
+
+.lang-check {
+  font-size: 14px;
+  color: #4154f1;
+  visibility: hidden;
+}
+
+.lang-item.active .lang-check {
+  visibility: visible;
+}

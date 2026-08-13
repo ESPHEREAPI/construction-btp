@@ -1,0 +1,14 @@
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+}
+
+.modal {
+  z-index: 1055;
+}
+
+.modal-content {
+  border-radius: 12px;
+}

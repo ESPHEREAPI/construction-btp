@@ -1,0 +1,90 @@
+.card {
+  border: none;
+  border-radius: 12px;
+  
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px 12px 0 0;
+    
+    h5 {
+      font-weight: 600;
+    }
+  }
+  
+  .card-body {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.form-label {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  
+  i {
+    opacity: 0.8;
+  }
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1.5px solid #dee2e6;
+  padding: 0.625rem 0.875rem;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+  }
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border: 1.5px solid #dee2e6;
+  font-weight: 500;
+}
+
+.badge {
+  padding: 0.4rem 0.65rem;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.alert {
+  border-radius: 8px;
+  border: none;
+  
+  &.alert-light {
+    background-color: #f8f9fa;
+    border: 1.5px solid #dee2e6;
+  }
+}
+
+.btn {
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &.btn-success {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(25, 135, 84, 0.4);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .btn {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "app": {
+    "title": "Gestion des Matériaux de Construction",
+    "welcome": "Bienvenue"
+  },
+  "nav": {
+    "dashboard": "Tableau de Bord",
+    "projects": "Projets",
+    "materials": "Matériaux",
+    "orders": "Commandes",
+    "usage": "Utilisation",
+    "stock": "Stock",
+    "admin": "Administration",
+    "companies": "Compagnies",
+    "licenses": "Licences",
+    "myLicense": "Ma Licence",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": "Connexion",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "remember": "Se souvenir de moi",
+    "forgot_password": "Mot de passe oublié ?",
+    "login_btn": "Se connecter",
+    "logout_confirm": "Êtes-vous sûr de vouloir vous déconnecter ?"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord",
+    "total_projects": "Projets Totaux",
+    "active_projects": "Projets Actifs",
+    "total_materials": "Matériaux",
+    "alerts": "Alertes",
+    "recent_activities": "Activités Récentes",
+    "material_usage": "Utilisation des Matériaux",
+    "budget_overview": "Aperçu du Budget"
+  },
+  "projects": {
+    "title": "Gestion des Projets",
+    "list": "Liste des Projets",
+    "add": "Ajouter un Projet",
+    "edit": "Modifier le Projet",
+    "delete": "Supprimer le Projet",
+    "details": "Détails du Projet",
+    "code": "Code",
+    "name": "Nom",
+    "location": "Localisation",
+    "client": "Client",
+    "status": "Statut",
+    "start_date": "Date de Début",
+    "end_date": "Date de Fin",
+    "budget": "Budget",
+    "manager": "Chef de Projet"
+  },
+  "materials": {
+    "title": "Gestion des Matériaux",
+    "list": "Liste des Matériaux",
+    "add": "Ajouter un Matériau",
+    "edit": "Modifier le Matériau",
+    "delete": "Supprimer le Matériau",
+    "code": "Code",
+    "name": "Nom",
+    "description": "Description",
+    "unit": "Unité",
+    "category": "Catégorie",
+    "price": "Prix Unitaire",
+    "supplier": "Fournisseur",
+    "active": "Actif"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "import": "Importer",
+    "yes": "Oui",
+    "no": "Non",
+    "confirm": "Confirmer",
+    "actions": "Actions"
+  }
+}

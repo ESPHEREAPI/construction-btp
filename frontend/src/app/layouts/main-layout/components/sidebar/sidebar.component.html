@@ -1,0 +1,18 @@
+<aside id="sidebar" class="sidebar" [class.collapsed]="collapsed">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item" *ngFor="let item of menuItems">
+      <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+        <i class="bi" [ngClass]="item.icon"></i>
+        <span>{{ item.label | translate }}</span>
+      </a>
+    </li>
+
+    <li class="nav-heading" *ngIf="superAdminItems.length">Super Admin</li>
+    <li class="nav-item" *ngFor="let item of superAdminItems">
+      <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+        <i class="bi" [ngClass]="item.icon"></i>
+        <span>{{ item.label | translate }}</span>
+      </a>
+    </li>
+  </ul>
+</aside>

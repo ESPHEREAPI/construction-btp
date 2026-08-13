@@ -1,0 +1,29 @@
+.card {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 10px;
+}
+
+.table-warning {
+  background-color: #fff3cd !important;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1.25rem;
+}
+
+.table {
+  margin-bottom: 0;
+  
+  th {
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+  }
+}
+
+.btn-group-sm .btn {
+  padding: 0.25rem 0.5rem;
+}

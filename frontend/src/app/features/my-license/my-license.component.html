@@ -1,0 +1,99 @@
+<div class="pagetitle">
+  <h1>Ma Licence</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+      <li class="breadcrumb-item active">Ma Licence</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div *ngIf="loading" class="text-center"><div class="spinner-border" role="status"></div></div>
+
+  <div class="row" *ngIf="!loading && mine">
+    <div class="col-lg-12 mb-4">
+
+      <!-- Active license -->
+      <div class="card" *ngIf="mine.current">
+        <div class="card-body">
+          <div class="alert alert-success mb-3">
+            <strong>Licence active</strong> — {{ mine.current.type }}
+          </div>
+          <p class="mb-1">Expiration : {{ mine.current.endDate || 'illimitée' }}
+            <span *ngIf="mine.current.endDate"> ({{ daysRemaining(mine.current.endDate) }} jours restants)</span>
+          </p>
+          <p class="mb-1">Max utilisateurs : {{ mine.current.maxUsers }} / Max projets : {{ mine.current.maxProjects }}</p>
+          <p class="mb-0">Modules : {{ mine.current.activeModules.join(', ') || '—' }}</p>
+        </div>
+      </div>
+
+      <!-- No active license -->
+      <div class="card" *ngIf="!mine.current">
+        <div class="card-body">
+          <div class="alert alert-warning mb-0">
+            Aucune licence active pour votre compagnie. {{ mine.pending ? 'Activez la clé reçue ci-dessous.' : 'Contactez votre Super Admin.' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending activation notice -->
+      <div class="card mt-3" *ngIf="mine.pending">
+        <div class="card-body">
+          <div class="alert alert-info mb-0">
+            <i class="bi bi-hourglass-split me-2"></i>
+            Une nouvelle licence ({{ mine.pending.type }}) est en attente d'activation.
+          </div>
+        </div>
+      </div>
+
+      <!-- Key activation (COMPANY_ADMIN only) -->
+      <div class="card mt-3" *ngIf="isCompanyAdmin">
+        <div class="card-body">
+          <h5 class="card-title">Activer une licence</h5>
+          <label class="form-label">Clé de licence</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="keyToActivate" placeholder="Collez ici la clé de licence reçue"></textarea>
+
+          <div class="alert alert-danger mt-2 mb-0" *ngIf="activateError">{{ activateError }}</div>
+          <div class="alert alert-success mt-2 mb-0" *ngIf="activateSuccess">{{ activateSuccess }}</div>
+
+          <button class="btn btn-primary mt-3" (click)="activate()" [disabled]="activating">
+            <span *ngIf="activating" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="bi bi-key" *ngIf="!activating"></i> Activer
+          </button>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="card mt-3">
+        <div class="card-body">
+          <h5 class="card-title">Historique de mes licences</h5>
+          <div *ngIf="loadingHistory" class="text-center"><div class="spinner-border spinner-border-sm"></div></div>
+          <table class="table table-sm" *ngIf="!loadingHistory && history.length > 0">
+            <thead>
+              <tr><th>Statut</th><th>Type</th><th>Début</th><th>Expiration</th><th>Max util.</th><th>Max projets</th><th>Essai</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of history">
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'bg-success': entry.status === 'ACTIVE',
+                    'bg-warning': entry.status === 'GENERATED' || entry.status === 'SUSPENDED',
+                    'bg-danger': entry.status === 'REVOKED' || entry.status === 'EXPIRED'
+                  }">{{ entry.status }}</span>
+                </td>
+                <td>{{ entry.type }}</td>
+                <td>{{ entry.startDate || '—' }}</td>
+                <td>{{ entry.endDate || 'illimitée' }}</td>
+                <td>{{ entry.maxUsers }}</td>
+                <td>{{ entry.maxProjects }}</td>
+                <td>{{ entry.trial ? 'Oui' : 'Non' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="!loadingHistory && history.length === 0" class="text-muted">Aucun historique.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

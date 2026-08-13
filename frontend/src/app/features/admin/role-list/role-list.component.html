@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-shield me-2"></i>Gestion des Rôles
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Rôle</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let role of roles">
+                  <td><strong>{{ role.name }}</strong></td>
+                  <td>{{ role.description }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-info">
+                      <i class="bi bi-eye"></i> Voir
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

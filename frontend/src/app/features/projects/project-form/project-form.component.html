@@ -1,0 +1,94 @@
+<div class="pagetitle">
+  <h1>{{ (isEditMode ? 'projects.edit' : 'projects.add') | translate }}</h1>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ (isEditMode ? 'projects.edit' : 'projects.add') | translate }}</h5>
+
+          <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.code' | translate }} *</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="code" [readonly]="isEditMode">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.name' | translate }} *</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="name">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Description</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" formControlName="description" rows="3"></textarea>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.location' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="location">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.client' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="client">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.status' | translate }} *</label>
+              <div class="col-sm-9">
+                <select class="form-select" formControlName="status">
+                  <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.start_date' | translate }} *</label>
+              <div class="col-sm-9">
+                <input type="date" class="form-control" formControlName="startDate">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.end_date' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="date" class="form-control" formControlName="endDate">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'projects.budget' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="number" class="form-control" formControlName="budget">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-9 offset-sm-3">
+                <button type="submit" class="btn btn-primary" [disabled]="loading || projectForm.invalid">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                  {{ 'common.save' | translate }}
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
+                  {{ 'common.cancel' | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

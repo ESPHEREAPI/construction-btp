@@ -1,0 +1,40 @@
+# ===== Secrets / local-only config =====
+backend/src/main/resources/application-local.properties
+**/application-local.properties
+.env
+.env.*
+*.pem
+*.key
+
+# ===== Backend (Maven / Java) =====
+backend/target/
+target/
+*.class
+*.jar
+!*/wrapper/maven-wrapper.jar
+backend/logs/
+*.log
+
+# ===== Frontend (Angular / Node) =====
+frontend/node_modules/
+node_modules/
+frontend/dist/
+dist/
+frontend/.angular/
+.angular/
+npm-debug.log*
+yarn-error.log*
+
+# ===== IDE / Editor =====
+.idea/
+*.iml
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini

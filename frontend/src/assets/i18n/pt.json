@@ -1,0 +1,86 @@
+{
+  "app": {
+    "title": "Gestão de Materiais de Construção",
+    "welcome": "Bem-vindo"
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "projects": "Projetos",
+    "materials": "Materiais",
+    "orders": "Pedidos",
+    "usage": "Uso",
+    "stock": "Estoque",
+    "admin": "Administração",
+    "companies": "Empresas",
+    "licenses": "Licenças",
+    "myLicense": "Minha Licença",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "auth": {
+    "login": "Login",
+    "username": "Nome de usuário",
+    "password": "Senha",
+    "remember": "Lembrar de mim",
+    "forgot_password": "Esqueceu a senha?",
+    "login_btn": "Entrar",
+    "logout_confirm": "Tem certeza que deseja sair?"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "total_projects": "Projetos Totais",
+    "active_projects": "Projetos Ativos",
+    "total_materials": "Materiais",
+    "alerts": "Alertas",
+    "recent_activities": "Atividades Recentes",
+    "material_usage": "Uso de Materiais",
+    "budget_overview": "Visão Geral do Orçamento"
+  },
+  "projects": {
+    "title": "Gestão de Projetos",
+    "list": "Lista de Projetos",
+    "add": "Adicionar Projeto",
+    "edit": "Editar Projeto",
+    "delete": "Excluir Projeto",
+    "details": "Detalhes do Projeto",
+    "code": "Código",
+    "name": "Nome",
+    "location": "Localização",
+    "client": "Cliente",
+    "status": "Status",
+    "start_date": "Data de Início",
+    "end_date": "Data de Término",
+    "budget": "Orçamento",
+    "manager": "Gerente de Projeto"
+  },
+  "materials": {
+    "title": "Gestão de Materiais",
+    "list": "Lista de Materiais",
+    "add": "Adicionar Material",
+    "edit": "Editar Material",
+    "delete": "Excluir Material",
+    "code": "Código",
+    "name": "Nome",
+    "description": "Descrição",
+    "unit": "Unidade",
+    "category": "Categoria",
+    "price": "Preço Unitário",
+    "supplier": "Fornecedor",
+    "active": "Ativo"
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "yes": "Sim",
+    "no": "Não",
+    "confirm": "Confirmar",
+    "actions": "Ações"
+  }
+}

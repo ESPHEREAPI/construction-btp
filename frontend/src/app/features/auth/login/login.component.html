@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row justify-content-center w-100">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+      
+      <div class="text-center mb-4">
+        <h2 class="logo">{{ 'app.title' | translate }}</h2>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="text-center mb-4">
+            <h5 class="card-title">{{ 'auth.login' | translate }}</h5>
+            <p class="text-muted small">Entrez vos identifiants pour accéder</p>
+          </div>
+
+          <form class="g-3" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+              <label for="username" class="form-label">{{ 'auth.username' | translate }}</label>
+              <div class="input-group">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="username"
+                  [(ngModel)]="credentials.username"
+                  name="username"
+                  placeholder="Entrez votre nom d'utilisateur"
+                  required>
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="form-label">{{ 'auth.password' | translate }}</label>
+              <div class="input-group">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="password"
+                  [(ngModel)]="credentials.password"
+                  name="password"
+                  placeholder="Entrez votre mot de passe"
+                  required>
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+              </div>
+            </div>
+
+            <div class="mb-4" *ngIf="error">
+              <div class="alert alert-danger mb-0">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>{{ error }}
+              </div>
+            </div>
+
+            <div class="d-grid mb-3">
+              <button 
+                class="btn btn-primary btn-lg" 
+                type="submit"
+                [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!loading" class="bi bi-box-arrow-in-right me-2"></i>
+                {{ 'auth.login_btn' | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <p class="text-white-50 small mb-0">
+          <i class="bi bi-shield-check me-1"></i>
+          Connexion sécurisée • Version 1.0.0
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

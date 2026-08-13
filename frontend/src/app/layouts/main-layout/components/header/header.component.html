@@ -1,0 +1,81 @@
+<header id="header" class="header fixed-top d-flex align-items-center">
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="/" class="logo d-flex align-items-center">
+      <span class="d-none d-lg-block">MaterialManage</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn" (click)="onToggleSidebar()"></i>
+  </div>
+
+  <!-- Context: which company/role this session belongs to -->
+  <div class="header-context ms-3 d-none d-md-flex align-items-center">
+    <span class="badge context-badge" *ngIf="isSuperAdmin">
+      <i class="bi bi-shield-lock-fill me-1"></i>Super Admin
+    </span>
+    <span class="badge context-badge" *ngIf="!isSuperAdmin && currentUser?.companyName">
+      <i class="bi bi-building me-1"></i>{{ currentUser?.companyName }}
+    </span>
+  </div>
+
+  <!-- Centered blinking alert when the license is about to expire -->
+  <a routerLink="/my-license" class="license-alert" *ngIf="licenseExpiringSoon">
+    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+    <span>{{ licenseExpiryMessage }}</span>
+  </a>
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+      <!-- Language Selector -->
+      <li class="nav-item dropdown lang-selector">
+        <a class="nav-link nav-icon d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-globe"></i>
+          <span class="lang-code ms-1">{{ currentLangLabel }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end lang-menu">
+          <li>
+            <a class="dropdown-item lang-item" [class.active]="currentLang === 'fr'" (click)="changeLanguage('fr')">
+              <span class="lang-flag">🇫🇷</span>
+              <span class="lang-name">Français</span>
+              <i class="bi bi-check-lg lang-check"></i>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item lang-item" [class.active]="currentLang === 'en'" (click)="changeLanguage('en')">
+              <span class="lang-flag">🇬🇧</span>
+              <span class="lang-name">English</span>
+              <i class="bi bi-check-lg lang-check"></i>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item lang-item" [class.active]="currentLang === 'pt'" (click)="changeLanguage('pt')">
+              <span class="lang-flag">🇵🇹</span>
+              <span class="lang-name">Português</span>
+              <i class="bi bi-check-lg lang-check"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- User Profile -->
+      <li class="nav-item dropdown pe-3">
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          <span class="d-none d-md-block dropdown-toggle ps-2">{{ currentUser?.username }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li class="dropdown-header">
+            <h6>{{ currentUser?.username }}</h6>
+            <span>{{ currentUser?.email }}</span>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>{{ 'nav.logout' | translate }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+  </nav>
+</header>

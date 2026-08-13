@@ -1,0 +1,19 @@
+.main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+}
+
+.main-collapsed {
+  margin-left: 0;
+}
+
+@media (min-width: 1200px) {
+  .main {
+    margin-left: 300px;
+  }
+
+  .main-collapsed {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,70 @@
+<div class="pagetitle">
+  <h1>Licences</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+      <li class="breadcrumb-item active">Licences</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title mb-1">Auto-inscription publique</h5>
+              <p class="text-muted small mb-0">Autorise n'importe qui à créer sa propre compagnie via /register.</p>
+            </div>
+            <div class="form-check form-switch" *ngIf="!loadingSetting">
+              <input class="form-check-input" type="checkbox" role="switch"
+                [checked]="selfRegistrationEnabled" (change)="toggleSelfRegistration()" style="width: 3em; height: 1.5em;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6" *ngFor="let plan of plans">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Plan {{ plan.type }}</h5>
+
+          <div class="mb-3">
+            <label class="form-label">Durée (jours) — vide = illimité</label>
+            <input type="number" class="form-control" [(ngModel)]="plan.durationDays" min="1">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Utilisateurs max</label>
+            <input type="number" class="form-control" [(ngModel)]="plan.maxUsers" min="1">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Projets max</label>
+            <input type="number" class="form-control" [(ngModel)]="plan.maxProjects" min="1">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label d-block">Modules inclus</label>
+            <div class="form-check form-check-inline" *ngFor="let module of allModules">
+              <input type="checkbox" class="form-check-input" [id]="plan.type + '-module-' + module.value"
+                [checked]="plan.modules.includes(module.value)" (change)="toggleModule(plan, module.value)">
+              <label class="form-check-label" [for]="plan.type + '-module-' + module.value">{{ module.value }}</label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" (click)="savePlan(plan)" [disabled]="savingType === plan.type">
+            <span *ngIf="savingType === plan.type" class="spinner-border spinner-border-sm me-2"></span>
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status"></div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+</section>

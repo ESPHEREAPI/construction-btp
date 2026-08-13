@@ -1,0 +1,39 @@
+<div class="pagetitle">
+  <h1>{{ 'projects.details' | translate }}</h1>
+</div>
+
+<section class="section" *ngIf="!loading && project">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">{{ project.name }}</h5>
+            <div>
+              <button class="btn btn-warning btn-sm me-2" [routerLink]="['/projects', project.id, 'edit']">
+                <i class="bi bi-pencil"></i> {{ 'common.edit' | translate }}
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteProject()">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <p><strong>Code:</strong> {{ project.code }}</p>
+              <p><strong>Location:</strong> {{ project.location }}</p>
+              <p><strong>Client:</strong> {{ project.client }}</p>
+              <p><strong>Status:</strong> <span class="badge bg-info">{{ project.status }}</span></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Start:</strong> {{ project.startDate | date }}</p>
+              <p><strong>End:</strong> {{ project.endDate | date }}</p>
+              <p><strong>Budget:</strong> {{ project.budget | number }} FCFA</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

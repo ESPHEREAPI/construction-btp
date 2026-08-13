@@ -1,0 +1,118 @@
+<div class="modal-backdrop-custom" (click)="close()"></div>
+<div class="modal d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Licence — {{ company.name }}</h5>
+        <button type="button" class="btn-close" (click)="close()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- One-time key display after a successful generation -->
+        <div *ngIf="generationResult" class="alert alert-success">
+          <strong>Licence générée.</strong> Transmettez cette clé à la compagnie — elle ne sera plus jamais affichée.
+          <div class="input-group mt-2">
+            <input type="text" class="form-control font-monospace small" [value]="generationResult.licenseKey" readonly>
+            <button class="btn btn-outline-secondary" type="button" (click)="copyKey()">
+              <i class="bi" [ngClass]="copied ? 'bi-check-lg' : 'bi-clipboard'"></i>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="!loadingHistory && !latest" class="alert alert-info">
+          Aucune licence pour cette compagnie.
+        </div>
+
+        <!-- Current license summary + actions -->
+        <div *ngIf="!loadingHistory && latest" class="border rounded p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge" [ngClass]="{
+                'bg-success': latest.status === 'ACTIVE',
+                'bg-warning': latest.status === 'GENERATED' || latest.status === 'SUSPENDED',
+                'bg-danger': latest.status === 'REVOKED' || latest.status === 'EXPIRED'
+              }">{{ latest.status }}</span>
+              <span class="ms-2">{{ latest.type }} — {{ latest.maxUsers }} util. / {{ latest.maxProjects }} projets</span>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-warning me-1" *ngIf="latest.status === 'ACTIVE'" [disabled]="actionBusy" (click)="suspend()">Suspendre</button>
+              <button class="btn btn-sm btn-success me-1" *ngIf="latest.status === 'SUSPENDED'" [disabled]="actionBusy" (click)="reactivate()">Réactiver</button>
+              <button class="btn btn-sm btn-danger" *ngIf="latest.status !== 'REVOKED'" [disabled]="actionBusy" (click)="revoke()">Révoquer</button>
+            </div>
+          </div>
+          <div class="small text-muted mt-1">Modules : {{ latest.activeModules.join(', ') || '—' }} · Expiration : {{ latest.endDate || 'illimitée' }}</div>
+        </div>
+
+        <!-- Generate a new license -->
+        <h6>Générer une nouvelle licence</h6>
+        <form (ngSubmit)="generate()">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Type</label>
+              <select class="form-select" [(ngModel)]="form.type" name="type">
+                <option value="PAYANT">PAYANT</option>
+                <option value="TRIAL">TRIAL</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Date d'expiration</label>
+              <input type="date" class="form-control" [(ngModel)]="form.endDate" name="endDate">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Max utilisateurs</label>
+              <input type="number" class="form-control" [(ngModel)]="form.maxUsers" name="maxUsers" min="1">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Max projets</label>
+              <input type="number" class="form-control" [(ngModel)]="form.maxProjects" name="maxProjects" min="1">
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label d-block">Modules actifs</label>
+            <div class="form-check form-check-inline" *ngFor="let module of allModules">
+              <input type="checkbox" class="form-check-input" [id]="'module-' + module.value"
+                [checked]="form.modules.includes(module.value)" (change)="toggleModule(module.value)">
+              <label class="form-check-label" [for]="'module-' + module.value">{{ moduleLabel(module.value) }}</label>
+            </div>
+          </div>
+
+          <div class="alert alert-danger mt-3 mb-0" *ngIf="error">{{ error }}</div>
+
+          <div class="mt-3">
+            <button class="btn btn-primary" type="submit" [disabled]="generating">
+              <span *ngIf="generating" class="spinner-border spinner-border-sm me-2"></span>
+              Générer
+            </button>
+          </div>
+        </form>
+
+        <hr>
+
+        <!-- History -->
+        <h6>Historique</h6>
+        <div *ngIf="loadingHistory" class="text-center"><div class="spinner-border spinner-border-sm"></div></div>
+        <table class="table table-sm" *ngIf="!loadingHistory && history.length > 0">
+          <thead>
+            <tr><th>Statut</th><th>Type</th><th>Modules</th><th>Expiration</th><th>Créée par</th><th>Créée le</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of history">
+              <td>{{ entry.status }}</td>
+              <td>{{ entry.type }}</td>
+              <td>{{ entry.activeModules.join(', ') }}</td>
+              <td>{{ entry.endDate || 'illimitée' }}</td>
+              <td>{{ entry.createdBy }}</td>
+              <td>{{ entry.createdAt | date: 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="close()">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

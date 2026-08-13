@@ -1,0 +1,15 @@
+<app-header (toggleSidebar)="onToggleSidebar()"></app-header>
+<app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+<main id="main" class="main" [class.main-collapsed]="sidebarCollapsed">
+  <div class="alert alert-warning d-flex align-items-center" role="alert" *ngIf="licenseStatusService.blocked$ | async as code">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span [ngSwitch]="code">
+      <span *ngSwitchCase="'LICENSE_SUSPENDED'">Votre compagnie a été suspendue. Contactez votre administrateur.</span>
+      <span *ngSwitchCase="'LICENSE_REQUIRED'">Aucune licence active. Contactez votre administrateur ou activez votre clé de licence sur l'écran « Ma Licence ».</span>
+      <span *ngSwitchCase="'LICENSE_MODULE_NOT_ACTIVE'">Ce module n'est pas inclus dans votre licence actuelle.</span>
+      <span *ngSwitchDefault>Votre licence a expiré. Les données restent consultables mais la création/modification est bloquée jusqu'au renouvellement.</span>
+    </span>
+  </div>
+  <router-outlet></router-outlet>
+</main>

@@ -1,0 +1,339 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-cart me-2"></i>
+            {{ isEditMode ? 'Modifier la commande' : 'Nouvelle commande' }}
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <!-- Message d'erreur -->
+          <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+            <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+          </div>
+
+          <!-- Message de succès -->
+          <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+            <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
+          </div>
+
+          <!-- Chargement initial -->
+          <div *ngIf="loadingData" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-2 text-muted">Chargement des données...</p>
+          </div>
+
+          <form *ngIf="!loadingData" (ngSubmit)="onSubmit()" #orderForm="ngForm">
+            <!-- Informations générales -->
+            <div class="row">
+              <!-- Projet -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-building me-1"></i>Projet *
+                </label>
+                <select 
+                  class="form-select" 
+                  [(ngModel)]="order.projectId" 
+                  name="projectId" 
+                  required
+                  [disabled]="loadingProjects">
+                  <option [ngValue]="null" disabled>
+                    {{ loadingProjects ? 'Chargement...' : 'Sélectionnez un projet' }}
+                  </option>
+                  <option *ngFor="let project of projects" [ngValue]="project.id">
+                    {{ project.code }} - {{ project.name }}
+                  </option>
+                </select>
+                <div class="form-text">
+                  <i class="bi bi-info-circle me-1"></i>
+                  {{ projects.length }} projet(s) disponible(s)
+                </div>
+              </div>
+
+              <!-- Fournisseur -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-truck me-1"></i>Fournisseur *
+                </label>
+                <div class="input-group">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [(ngModel)]="order.supplier" 
+                    name="supplier" 
+                    required
+                    list="suppliersList"
+                    placeholder="Saisissez ou sélectionnez un fournisseur"
+                    [disabled]="loadingSuppliers">
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    (click)="showSuppliersList = !showSuppliersList"
+                    title="Afficher la liste">
+                    <i class="bi bi-chevron-down"></i>
+                  </button>
+                </div>
+                
+                <!-- Liste déroulante des fournisseurs -->
+                <datalist id="suppliersList">
+                  <option *ngFor="let supplier of suppliers" [value]="supplier">
+                </datalist>
+
+                <!-- Liste affichée des fournisseurs -->
+                <div *ngIf="showSuppliersList && suppliers.length > 0" class="card mt-2" style="max-height: 200px; overflow-y: auto;">
+                  <div class="list-group list-group-flush">
+                    <button 
+                      type="button"
+                      *ngFor="let supplier of suppliers" 
+                      class="list-group-item list-group-item-action"
+                      (click)="selectSupplier(supplier)">
+                      <i class="bi bi-truck me-2"></i>{{ supplier }}
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-text">
+                  <i class="bi bi-info-circle me-1"></i>
+                  {{ loadingSuppliers ? 'Chargement...' : suppliers.length + ' fournisseur(s) récent(s)' }}
+                </div>
+              </div>
+
+              <!-- Date de commande -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-calendar-event me-1"></i>Date de commande *
+                </label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  [(ngModel)]="order.orderDate" 
+                  name="orderDate" 
+                  required
+                  [max]="maxDate">
+                <div class="form-text">Date du jour par défaut</div>
+              </div>
+
+              <!-- Date de livraison prévue -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-calendar-check me-1"></i>Date de livraison prévue *
+                </label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  [(ngModel)]="order.expectedDeliveryDate" 
+                  name="expectedDeliveryDate" 
+                  required
+                  [min]="order.orderDate">
+                <div class="form-text">Doit être après la date de commande</div>
+              </div>
+
+              <!-- Notes -->
+              <div class="col-12 mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-journal-text me-1"></i>Notes
+                </label>
+                <textarea 
+                  class="form-control" 
+                  [(ngModel)]="order.notes" 
+                  name="notes" 
+                  rows="3"
+                  placeholder="Notes supplémentaires sur la commande..."></textarea>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Articles de la commande -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="mb-0">
+                <i class="bi bi-list-check me-2"></i>
+                Articles ({{ order.items.length }})
+              </h6>
+              <button 
+                type="button" 
+                class="btn btn-sm btn-outline-primary" 
+                (click)="addItem()">
+                <i class="bi bi-plus-circle me-1"></i>Ajouter un article
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width: 5%">#</th>
+                    <th style="width: 35%">Matériau *</th>
+                    <th style="width: 15%">Quantité *</th>
+                    <th style="width: 10%">Unité</th>
+                    <th style="width: 15%">Prix unitaire</th>
+                    <th style="width: 15%">Total</th>
+                    <th style="width: 5%"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of order.items; let i = index" [class.table-warning]="!item.materialId">
+                    <!-- Numéro -->
+                    <td class="align-middle">
+                      <span class="badge bg-secondary">{{ i + 1 }}</span>
+                    </td>
+
+                    <!-- Matériau -->
+                    <td>
+                      <select 
+                        class="form-select form-select-sm" 
+                        [(ngModel)]="item.materialId" 
+                        [name]="'materialId_' + i" 
+                        required
+                        (change)="onMaterialSelected(i)"
+                        [disabled]="loadingMaterials">
+                        <option [ngValue]="null" disabled>
+                          {{ loadingMaterials ? 'Chargement...' : 'Sélectionnez un matériau' }}
+                        </option>
+                        <option *ngFor="let material of materials" [ngValue]="material.id">
+                          {{ material.code }} - {{ material.name }}
+                        </option>
+                      </select>
+                      <small *ngIf="item.materialId && getMaterialById(item.materialId)" class="text-muted">
+                        Catégorie: {{ getMaterialById(item.materialId)?.category }}
+                      </small>
+                    </td>
+
+                    <!-- Quantité -->
+                    <td>
+                      <input 
+                        type="number" 
+                        class="form-control form-control-sm" 
+                        [(ngModel)]="item.quantity" 
+                        [name]="'quantity_' + i" 
+                        required 
+                        min="0.01" 
+                        step="0.01"
+                        (input)="calculateItemTotal(i)"
+                        placeholder="0.00">
+                    </td>
+
+                    <!-- Unité -->
+                    <td class="align-middle">
+                      <span *ngIf="item.materialId" class="badge bg-info">
+                        {{ getMaterialById(item.materialId)?.unit || '-' }}
+                      </span>
+                    </td>
+
+                    <!-- Prix unitaire -->
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <input 
+                          type="number" 
+                          class="form-control" 
+                          [(ngModel)]="item.unitPrice" 
+                          [name]="'unitPrice_' + i" 
+                          min="0" 
+                          step="0.01"
+                          (input)="calculateItemTotal(i)"
+                          placeholder="0.00">
+                        <span class="input-group-text">FCFA</span>
+                      </div>
+                      <small *ngIf="item.materialId && getMaterialById(item.materialId)?.unitPrice" class="text-muted">
+                        Prix catalogue: {{ getMaterialById(item.materialId)?.unitPrice | number:'1.2-2' }} FCFA
+                      </small>
+                    </td>
+
+                    <!-- Total -->
+                    <td class="align-middle">
+                      <strong class="text-primary">
+                        {{ getItemTotal(i) | number:'1.2-2' }} FCFA
+                      </strong>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="align-middle">
+                      <button 
+                        type="button" 
+                        class="btn btn-sm btn-outline-danger" 
+                        (click)="removeItem(i)" 
+                        [disabled]="order.items.length === 1"
+                        title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Ligne vide si pas d'articles -->
+                  <tr *ngIf="order.items.length === 0">
+                    <td colspan="7" class="text-center text-muted py-4">
+                      <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                      Aucun article ajouté
+                    </td>
+                  </tr>
+                </tbody>
+
+                <!-- Total général -->
+                <tfoot class="table-light">
+                  <tr>
+                    <td colspan="5" class="text-end fw-bold">Total général:</td>
+                    <td colspan="2">
+                      <h5 class="text-primary mb-0">
+                        {{ getTotalAmount() | number:'1.2-2' }} FCFA
+                      </h5>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <!-- Message si pas assez de matériaux -->
+            <div *ngIf="materials.length === 0 && !loadingMaterials" class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              Aucun matériau disponible. Veuillez d'abord ajouter des matériaux.
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <button 
+                type="button" 
+                class="btn btn-secondary" 
+                (click)="onCancel()"
+                [disabled]="loading">
+                <i class="bi bi-x-circle me-1"></i>Annuler
+              </button>
+
+              <div class="d-flex gap-2">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-primary" 
+                  (click)="resetForm()"
+                  [disabled]="loading">
+                  <i class="bi bi-arrow-clockwise me-1"></i>Réinitialiser
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="!orderForm.valid || loading || order.items.length === 0">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                  <i *ngIf="!loading" class="bi bi-save me-1"></i>
+                  {{ isEditMode ? 'Modifier la commande' : 'Créer la commande' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Aide -->
+            <div class="alert alert-info mt-3 mb-0">
+              <i class="bi bi-info-circle-fill me-2"></i>
+              <strong>Aide:</strong> 
+              Les champs marqués d'un astérisque (*) sont obligatoires. 
+              Le prix unitaire est automatiquement renseigné avec le prix catalogue du matériau.
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+<div class="pagetitle">
+  <h1>{{ (isEditMode ? 'materials.edit' : 'materials.add') | translate }}</h1>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ (isEditMode ? 'materials.edit' : 'materials.add') | translate }}</h5>
+
+          <form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Code *</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="code" [readonly]="isEditMode">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'materials.name' | translate }} *</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="name">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Description</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" formControlName="description" rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'materials.unit' | translate }} *</label>
+              <div class="col-sm-9">
+                <select class="form-select" formControlName="unit">
+                  <option *ngFor="let unit of units" [value]="unit">{{ unit }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'materials.category' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="category">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'materials.price' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="number" class="form-control" formControlName="unitPrice">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ 'materials.supplier' | translate }}</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" formControlName="supplier">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Actif</label>
+              <div class="col-sm-9">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" formControlName="active">
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-9 offset-sm-3">
+                <button type="submit" class="btn btn-primary" [disabled]="loading || materialForm.invalid">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                  {{ 'common.save' | translate }}
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
+                  {{ 'common.cancel' | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

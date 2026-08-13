@@ -1,0 +1,109 @@
+package com.construction.material.service.impl;
+
+import com.construction.material.entity.Company;
+import com.construction.material.entity.Material;
+import com.construction.material.exception.ResourceNotFoundException;
+import com.construction.material.repository.CompanyRepository;
+import com.construction.material.repository.MaterialRepository;
+import com.construction.material.security.TenantContext;
+import com.construction.material.service.MaterialService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class MaterialServiceImpl implements MaterialService {
+
+    private final MaterialRepository materialRepository;
+    private final CompanyRepository companyRepository;
+
+    @Override
+    public List<Material> findAll() {
+        Long companyId = TenantContext.get();
+        return companyId != null
+                ? materialRepository.findByCompanyIsNullOrCompanyId(companyId)
+                : materialRepository.findAll();
+    }
+
+    @Override
+    public Page<Material> findAll(Pageable pageable) {
+        // Company-scoped visibility only applies to the unpaginated listing today; paginated
+        // browsing is used from admin/system contexts where the Super Admin sees everything.
+        return materialRepository.findAll(pageable);
+    }
+
+    @Override
+    public Material findById(Long id) {
+        Material material = materialRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Material not found with id: " + id));
+        if (!isVisibleToCurrentTenant(material)) {
+            throw new ResourceNotFoundException("Material not found with id: " + id);
+        }
+        return material;
+    }
+
+    @Override
+    @Transactional
+    public Material save(Material material) {
+        Long companyId = TenantContext.get();
+        if (companyId != null) {
+            Company company = companyRepository.findById(companyId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Company not found"));
+            material.setCompany(company);
+        }
+        material.setCreatedAt(LocalDateTime.now());
+        return materialRepository.save(material);
+    }
+
+    @Override
+    @Transactional
+    public Material update(Long id, Material material) {
+        Material existing = findById(id);
+        existing.setName(material.getName());
+        existing.setDescription(material.getDescription());
+        existing.setUnit(material.getUnit());
+        existing.setCategory(material.getCategory());
+        existing.setUnitPrice(material.getUnitPrice());
+        existing.setSupplier(material.getSupplier());
+        existing.setActive(material.getActive());
+        existing.setUpdatedAt(LocalDateTime.now());
+        return materialRepository.save(existing);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Material material = findById(id);
+        materialRepository.delete(material);
+    }
+
+    @Override
+    public List<Material> findByCategory(String category) {
+        Long companyId = TenantContext.get();
+        return companyId != null
+                ? materialRepository.findByCompanyIsNullOrCompanyIdAndCategory(companyId, category)
+                : materialRepository.findByCategory(category);
+    }
+
+    @Override
+    public List<Material> findActive() {
+        Long companyId = TenantContext.get();
+        return companyId != null
+                ? materialRepository.findByCompanyIsNullOrCompanyIdAndActiveTrue(companyId)
+                : materialRepository.findByActiveTrue();
+    }
+
+    /** Super Admin (no company) sees everything; a company user sees system materials plus its own. */
+    private boolean isVisibleToCurrentTenant(Material material) {
+        Long companyId = TenantContext.get();
+        return companyId == null
+                || material.getCompany() == null
+                || companyId.equals(material.getCompany().getId());
+    }
+}

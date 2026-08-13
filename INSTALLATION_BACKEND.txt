@@ -1,0 +1,194 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🏗️ CONSTRUCTION MATERIAL MANAGEMENT SYSTEM - GUIDE D'INSTALLATION BACKEND
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: PRÉREQUIS
+═══════════════════════════════════════════════════════════════════════════════
+✓ Java JDK 17 ou 21 installé
+✓ Maven 3.8+ installé  
+✓ MySQL 8.0+ installé
+✓ Git installé
+
+Vérification:
+$ java -version
+$ mvn -version
+$ mysql --version
+
+
+📋 ÉTAPE 2: CONFIGURATION MYSQL
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Démarrer MySQL:
+   Linux/Mac:  $ sudo service mysql start
+   Windows:    $ net start MySQL80
+
+2. Se connecter à MySQL:
+   $ mysql -u root -p
+
+3. Créer la base de données:
+   mysql> CREATE DATABASE construction_material_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   mysql> EXIT;
+
+4. Importer les données de démonstration:
+   $ cd /home/claude/construction-material-management
+   $ mysql -u root -p construction_material_db < database/init_database.sql
+
+
+📋 ÉTAPE 3: CONFIGURATION DU BACKEND
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Éditer le fichier de configuration:
+   $ cd backend/src/main/resources
+   $ nano application.properties
+
+2. Modifier ces lignes:
+   spring.datasource.username=root
+   spring.datasource.password=VOTRE_MOT_DE_PASSE_MYSQL
+   
+   jwt.secret=ChangerCetteCleDansProduction512BitsMinimumPourHS512
+
+
+📋 ÉTAPE 4: COMPILATION
+═══════════════════════════════════════════════════════════════════════════════
+
+$ cd /home/claude/construction-material-management/backend
+$ mvn clean install -DskipTests
+
+En cas d'erreur:
+$ mvn clean install -U -DskipTests
+
+
+📋 ÉTAPE 5: LANCEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Méthode 1 - Maven (Développement):
+$ mvn spring-boot:run
+
+Méthode 2 - JAR (Production):
+$ mvn clean package -DskipTests
+$ java -jar target/material-management-1.0.0.jar
+
+Le serveur démarre sur: http://localhost:8080
+
+
+📋 ÉTAPE 6: VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Accéder à Swagger UI:
+   http://localhost:8080/swagger-ui.html
+
+2. Tester l'authentification:
+   POST http://localhost:8080/api/auth/login
+   Body: {
+     "username": "admin",
+     "password": "password123"
+   }
+
+3. Copier le token JWT reçu
+
+4. Cliquer sur "Authorize" dans Swagger
+
+5. Entrer: Bearer VOTRE_TOKEN_JWT
+
+6. Tester les autres endpoints
+
+
+🔑 COMPTES DE DÉMONSTRATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Mot de passe pour TOUS les comptes: password123
+
+┌────────────┬──────────────────────────────┬────────────────────┐
+│ Username   │ Email                        │ Rôle               │
+├────────────┼──────────────────────────────┼────────────────────┤
+│ admin      │ admin@construction.com       │ ADMIN              │
+│ jdupont    │ j.dupont@construction.com    │ PROJECT_MANAGER    │
+│ mngono     │ m.ngono@construction.com     │ SITE_MANAGER       │
+│ asilva     │ a.silva@construction.com     │ INVENTORY_MANAGER  │
+│ jsmith     │ j.smith@construction.com     │ READ_ONLY          │
+└────────────┴──────────────────────────────┴────────────────────┘
+
+
+📊 DONNÉES DE DÉMONSTRATION INCLUSES
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ 3 Projets de construction
+✓ 8 Matériaux de construction (ciment, fer, sable, etc.)
+✓ Quantifications pour chaque projet
+✓ Commandes de matériaux
+✓ Enregistrements d'utilisation
+✓ Stocks par chantier
+✓ Mouvements de stock
+✓ Alertes actives
+
+
+🐛 RÉSOLUTION DES PROBLÈMES COURANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Problème 1: Erreur de connexion MySQL
+   Error: Access denied for user 'root'@'localhost'
+   Solution: Vérifier username/password dans application.properties
+
+Problème 2: Port 8080 déjà utilisé
+   Solution Linux/Mac: $ lsof -ti:8080 | xargs kill -9
+   Solution Windows:   $ netstat -ano | findstr :8080
+                       $ taskkill /PID <PID> /F
+
+Problème 3: Erreur de compilation MapStruct
+   Solution: $ mvn clean install -U -DskipTests
+
+Problème 4: Table n'existe pas
+   Solution: Réimporter le script SQL
+             $ mysql -u root -p construction_material_db < database/init_database.sql
+
+
+📚 ENDPOINTS API PRINCIPAUX
+═══════════════════════════════════════════════════════════════════════════════
+
+Authentification:
+  POST /api/auth/login
+  POST /api/auth/register
+
+Projets:
+  GET    /api/projects
+  POST   /api/projects
+  GET    /api/projects/{id}
+  PUT    /api/projects/{id}
+  DELETE /api/projects/{id}
+
+Matériaux:
+  GET    /api/materials
+  POST   /api/materials
+  GET    /api/materials/{id}
+  PUT    /api/materials/{id}
+  DELETE /api/materials/{id}
+
+Dashboard:
+  GET /api/dashboard/stats
+
+
+✅ CHECKLIST DE VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+□ MySQL démarré
+□ Base de données créée
+□ Script SQL importé
+□ application.properties configuré
+□ Compilation réussie
+□ Serveur démarré (http://localhost:8080)
+□ Swagger UI accessible
+□ Login admin réussi
+□ Token JWT reçu
+□ Endpoints testés
+
+
+🎯 PROCHAINE ÉTAPE: FRONTEND ANGULAR
+═══════════════════════════════════════════════════════════════════════════════
+
+Une fois le backend validé, vous pouvez passer au développement du frontend
+Angular avec le template NiceAdmin.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+Version: 1.0.0 | Date: Novembre 2025
+═══════════════════════════════════════════════════════════════════════════════
