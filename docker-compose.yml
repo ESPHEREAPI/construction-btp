@@ -1,0 +1,45 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env
+    # Lets the container reach the host's native MySQL (127.0.0.1:3306 on
+    # the host) without publishing anything - works on Linux Docker 20.10+.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - construction-btp-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8082:80"
+    depends_on:
+      - backend
+    networks:
+      - construction-btp-network
+    restart: unless-stopped
+
+  # Points at the native MySQL (construction_material_db), NOT the
+  # dockerized easycom-mysql - separate from the existing easycom-phpmyadmin,
+  # which only knows about easycom's own database. Login with the
+  # construction_btp / DB_PASSWORD credentials from deploy/mysql-bootstrap.sql.
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: host.docker.internal
+      PMA_PORT: 3306
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8083:80"
+    networks:
+      - construction-btp-network
+    restart: unless-stopped
+
+networks:
+  construction-btp-network:
+    driver: bridge
