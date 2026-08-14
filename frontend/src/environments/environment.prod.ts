@@ -4,6 +4,6 @@ export const environment = {
   // same origin, regardless of which path the frontend itself is served
   // under (e.g. /construction-btp/).
   apiUrl: '/api',
-  appName: 'Construction Material Management',
+  appName: 'GMC-cloud',
   version: '1.0.0'
 };
