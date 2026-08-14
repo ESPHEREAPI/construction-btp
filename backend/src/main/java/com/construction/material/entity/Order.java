@@ -44,7 +44,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private OrderStatus status = OrderStatus.DRAFT;
+    private OrderStatus status = OrderStatus.PENDING;
 
     @Column(length = 200)
     private String supplier;
@@ -78,12 +78,8 @@ public class Order {
     private LocalDateTime updatedAt;
 
     public enum OrderStatus {
-        DRAFT,
-        SUBMITTED,
+        PENDING,
         APPROVED,
-        REJECTED,
-        ORDERED,
-        PARTIALLY_RECEIVED,
         RECEIVED,
         CANCELLED
     }

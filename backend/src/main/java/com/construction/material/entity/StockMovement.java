@@ -66,13 +66,9 @@ public class StockMovement {
     private String notes;
 
     public enum MovementType {
-        IN_PURCHASE,
-        IN_TRANSFER,
-        IN_RETURN,
-        IN_ADJUSTMENT,
-        OUT_USAGE,
-        OUT_TRANSFER,
-        OUT_LOSS,
-        OUT_ADJUSTMENT
+        IN,
+        OUT,
+        TRANSFER,
+        ADJUSTMENT
     }
 }
