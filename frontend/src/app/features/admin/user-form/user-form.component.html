@@ -55,7 +55,7 @@
                 <div class="form-check form-check-inline" *ngFor="let role of availableRoles">
                   <input type="checkbox" class="form-check-input" [id]="'role-' + role.id"
                     [checked]="user.roleIds.includes(role.id)" (change)="toggleRole(role.id)">
-                  <label class="form-check-label" [for]="'role-' + role.id">{{ role.name }}</label>
+                  <label class="form-check-label" [for]="'role-' + role.id">{{ roleLabelKey(role.name) | translate }}</label>
                 </div>
                 <div class="form-text text-danger" *ngIf="user.roleIds.length === 0">Sélectionnez au moins un rôle</div>
               </div>

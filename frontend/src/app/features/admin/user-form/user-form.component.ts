@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { Role } from '../../../core/models/admin.model';
 
@@ -9,7 +10,7 @@ import { Role } from '../../../core/models/admin.model';
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss']
 })
@@ -47,6 +48,10 @@ export class UserFormComponent implements OnInit {
       this.isEditMode = true;
       this.loadUser(+id);
     }
+  }
+
+  roleLabelKey(roleName: string): string {
+    return 'roles.' + roleName;
   }
 
   toggleRole(roleId: number): void {

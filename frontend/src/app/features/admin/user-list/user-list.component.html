@@ -59,7 +59,7 @@
                   <td>{{ user.email }}</td>
                   <td>
                     <span *ngFor="let role of user.roles" class="badge bg-info me-1">
-                      {{ role.name }}
+                      {{ ('roles.' + role.name) | translate }}
                     </span>
                   </td>
                   <td>

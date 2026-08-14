@@ -68,6 +68,14 @@
     "supplier": "Fornecedor",
     "active": "Ativo"
   },
+  "roles": {
+    "ROLE_ADMIN": "Administrador",
+    "ROLE_COMPANY_ADMIN": "Admin da Empresa",
+    "ROLE_PROJECT_MANAGER": "Gerente de Projeto",
+    "ROLE_SITE_MANAGER": "Gerente de Obra",
+    "ROLE_INVENTORY_MANAGER": "Gerente de Inventário",
+    "ROLE_READ_ONLY": "Somente Leitura"
+  },
   "common": {
     "save": "Salvar",
     "cancel": "Cancelar",

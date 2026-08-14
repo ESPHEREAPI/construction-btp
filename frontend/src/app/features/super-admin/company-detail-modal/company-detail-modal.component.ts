@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { Company } from '../../../core/models/company.model';
 import { UserManagement } from '../../../core/models/admin.model';
 import { AdminService } from '../../../core/services/admin.service';
@@ -7,7 +8,7 @@ import { AdminService } from '../../../core/services/admin.service';
 @Component({
   selector: 'app-company-detail-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './company-detail-modal.component.html',
   styleUrls: ['./company-detail-modal.component.scss']
 })
