@@ -70,7 +70,15 @@
   background-clip: text;
   text-decoration: none;
   margin-bottom: 30px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 26px;
+  color: #667eea;
+  -webkit-text-fill-color: #667eea;
 }
 
 .card-title {
