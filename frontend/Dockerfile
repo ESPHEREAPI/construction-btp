@@ -8,7 +8,10 @@ COPY package.json package-lock.json ./
 # node_modules there predates it. --legacy-peer-deps skips that strict check.
 RUN npm ci --legacy-peer-deps
 COPY . .
-RUN npm run build -- --configuration production
+# Served under /construction-btp/ (not the domain root) on the target server,
+# alongside other apps on the same host - base-href makes Angular's own
+# routing/asset URLs resolve correctly under that subpath.
+RUN npm run build -- --configuration production --base-href /construction-btp/
 
 # Runtime stage
 FROM nginx:alpine

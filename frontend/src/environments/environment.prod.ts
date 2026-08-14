@@ -1,6 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-api.com/api',
+  // Relative and root-absolute: nginx proxies /api/* to the backend on the
+  // same origin, regardless of which path the frontend itself is served
+  // under (e.g. /construction-btp/).
+  apiUrl: '/api',
   appName: 'Construction Material Management',
   version: '1.0.0'
 };
