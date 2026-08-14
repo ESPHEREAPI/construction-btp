@@ -26,13 +26,17 @@
             <div class="row">
               <div class="col-6 mb-4">
                 <label for="firstName" class="form-label">Prénom</label>
-                <input type="text" class="form-control" id="firstName"
-                  [(ngModel)]="request.firstName" name="firstName">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="firstName"
+                    [(ngModel)]="request.firstName" name="firstName">
+                </div>
               </div>
               <div class="col-6 mb-4">
                 <label for="lastName" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="lastName"
-                  [(ngModel)]="request.lastName" name="lastName">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="lastName"
+                    [(ngModel)]="request.lastName" name="lastName">
+                </div>
               </div>
             </div>
 

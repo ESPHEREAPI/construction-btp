@@ -50,7 +50,8 @@
           <table class="table table-sm table-hover">
             <thead>
               <tr>
-                <th>Utilisateur</th>
+                <th>Identifiant de connexion</th>
+                <th>Nom</th>
                 <th>Email</th>
                 <th>Rôles</th>
                 <th>Statut</th>
@@ -60,10 +61,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let user of users">
-                <td>
-                  <strong>{{ user.fullName }}</strong>
-                  <br><small class="text-muted">{{ user.username }}</small>
-                </td>
+                <td><code>{{ user.username }}</code></td>
+                <td>{{ user.fullName }}</td>
                 <td>{{ user.email }}</td>
                 <td>
                   <span *ngFor="let role of user.roles" class="badge bg-info me-1">{{ role.name }}</span>
