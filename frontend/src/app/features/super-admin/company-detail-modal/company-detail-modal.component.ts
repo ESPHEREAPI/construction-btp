@@ -1,45 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Company } from '../../../core/models/company.model';
 import { UserManagement } from '../../../core/models/admin.model';
 import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
-  selector: 'app-user-list',
+  selector: 'app-company-detail-modal',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  imports: [CommonModule],
+  templateUrl: './company-detail-modal.component.html',
+  styleUrls: ['./company-detail-modal.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class CompanyDetailModalComponent implements OnChanges {
+  @Input({ required: true }) company!: Company;
+  @Output() closed = new EventEmitter<void>();
+
   users: UserManagement[] = [];
-  loading = false;
+  loading = true;
   error = '';
-  
-  currentPage = 0;
-  pageSize = 10;
-  totalElements = 0;
-  totalPages = 0;
 
   resetPasswordResult: { username: string; tempPassword: string } | null = null;
   copiedTempPassword = false;
 
   constructor(private adminService: AdminService) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.resetPasswordResult = null;
     this.loadUsers();
   }
 
   loadUsers(): void {
     this.loading = true;
     this.error = '';
-    
-    this.adminService.getAllUsers(this.currentPage, this.pageSize).subscribe({
+    this.adminService.getAllUsers(0, 100, this.company.id).subscribe({
       next: (response) => {
         this.users = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
         this.loading = false;
       },
       error: (err) => {
@@ -48,23 +43,6 @@ export class UserListComponent implements OnInit {
         console.error(err);
       }
     });
-  }
-
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.loadUsers();
-  }
-
-  toggleUserStatus(id: number): void {
-    if (confirm('Changer le statut de cet utilisateur ?')) {
-      this.adminService.toggleUserStatus(id).subscribe({
-        next: () => this.loadUsers(),
-        error: (err) => {
-          alert('Erreur lors du changement de statut');
-          console.error(err);
-        }
-      });
-    }
   }
 
   resetPassword(user: UserManagement): void {
@@ -89,15 +67,7 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  deleteUser(id: number): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-      this.adminService.deleteUser(id).subscribe({
-        next: () => this.loadUsers(),
-        error: (err) => {
-          alert('Erreur lors de la suppression');
-          console.error(err);
-        }
-      });
-    }
+  close(): void {
+    this.closed.emit();
   }
 }

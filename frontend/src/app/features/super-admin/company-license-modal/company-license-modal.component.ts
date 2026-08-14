@@ -36,17 +36,34 @@ export class CompanyLicenseModalComponent implements OnChanges {
 
   actionBusy = false;
 
+  durationDays: number | null = 365;
+  noExpiration = false;
+
   constructor(private licenseService: LicenseService) {}
 
   ngOnChanges(): void {
     this.generationResult = null;
     this.error = '';
     this.form = this.emptyForm();
+    this.durationDays = 365;
+    this.noExpiration = false;
+    this.applyDuration();
     this.loadHistory();
   }
 
   private emptyForm(): GenerateLicenseRequest {
     return { type: 'PAYANT', endDate: null, maxUsers: 5, maxProjects: 3, modules: [] };
+  }
+
+  /** Recomputes form.endDate from durationDays/noExpiration - the date itself is never typed directly. */
+  applyDuration(): void {
+    if (this.noExpiration || !this.durationDays || this.durationDays < 1) {
+      this.form.endDate = null;
+      return;
+    }
+    const result = new Date();
+    result.setDate(result.getDate() + this.durationDays);
+    this.form.endDate = result.toISOString().slice(0, 10);
   }
 
   loadHistory(): void {

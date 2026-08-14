@@ -6,11 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CompanyService } from '../../../core/services/company.service';
 import { Company, CreateCompanyRequest } from '../../../core/models/company.model';
 import { CompanyLicenseModalComponent } from '../company-license-modal/company-license-modal.component';
+import { CompanyDetailModalComponent } from '../company-detail-modal/company-detail-modal.component';
 
 @Component({
   selector: 'app-company-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, CompanyLicenseModalComponent],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, CompanyLicenseModalComponent, CompanyDetailModalComponent],
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.scss']
 })
@@ -32,6 +33,7 @@ export class CompanyListComponent implements OnInit {
   };
 
   companyForLicenseModal: Company | null = null;
+  companyForDetailModal: Company | null = null;
 
   constructor(private companyService: CompanyService) {}
 
@@ -95,5 +97,13 @@ export class CompanyListComponent implements OnInit {
 
   closeLicenseModal(): void {
     this.companyForLicenseModal = null;
+  }
+
+  openDetailModal(company: Company): void {
+    this.companyForDetailModal = company;
+  }
+
+  closeDetailModal(): void {
+    this.companyForDetailModal = null;
   }
 }

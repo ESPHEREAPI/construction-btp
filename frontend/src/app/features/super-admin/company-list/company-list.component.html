@@ -98,6 +98,9 @@
                   </span>
                 </td>
                 <td>
+                  <button class="btn btn-sm btn-outline-secondary me-1" (click)="openDetailModal(company)">
+                    <i class="bi bi-eye"></i> Détails
+                  </button>
                   <button class="btn btn-sm btn-outline-primary me-1" (click)="openLicenseModal(company)">
                     <i class="bi bi-key"></i> Gérer la licence
                   </button>
@@ -124,3 +127,9 @@
   (closed)="closeLicenseModal()"
   (changed)="loadCompanies()">
 </app-company-license-modal>
+
+<app-company-detail-modal
+  *ngIf="companyForDetailModal"
+  [company]="companyForDetailModal"
+  (closed)="closeDetailModal()">
+</app-company-detail-modal>

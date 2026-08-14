@@ -56,8 +56,15 @@
               </select>
             </div>
             <div class="col-md-4">
-              <label class="form-label">Date d'expiration</label>
-              <input type="date" class="form-control" [(ngModel)]="form.endDate" name="endDate">
+              <label class="form-label">Durée (jours)</label>
+              <input type="number" class="form-control" [(ngModel)]="durationDays" name="durationDays"
+                min="1" [disabled]="noExpiration" (ngModelChange)="applyDuration()">
+              <div class="form-check mt-1">
+                <input type="checkbox" class="form-check-input" id="noExpiration"
+                  [(ngModel)]="noExpiration" name="noExpiration" (ngModelChange)="applyDuration()">
+                <label class="form-check-label small" for="noExpiration">Sans expiration</label>
+              </div>
+              <div class="form-text" *ngIf="!noExpiration">Expire le : {{ form.endDate || '—' }}</div>
             </div>
             <div class="col-md-2">
               <label class="form-label">Max utilisateurs</label>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
+import { Role } from '../../../core/models/admin.model';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class UserFormComponent implements OnInit {
   loading = false;
   error = '';
 
+  availableRoles: Role[] = [];
+
   constructor(
     private adminService: AdminService,
     private router: Router,
@@ -34,10 +37,24 @@ export class UserFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.adminService.getAssignableRoles().subscribe({
+      next: (roles) => (this.availableRoles = roles),
+      error: (err) => console.error(err)
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
       this.loadUser(+id);
+    }
+  }
+
+  toggleRole(roleId: number): void {
+    const index = this.user.roleIds.indexOf(roleId);
+    if (index >= 0) {
+      this.user.roleIds.splice(index, 1);
+    } else {
+      this.user.roleIds.push(roleId);
     }
   }
 

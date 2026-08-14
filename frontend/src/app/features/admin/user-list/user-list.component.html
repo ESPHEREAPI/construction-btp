@@ -24,6 +24,19 @@
           <!-- Error -->
           <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
+          <!-- One-time temporary password display after a reset -->
+          <div *ngIf="resetPasswordResult" class="alert alert-success alert-dismissible">
+            <strong>Mot de passe réinitialisé pour {{ resetPasswordResult.username }}.</strong>
+            À communiquer une seule fois — l'utilisateur devra le changer à sa prochaine connexion.
+            <div class="input-group mt-2" style="max-width: 400px;">
+              <input type="text" class="form-control font-monospace small" [value]="resetPasswordResult.tempPassword" readonly>
+              <button class="btn btn-outline-secondary" type="button" (click)="copyTempPassword()">
+                <i class="bi" [ngClass]="copiedTempPassword ? 'bi-check-lg' : 'bi-clipboard'"></i>
+              </button>
+            </div>
+            <button type="button" class="btn-close" (click)="resetPasswordResult = null"></button>
+          </div>
+
           <!-- Table -->
           <div *ngIf="!loading && !error" class="table-responsive">
             <table class="table table-hover">
@@ -69,10 +82,13 @@
                       <a [routerLink]="['/admin/users', user.id, 'edit']" class="btn btn-warning" title="Modifier">
                         <i class="bi bi-pencil"></i>
                       </a>
-                      <button (click)="toggleUserStatus(user.id)" 
-                              [class]="user.active ? 'btn btn-secondary' : 'btn btn-success'" 
+                      <button (click)="toggleUserStatus(user.id)"
+                              [class]="user.active ? 'btn btn-secondary' : 'btn btn-success'"
                               [title]="user.active ? 'Désactiver' : 'Activer'">
                         <i [class]="user.active ? 'bi bi-slash-circle' : 'bi bi-check-circle'"></i>
+                      </button>
+                      <button (click)="resetPassword(user)" class="btn btn-outline-primary" title="Réinitialiser le mot de passe">
+                        <i class="bi bi-key"></i>
                       </button>
                       <button (click)="deleteUser(user.id)" class="btn btn-danger" title="Supprimer">
                         <i class="bi bi-trash"></i>

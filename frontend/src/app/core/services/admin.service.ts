@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserManagement } from '../models/admin.model';
+import { UserManagement, Role } from '../models/admin.model';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -13,10 +13,13 @@ export class AdminService {
   constructor(private api: ApiService) {}
 
   // Users
-  getAllUsers(page: number = 0, size: number = 10): Observable<any> {
-    const params = new HttpParams()
+  getAllUsers(page: number = 0, size: number = 10, companyId?: number): Observable<any> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
+    if (companyId != null) {
+      params = params.set('companyId', companyId.toString());
+    }
     return this.api.get<any>(`${this.apiUrl}/users`,  params );
   }
 
@@ -38,5 +41,14 @@ export class AdminService {
 
   toggleUserStatus(id: number): Observable<UserManagement> {
     return this.api.put<UserManagement>(`${this.apiUrl}/users/${id}/toggle-status`, {});
+  }
+
+  resetPassword(id: number): Observable<{ tempPassword: string }> {
+    return this.api.put<{ tempPassword: string }>(`${this.apiUrl}/users/${id}/reset-password`, {});
+  }
+
+  // Roles
+  getAssignableRoles(): Observable<Role[]> {
+    return this.api.get<Role[]>(`${this.apiUrl}/roles`);
   }
 }

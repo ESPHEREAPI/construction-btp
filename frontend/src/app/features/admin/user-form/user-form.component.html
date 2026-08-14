@@ -46,8 +46,18 @@
 
               <div class="col-md-6 mb-3" *ngIf="!isEditMode">
                 <label class="form-label">Mot de passe *</label>
-                <input type="password" class="form-control" [(ngModel)]="user.password" 
+                <input type="password" class="form-control" [(ngModel)]="user.password"
                        name="password" [required]="!isEditMode">
+              </div>
+
+              <div class="col-12 mb-3">
+                <label class="form-label d-block">Rôles *</label>
+                <div class="form-check form-check-inline" *ngFor="let role of availableRoles">
+                  <input type="checkbox" class="form-check-input" [id]="'role-' + role.id"
+                    [checked]="user.roleIds.includes(role.id)" (change)="toggleRole(role.id)">
+                  <label class="form-check-label" [for]="'role-' + role.id">{{ role.name }}</label>
+                </div>
+                <div class="form-text text-danger" *ngIf="user.roleIds.length === 0">Sélectionnez au moins un rôle</div>
               </div>
             </div>
 
@@ -55,7 +65,7 @@
               <button type="button" class="btn btn-secondary" (click)="onCancel()">
                 Annuler
               </button>
-              <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid || loading">
+              <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid || loading || user.roleIds.length === 0">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
                 {{ isEditMode ? 'Modifier' : 'Créer' }}
               </button>
