@@ -1,5 +1,6 @@
 package com.construction.material.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -56,9 +57,13 @@ public class Material {
     /**
      * Null = system material, seeded at startup and visible to every company.
      * Non-null = created by that company, visible only to it.
+     * Excluded from JSON: lazy and never rendered by the frontend, and
+     * serializing it after the request's Hibernate session closes throws
+     * LazyInitializationException for any company-owned material.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
+    @JsonIgnore
     private Company company;
 
     @Column(precision = 15, scale = 3)
