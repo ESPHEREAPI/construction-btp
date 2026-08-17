@@ -9,6 +9,8 @@
         <div class="card-body">
           <h5 class="card-title">{{ (isEditMode ? 'materials.edit' : 'materials.add') | translate }}</h5>
 
+          <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
           <form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
             <div class="row mb-3">
               <label class="col-sm-3 col-form-label">Code *</label>

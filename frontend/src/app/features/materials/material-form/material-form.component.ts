@@ -18,6 +18,7 @@ export class MaterialFormComponent implements OnInit {
   isEditMode = false;
   materialId?: number;
   loading = false;
+  error = '';
   units = Object.values(MaterialUnit);
 
   constructor(
@@ -61,6 +62,7 @@ export class MaterialFormComponent implements OnInit {
     if (this.materialForm.invalid) return;
 
     this.loading = true;
+    this.error = '';
     const material: Material = this.materialForm.value;
 
     const operation = this.isEditMode && this.materialId
@@ -69,7 +71,12 @@ export class MaterialFormComponent implements OnInit {
 
     operation.subscribe({
       next: () => this.router.navigate(['/materials']),
-      error: () => this.loading = false
+      error: (err) => {
+        this.loading = false;
+        this.error = err?.error?.message || err?.error?.code
+          || Object.values(err?.error || {}).join(' ')
+          || 'Erreur lors de l\'enregistrement du matériau';
+      }
     });
   }
 
