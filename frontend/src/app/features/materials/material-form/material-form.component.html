@@ -45,7 +45,21 @@
             <div class="row mb-3">
               <label class="col-sm-3 col-form-label">{{ 'materials.category' | translate }}</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" formControlName="category">
+                <div class="input-group" *ngIf="!showCustomCategory">
+                  <select class="form-select" [value]="materialForm.get('category')?.value || ''" (change)="onCategoryChange($event)">
+                    <option value="">—</option>
+                    <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+                  </select>
+                  <button type="button" class="btn btn-outline-secondary" title="Nouvelle catégorie" (click)="showCustomCategory = true">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+                <div class="input-group" *ngIf="showCustomCategory">
+                  <input type="text" class="form-control" formControlName="category" placeholder="Nouvelle catégorie">
+                  <button type="button" class="btn btn-outline-secondary" title="Choisir dans la liste" (click)="showCustomCategory = false">
+                    <i class="bi bi-list"></i>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -59,7 +73,21 @@
             <div class="row mb-3">
               <label class="col-sm-3 col-form-label">{{ 'materials.supplier' | translate }}</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" formControlName="supplier">
+                <div class="input-group" *ngIf="!showCustomSupplier">
+                  <select class="form-select" [value]="materialForm.get('supplier')?.value || ''" (change)="onSupplierChange($event)">
+                    <option value="">—</option>
+                    <option *ngFor="let s of suppliers" [value]="s">{{ s }}</option>
+                  </select>
+                  <button type="button" class="btn btn-outline-secondary" title="Nouveau fournisseur" (click)="showCustomSupplier = true">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+                <div class="input-group" *ngIf="showCustomSupplier">
+                  <input type="text" class="form-control" formControlName="supplier" placeholder="Nouveau fournisseur">
+                  <button type="button" class="btn btn-outline-secondary" title="Choisir dans la liste" (click)="showCustomSupplier = false">
+                    <i class="bi bi-list"></i>
+                  </button>
+                </div>
               </div>
             </div>
 

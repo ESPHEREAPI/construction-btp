@@ -21,6 +21,11 @@ export class MaterialFormComponent implements OnInit {
   error = '';
   units = Object.values(MaterialUnit);
 
+  categories: string[] = [];
+  suppliers: string[] = [];
+  showCustomCategory = false;
+  showCustomSupplier = false;
+
   constructor(
     private fb: FormBuilder,
     private materialService: MaterialService,
@@ -30,6 +35,8 @@ export class MaterialFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.loadCategories();
+    this.loadSuppliers();
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -37,6 +44,41 @@ export class MaterialFormComponent implements OnInit {
         this.loadMaterial(this.materialId);
       }
     });
+  }
+
+  private loadCategories(): void {
+    this.materialService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+        this.ensureOptionPresent(this.categories, this.materialForm.get('category')?.value);
+      }
+    });
+  }
+
+  private loadSuppliers(): void {
+    this.materialService.getSuppliers().subscribe({
+      next: (data) => {
+        this.suppliers = data;
+        this.ensureOptionPresent(this.suppliers, this.materialForm.get('supplier')?.value);
+      }
+    });
+  }
+
+  /** Keeps a value already on the form selectable even if it wasn't in the fetched distinct list yet. */
+  private ensureOptionPresent(options: string[], value: string | null | undefined): void {
+    if (value && !options.includes(value)) {
+      options.push(value);
+    }
+  }
+
+  onCategoryChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.materialForm.get('category')?.setValue(value);
+  }
+
+  onSupplierChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.materialForm.get('supplier')?.setValue(value);
   }
 
   initForm(): void {
@@ -54,7 +96,11 @@ export class MaterialFormComponent implements OnInit {
 
   loadMaterial(id: number): void {
     this.materialService.getById(id).subscribe({
-      next: (material) => this.materialForm.patchValue(material)
+      next: (material) => {
+        this.materialForm.patchValue(material);
+        this.ensureOptionPresent(this.categories, material.category);
+        this.ensureOptionPresent(this.suppliers, material.supplier);
+      }
     });
   }
 

@@ -85,4 +85,18 @@ public class MaterialController {
         moduleAccessGuard.require(LicenseModule.MATERIALS);
         return ResponseEntity.ok(materialService.findActive());
     }
+
+    @GetMapping("/categories")
+    @Operation(summary = "List distinct material categories visible to the current tenant")
+    public ResponseEntity<List<String>> getCategories() {
+        moduleAccessGuard.require(LicenseModule.MATERIALS);
+        return ResponseEntity.ok(materialService.findCategories());
+    }
+
+    @GetMapping("/suppliers")
+    @Operation(summary = "List distinct material suppliers visible to the current tenant")
+    public ResponseEntity<List<String>> getSuppliers() {
+        moduleAccessGuard.require(LicenseModule.MATERIALS);
+        return ResponseEntity.ok(materialService.findSuppliers());
+    }
 }

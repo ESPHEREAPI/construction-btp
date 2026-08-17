@@ -99,6 +99,22 @@ public class MaterialServiceImpl implements MaterialService {
                 : materialRepository.findByActiveTrue();
     }
 
+    @Override
+    public List<String> findCategories() {
+        Long companyId = TenantContext.get();
+        return companyId != null
+                ? materialRepository.findDistinctCategoriesByCompany(companyId)
+                : materialRepository.findDistinctCategories();
+    }
+
+    @Override
+    public List<String> findSuppliers() {
+        Long companyId = TenantContext.get();
+        return companyId != null
+                ? materialRepository.findDistinctSuppliersByCompany(companyId)
+                : materialRepository.findDistinctSuppliers();
+    }
+
     /** Super Admin (no company) sees everything; a company user sees system materials plus its own. */
     private boolean isVisibleToCurrentTenant(Material material) {
         Long companyId = TenantContext.get();

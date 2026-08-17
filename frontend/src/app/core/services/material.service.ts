@@ -84,6 +84,13 @@ export class MaterialService {
   }
 
   /**
+   * Récupérer tous les fournisseurs de matériaux
+   */
+  getSuppliers(): Observable<string[]> {
+    return this.api.get<string[]>(`${this.apiUrl}/suppliers`);
+  }
+
+  /**
    * Récupérer les matériaux disponibles (avec stock)
    */
   getAvailable(page: number = 0, size: number = 100): Observable<any> {

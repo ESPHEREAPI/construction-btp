@@ -14,4 +14,6 @@ public interface MaterialService {
     void deleteById(Long id);
     List<Material> findByCategory(String category);
     List<Material> findActive();
+    List<String> findCategories();
+    List<String> findSuppliers();
 }
