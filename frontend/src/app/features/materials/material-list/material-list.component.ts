@@ -14,7 +14,10 @@ import { Material } from '../../../core/models/material.model';
 })
 export class MaterialListComponent implements OnInit {
   materials: Material[] = [];
+  hiddenMaterials: Material[] = [];
   loading = true;
+  showHidden = false;
+  error = '';
 
   constructor(private materialService: MaterialService) {}
 
@@ -23,6 +26,7 @@ export class MaterialListComponent implements OnInit {
   }
 
   loadMaterials(): void {
+    this.loading = true;
     this.materialService.getAll().subscribe({
       next: (data) => {
         this.materials = data;
@@ -35,13 +39,42 @@ export class MaterialListComponent implements OnInit {
     });
   }
 
+  /** A material with no owning company is part of the shared catalog - read/hide-only for a company user. */
+  isSystemMaterial(material: Material): boolean {
+    return material.company === null || material.company === undefined;
+  }
+
   deleteMaterial(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce matériau ?')) {
       this.materialService.delete(id).subscribe({
-        next: () => {
-          this.loadMaterials();
-        }
+        next: () => this.loadMaterials(),
+        error: (err) => alert(err?.error?.message || 'Erreur lors de la suppression')
       });
     }
+  }
+
+  hideMaterial(id: number): void {
+    this.materialService.hide(id).subscribe({
+      next: () => this.loadMaterials(),
+      error: (err) => alert(err?.error?.message || 'Erreur lors du masquage')
+    });
+  }
+
+  toggleShowHidden(): void {
+    this.showHidden = !this.showHidden;
+    if (this.showHidden) {
+      this.materialService.getHidden().subscribe({
+        next: (data) => (this.hiddenMaterials = data)
+      });
+    }
+  }
+
+  unhideMaterial(id: number): void {
+    this.materialService.unhide(id).subscribe({
+      next: () => {
+        this.hiddenMaterials = this.hiddenMaterials.filter(m => m.id !== id);
+        this.loadMaterials();
+      }
+    });
   }
 }

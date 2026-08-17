@@ -9,6 +9,8 @@ export interface Material {
   supplier?: string;
   active: boolean;
   createdAt?: Date;
+  /** Null = shared catalog material (visible to every company, read/hide-only). Set = owned by that company. */
+  company?: { id: number; name: string } | null;
 }
 
 export enum MaterialUnit {

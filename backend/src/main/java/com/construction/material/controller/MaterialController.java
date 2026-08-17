@@ -99,4 +99,29 @@ public class MaterialController {
         moduleAccessGuard.require(LicenseModule.MATERIALS);
         return ResponseEntity.ok(materialService.findSuppliers());
     }
+
+    @PutMapping("/{id}/hide")
+    @PreAuthorize("hasAnyAuthority('MATERIAL_UPDATE', 'ROLE_ADMIN')")
+    @Operation(summary = "Hide a shared catalog material from this company's material list")
+    public ResponseEntity<Void> hideMaterial(@PathVariable Long id) {
+        moduleAccessGuard.require(LicenseModule.MATERIALS);
+        materialService.hide(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/unhide")
+    @PreAuthorize("hasAnyAuthority('MATERIAL_UPDATE', 'ROLE_ADMIN')")
+    @Operation(summary = "Make a previously hidden shared catalog material visible again")
+    public ResponseEntity<Void> unhideMaterial(@PathVariable Long id) {
+        moduleAccessGuard.require(LicenseModule.MATERIALS);
+        materialService.unhide(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/hidden")
+    @Operation(summary = "List shared catalog materials this company has hidden")
+    public ResponseEntity<List<Material>> getHiddenMaterials() {
+        moduleAccessGuard.require(LicenseModule.MATERIALS);
+        return ResponseEntity.ok(materialService.findHidden());
+    }
 }

@@ -91,6 +91,27 @@ export class MaterialService {
   }
 
   /**
+   * Masquer un matériau du catalogue partagé (n'affecte que la compagnie courante)
+   */
+  hide(id: number): Observable<void> {
+    return this.api.put<void>(`${this.apiUrl}/${id}/hide`, {});
+  }
+
+  /**
+   * Réafficher un matériau du catalogue partagé précédemment masqué
+   */
+  unhide(id: number): Observable<void> {
+    return this.api.put<void>(`${this.apiUrl}/${id}/unhide`, {});
+  }
+
+  /**
+   * Récupérer les matériaux du catalogue partagé masqués par la compagnie courante
+   */
+  getHidden(): Observable<Material[]> {
+    return this.api.get<Material[]>(`${this.apiUrl}/hidden`);
+  }
+
+  /**
    * Récupérer les matériaux disponibles (avec stock)
    */
   getAvailable(page: number = 0, size: number = 100): Observable<any> {

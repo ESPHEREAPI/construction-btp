@@ -16,4 +16,9 @@ public interface MaterialService {
     List<Material> findActive();
     List<String> findCategories();
     List<String> findSuppliers();
+
+    /** Hides a shared catalog material from the current company's own view only. */
+    void hide(Long id);
+    void unhide(Long id);
+    List<Material> findHidden();
 }
