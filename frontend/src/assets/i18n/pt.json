@@ -74,7 +74,7 @@
     "ROLE_PROJECT_MANAGER": "Gerente de Projeto",
     "ROLE_SITE_MANAGER": "Gerente de Obra",
     "ROLE_INVENTORY_MANAGER": "Gerente de Inventário",
-    "ROLE_READ_ONLY": "Somente Leitura"
+    "ROLE_READ_ONLY": "Funcionário"
   },
   "common": {
     "save": "Salvar",

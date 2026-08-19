@@ -24,4 +24,6 @@ public class UserResponse {
     private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long assignedProjectId;
+    private String assignedProjectName;
 }

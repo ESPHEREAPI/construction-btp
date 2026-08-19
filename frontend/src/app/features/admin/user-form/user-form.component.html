@@ -59,6 +59,15 @@
                 </div>
                 <div class="form-text text-danger" *ngIf="user.roleIds.length === 0">Sélectionnez au moins un rôle</div>
               </div>
+
+              <div class="col-md-6 mb-3" *ngIf="showProjectAssignment">
+                <label class="form-label">Projet affecté</label>
+                <select class="form-select" [(ngModel)]="user.assignedProjectId" name="assignedProjectId">
+                  <option [ngValue]="null">— Aucun —</option>
+                  <option *ngFor="let project of availableProjects" [ngValue]="project.id">{{ project.code }} - {{ project.name }}</option>
+                </select>
+                <div class="form-text">Cet utilisateur ne verra que les données de ce projet.</div>
+              </div>
             </div>
 
             <div class="d-flex justify-content-end gap-2">

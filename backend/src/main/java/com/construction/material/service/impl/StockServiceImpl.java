@@ -13,6 +13,7 @@ import com.construction.material.repository.AlertRepository;
 import com.construction.material.repository.StockMovementRepository;
 import com.construction.material.repository.StockRepository;
 import com.construction.material.repository.UserRepository;
+import com.construction.material.security.ProjectContext;
 import com.construction.material.security.TenantContext;
 import com.construction.material.service.StockService;
 import jakarta.persistence.criteria.Predicate;
@@ -184,12 +185,15 @@ public class StockServiceImpl implements StockService {
 
     private Specification<Stock> buildSpecification(Long projectId, boolean lowStockOnly) {
         Long companyId = TenantContext.get();
+        Long scopedProjectId = ProjectContext.get();
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (companyId != null) {
                 predicates.add(cb.equal(root.get("project").get("company").get("id"), companyId));
             }
-            if (projectId != null) {
+            if (scopedProjectId != null) {
+                predicates.add(cb.equal(root.get("project").get("id"), scopedProjectId));
+            } else if (projectId != null) {
                 predicates.add(cb.equal(root.get("project").get("id"), projectId));
             }
             if (lowStockOnly) {
@@ -206,6 +210,10 @@ public class StockServiceImpl implements StockService {
         boolean visible = companyId == null
                 || (stock.getProject().getCompany() != null && companyId.equals(stock.getProject().getCompany().getId()));
         if (!visible) {
+            throw new ResourceNotFoundException(msg("stock.not.found"));
+        }
+        Long scopedProjectId = ProjectContext.get();
+        if (scopedProjectId != null && !scopedProjectId.equals(stock.getProject().getId())) {
             throw new ResourceNotFoundException(msg("stock.not.found"));
         }
         return stock;

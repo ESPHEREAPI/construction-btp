@@ -74,7 +74,7 @@
     "ROLE_PROJECT_MANAGER": "Project Manager",
     "ROLE_SITE_MANAGER": "Site Manager",
     "ROLE_INVENTORY_MANAGER": "Inventory Manager",
-    "ROLE_READ_ONLY": "Read Only"
+    "ROLE_READ_ONLY": "Employee"
   },
   "common": {
     "save": "Save",

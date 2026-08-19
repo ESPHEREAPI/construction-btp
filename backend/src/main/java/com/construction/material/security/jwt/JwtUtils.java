@@ -17,6 +17,7 @@ public class JwtUtils {
 
     private static final String CLAIM_COMPANY_ID = "companyId";
     private static final String CLAIM_MUST_CHANGE_PASSWORD = "mustChangePassword";
+    private static final String CLAIM_ASSIGNED_PROJECT_ID = "assignedProjectId";
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -34,6 +35,7 @@ public class JwtUtils {
         if (userPrincipal instanceof CustomUserDetails customUserDetails) {
             builder.claim(CLAIM_COMPANY_ID, customUserDetails.getCompanyId());
             builder.claim(CLAIM_MUST_CHANGE_PASSWORD, customUserDetails.isMustChangePassword());
+            builder.claim(CLAIM_ASSIGNED_PROJECT_ID, customUserDetails.getAssignedProjectId());
         }
 
         return builder.signWith(getSigningKey()).compact();
@@ -51,6 +53,11 @@ public class JwtUtils {
     public boolean getMustChangePasswordFromJwtToken(String token) {
         Object value = parseClaims(token).get(CLAIM_MUST_CHANGE_PASSWORD);
         return value != null && Boolean.parseBoolean(value.toString());
+    }
+
+    public Long getAssignedProjectIdFromJwtToken(String token) {
+        Object projectId = parseClaims(token).get(CLAIM_ASSIGNED_PROJECT_ID);
+        return projectId != null ? Long.valueOf(projectId.toString()) : null;
     }
 
     private Claims parseClaims(String token) {

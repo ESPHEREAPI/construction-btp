@@ -55,6 +55,15 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    /**
+     * The single project this user is scoped to (Chef de Projet, Chef de Chantier,
+     * Gestionnaire d'Inventaire, Employé). Null for Super Admin/Company Admin/Admin,
+     * who are never project-restricted, and for any operational user not yet assigned.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_project_id")
+    private Project assignedProject;
+
     @Column(nullable = false)
     @Builder.Default
     private Boolean mustChangePassword = true;

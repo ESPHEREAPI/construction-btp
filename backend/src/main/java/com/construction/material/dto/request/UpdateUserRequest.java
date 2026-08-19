@@ -24,4 +24,7 @@ public class UpdateUserRequest {
 
     @NotEmpty
     private Set<Long> roleIds;
+
+    /** Ignored for admin-tier roles (Super Admin/Company Admin/Admin), who are never project-restricted. */
+    private Long assignedProjectId;
 }

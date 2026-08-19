@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/materials")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyAuthority('MATERIAL_READ', 'ROLE_ADMIN')")
 @Tag(name = "Materials", description = "Material management APIs")
 public class MaterialController {
 

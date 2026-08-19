@@ -28,13 +28,19 @@ interface MenuItem {
 export class SidebarComponent implements OnInit {
   @Input() collapsed = false;
 
+  /** Employé (ROLE_READ_ONLY) is scoped to Stock only - the other operational modules are for the remaining roles. */
+  private readonly NON_EMPLOYEE_ROLES = [
+    'ROLE_SUPER_ADMIN', 'ROLE_COMPANY_ADMIN', 'ROLE_ADMIN',
+    'ROLE_PROJECT_MANAGER', 'ROLE_SITE_MANAGER', 'ROLE_INVENTORY_MANAGER'
+  ];
+
   private allMenuItems: MenuItem[] = [
     { path: '/dashboard', icon: 'bi-grid', label: 'nav.dashboard' },
     { path: '/my-license', icon: 'bi-key', label: 'nav.myLicense', companyScoped: true },
-    { path: '/projects', icon: 'bi-building', label: 'nav.projects', companyScoped: true, module: 'PROJECTS' },
-    { path: '/materials', icon: 'bi-box', label: 'nav.materials', companyScoped: true, module: 'MATERIALS' },
-    { path: '/orders', icon: 'bi-cart', label: 'nav.orders', companyScoped: true, module: 'ORDERS' },
-    { path: '/usages', icon: 'bi-graph-up', label: 'nav.usage', companyScoped: true, module: 'USAGE' },
+    { path: '/projects', icon: 'bi-building', label: 'nav.projects', roles: this.NON_EMPLOYEE_ROLES, companyScoped: true, module: 'PROJECTS' },
+    { path: '/materials', icon: 'bi-box', label: 'nav.materials', roles: this.NON_EMPLOYEE_ROLES, companyScoped: true, module: 'MATERIALS' },
+    { path: '/orders', icon: 'bi-cart', label: 'nav.orders', roles: this.NON_EMPLOYEE_ROLES, companyScoped: true, module: 'ORDERS' },
+    { path: '/usages', icon: 'bi-graph-up', label: 'nav.usage', roles: this.NON_EMPLOYEE_ROLES, companyScoped: true, module: 'USAGE' },
     { path: '/stocks', icon: 'bi-stack', label: 'nav.stock', companyScoped: true, module: 'STOCK' },
     { path: '/admin/users', icon: 'bi-gear', label: 'nav.admin', roles: ['ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'], companyScoped: true, module: 'ADMIN' },
   ];

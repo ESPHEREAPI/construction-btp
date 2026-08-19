@@ -22,8 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -63,6 +66,7 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) {
         seedPermissionsAndRoles();
+        backfillRolePermissions();
         seedLicensePlans();
         backfillLicensePlanDefaultModules();
         seedSelfRegistrationSetting();
@@ -102,6 +106,95 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         log.info("Seeded {} permissions and {} roles", allPermissions.size(), Role.RoleName.values().length);
+    }
+
+    /**
+     * seedPermissionsAndRoles() only runs once (roleRepository.count() > 0 guard), so a
+     * company already deployed before this permission matrix existed would otherwise be
+     * stuck on the original "every operational role gets everything" seed. Roles are
+     * system-managed, not user-customizable, so unconditionally reapplying the intended
+     * set on every boot is safe and self-healing - same pattern as
+     * backfillLicensePlanDefaultModules() below.
+     */
+    private void backfillRolePermissions() {
+        Set<Permission.PermissionName> all = Set.of(Permission.PermissionName.values());
+
+        Map<Role.RoleName, Set<Permission.PermissionName>> matrix = new EnumMap<>(Role.RoleName.class);
+        matrix.put(Role.RoleName.ROLE_SUPER_ADMIN, all);
+        matrix.put(Role.RoleName.ROLE_COMPANY_ADMIN, all);
+        matrix.put(Role.RoleName.ROLE_ADMIN, all);
+        matrix.put(Role.RoleName.ROLE_PROJECT_MANAGER, Set.of(
+                Permission.PermissionName.PROJECT_READ,
+                Permission.PermissionName.MATERIAL_READ,
+                Permission.PermissionName.QUANTIFICATION_CREATE,
+                Permission.PermissionName.QUANTIFICATION_READ,
+                Permission.PermissionName.QUANTIFICATION_UPDATE,
+                Permission.PermissionName.QUANTIFICATION_DELETE,
+                Permission.PermissionName.ORDER_CREATE,
+                Permission.PermissionName.ORDER_READ,
+                Permission.PermissionName.ORDER_UPDATE,
+                Permission.PermissionName.ORDER_APPROVE,
+                Permission.PermissionName.USAGE_CREATE,
+                Permission.PermissionName.USAGE_READ,
+                Permission.PermissionName.USAGE_UPDATE,
+                Permission.PermissionName.STOCK_READ,
+                Permission.PermissionName.STOCK_UPDATE
+        ));
+        matrix.put(Role.RoleName.ROLE_SITE_MANAGER, Set.of(
+                Permission.PermissionName.PROJECT_READ,
+                Permission.PermissionName.MATERIAL_READ,
+                Permission.PermissionName.ORDER_READ,
+                Permission.PermissionName.ORDER_UPDATE,
+                Permission.PermissionName.USAGE_CREATE,
+                Permission.PermissionName.USAGE_READ,
+                Permission.PermissionName.STOCK_READ,
+                Permission.PermissionName.STOCK_UPDATE
+        ));
+        matrix.put(Role.RoleName.ROLE_INVENTORY_MANAGER, Set.of(
+                Permission.PermissionName.PROJECT_READ,
+                Permission.PermissionName.MATERIAL_CREATE,
+                Permission.PermissionName.MATERIAL_READ,
+                Permission.PermissionName.MATERIAL_UPDATE,
+                Permission.PermissionName.MATERIAL_DELETE,
+                Permission.PermissionName.ORDER_CREATE,
+                Permission.PermissionName.ORDER_READ,
+                Permission.PermissionName.ORDER_UPDATE,
+                Permission.PermissionName.USAGE_READ,
+                Permission.PermissionName.STOCK_READ,
+                Permission.PermissionName.STOCK_UPDATE
+        ));
+        matrix.put(Role.RoleName.ROLE_READ_ONLY, Set.of(
+                Permission.PermissionName.PROJECT_READ,
+                Permission.PermissionName.STOCK_READ
+        ));
+
+        Map<String, Permission> byName = permissionRepository.findAll().stream()
+                .collect(Collectors.toMap(Permission::getName, p -> p));
+
+        roleRepository.findAll().forEach(role -> {
+            Role.RoleName roleName;
+            try {
+                roleName = Role.RoleName.valueOf(role.getName());
+            } catch (IllegalArgumentException e) {
+                return;
+            }
+            Set<Permission.PermissionName> target = matrix.get(roleName);
+            if (target == null) {
+                return;
+            }
+            Set<Permission> targetPermissions = target.stream()
+                    .map(pn -> byName.get(pn.name()))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            Set<String> currentNames = role.getPermissions().stream().map(Permission::getName).collect(Collectors.toSet());
+            Set<String> targetNames = targetPermissions.stream().map(Permission::getName).collect(Collectors.toSet());
+            if (!currentNames.equals(targetNames)) {
+                role.setPermissions(targetPermissions);
+                roleRepository.save(role);
+                log.info("Backfilled permissions for role {} ({} permissions)", role.getName(), targetPermissions.size());
+            }
+        });
     }
 
     private void seedLicensePlans() {

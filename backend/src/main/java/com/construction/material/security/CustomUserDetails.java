@@ -7,8 +7,9 @@ import java.util.Collection;
 
 /**
  * UserDetails implementation that additionally carries the authenticated
- * user's company (tenant) id and mustChangePassword flag, so the JWT and
- * the request-scoped TenantContext can be populated from a single source.
+ * user's company (tenant) id, assigned project id, and mustChangePassword
+ * flag, so the JWT and the request-scoped TenantContext/ProjectContext can
+ * be populated from a single source.
  */
 public class CustomUserDetails implements UserDetails {
 
@@ -18,15 +19,17 @@ public class CustomUserDetails implements UserDetails {
     private final boolean active;
     private final Long companyId;
     private final boolean mustChangePassword;
+    private final Long assignedProjectId;
 
     public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities,
-                              boolean active, Long companyId, boolean mustChangePassword) {
+                              boolean active, Long companyId, boolean mustChangePassword, Long assignedProjectId) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
         this.active = active;
         this.companyId = companyId;
         this.mustChangePassword = mustChangePassword;
+        this.assignedProjectId = assignedProjectId;
     }
 
     public Long getCompanyId() {
@@ -35,6 +38,10 @@ public class CustomUserDetails implements UserDetails {
 
     public boolean isMustChangePassword() {
         return mustChangePassword;
+    }
+
+    public Long getAssignedProjectId() {
+        return assignedProjectId;
     }
 
     @Override

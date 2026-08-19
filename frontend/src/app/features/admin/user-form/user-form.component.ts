@@ -4,7 +4,11 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
+import { ProjectService } from '../../../core/services/project.service';
 import { Role } from '../../../core/models/admin.model';
+
+/** Roles that scope a user to a single assigned project - Super Admin/Company Admin/Admin see everything. */
+const PROJECT_SCOPED_ROLE_NAMES = ['ROLE_PROJECT_MANAGER', 'ROLE_SITE_MANAGER', 'ROLE_INVENTORY_MANAGER', 'ROLE_READ_ONLY'];
 
 
 @Component({
@@ -22,17 +26,20 @@ export class UserFormComponent implements OnInit {
     firstName: '',
     lastName: '',
     phone: '',
-    roleIds: []
+    roleIds: [],
+    assignedProjectId: null
   };
-  
+
   isEditMode = false;
   loading = false;
   error = '';
 
   availableRoles: Role[] = [];
+  availableProjects: any[] = [];
 
   constructor(
     private adminService: AdminService,
+    private projectService: ProjectService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -41,6 +48,11 @@ export class UserFormComponent implements OnInit {
     this.adminService.getAssignableRoles().subscribe({
       next: (roles) => (this.availableRoles = roles),
       error: (err) => console.error(err)
+    });
+
+    this.projectService.getAll().subscribe({
+      next: (data: any) => (this.availableProjects = data?.content || data || []),
+      error: (err: any) => console.error(err)
     });
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -61,6 +73,13 @@ export class UserFormComponent implements OnInit {
     } else {
       this.user.roleIds.push(roleId);
     }
+  }
+
+  /** Whether at least one selected role is project-scoped - only then does the assignment field make sense. */
+  get showProjectAssignment(): boolean {
+    return this.availableRoles
+      .filter(r => this.user.roleIds.includes(r.id))
+      .some(r => PROJECT_SCOPED_ROLE_NAMES.includes(r.name));
   }
 
   loadUser(id: number): void {

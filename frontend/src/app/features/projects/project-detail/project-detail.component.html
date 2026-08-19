@@ -29,7 +29,7 @@
             <div class="col-md-6">
               <p><strong>Start:</strong> {{ project.startDate | date }}</p>
               <p><strong>End:</strong> {{ project.endDate | date }}</p>
-              <p><strong>Budget:</strong> {{ project.budget | number }} FCFA</p>
+              <p *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget | number }} FCFA</p>
             </div>
           </div>
         </div>

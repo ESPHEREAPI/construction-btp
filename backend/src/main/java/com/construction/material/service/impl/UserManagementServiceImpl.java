@@ -7,10 +7,12 @@ import com.construction.material.dto.response.PermissionResponse;
 import com.construction.material.dto.response.RoleResponse;
 import com.construction.material.dto.response.UserResponse;
 import com.construction.material.entity.Permission;
+import com.construction.material.entity.Project;
 import com.construction.material.entity.Role;
 import com.construction.material.entity.User;
 import com.construction.material.exception.BusinessException;
 import com.construction.material.exception.ResourceNotFoundException;
+import com.construction.material.repository.ProjectRepository;
 import com.construction.material.repository.RoleRepository;
 import com.construction.material.repository.UserRepository;
 import com.construction.material.security.TenantContext;
@@ -49,6 +51,9 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -90,6 +95,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         Long companyId = requireCompanyId();
         Set<Role> roles = resolveAssignableRoles(request.getRoleIds());
+        Project assignedProject = resolveAssignedProject(roles, request.getAssignedProjectId(), companyId);
 
         User user = User.builder()
                 .username(request.getUsername())
@@ -102,6 +108,7 @@ public class UserManagementServiceImpl implements UserManagementService {
                 .mustChangePassword(true)
                 .company(buildCompanyRef(companyId))
                 .roles(roles)
+                .assignedProject(assignedProject)
                 .build();
 
         return toResponse(userRepository.save(user));
@@ -115,11 +122,15 @@ public class UserManagementServiceImpl implements UserManagementService {
             throw new BusinessException(msg("user.email.exists"));
         }
 
+        Set<Role> roles = resolveAssignableRoles(request.getRoleIds());
+        Long companyId = user.getCompany() != null ? user.getCompany().getId() : requireCompanyId();
+
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPhone(request.getPhone());
-        user.setRoles(resolveAssignableRoles(request.getRoleIds()));
+        user.setRoles(roles);
+        user.setAssignedProject(resolveAssignedProject(roles, request.getAssignedProjectId(), companyId));
 
         return toResponse(userRepository.save(user));
     }
@@ -179,6 +190,23 @@ public class UserManagementServiceImpl implements UserManagementService {
             throw new BusinessException(msg("user.role.super.admin.forbidden"));
         }
         return new HashSet<>(roles);
+    }
+
+    private static final Set<String> ADMIN_TIER_ROLES = Set.of(
+            "ROLE_SUPER_ADMIN", "ROLE_COMPANY_ADMIN", "ROLE_ADMIN");
+
+    /** Admin-tier roles are never project-restricted; any assignedProjectId sent for them is ignored. */
+    private Project resolveAssignedProject(Set<Role> roles, Long assignedProjectId, Long companyId) {
+        boolean isAdminTier = roles.stream().anyMatch(r -> ADMIN_TIER_ROLES.contains(r.getName()));
+        if (isAdminTier || assignedProjectId == null) {
+            return null;
+        }
+        Project project = projectRepository.findById(assignedProjectId)
+                .orElseThrow(() -> new ResourceNotFoundException(msg("project.not.found")));
+        if (project.getCompany() == null || !companyId.equals(project.getCompany().getId())) {
+            throw new ResourceNotFoundException(msg("project.not.found"));
+        }
+        return project;
     }
 
     private com.construction.material.entity.Company buildCompanyRef(Long companyId) {
@@ -249,6 +277,8 @@ public class UserManagementServiceImpl implements UserManagementService {
                 .lastLoginAt(user.getLastLoginAt())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .assignedProjectId(user.getAssignedProject() != null ? user.getAssignedProject().getId() : null)
+                .assignedProjectName(user.getAssignedProject() != null ? user.getAssignedProject().getName() : null)
                 .build();
     }
 

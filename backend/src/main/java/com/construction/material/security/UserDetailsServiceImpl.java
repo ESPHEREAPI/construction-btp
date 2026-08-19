@@ -41,7 +41,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 authorities,
                 user.getActive(),
                 user.getCompany() != null ? user.getCompany().getId() : null,
-                Boolean.TRUE.equals(user.getMustChangePassword())
+                Boolean.TRUE.equals(user.getMustChangePassword()),
+                user.getAssignedProject() != null ? user.getAssignedProject().getId() : null
         );
     }
 }

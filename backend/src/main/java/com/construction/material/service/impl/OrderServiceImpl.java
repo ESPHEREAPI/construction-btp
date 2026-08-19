@@ -19,6 +19,7 @@ import com.construction.material.repository.ProjectRepository;
 import com.construction.material.repository.StockMovementRepository;
 import com.construction.material.repository.StockRepository;
 import com.construction.material.repository.UserRepository;
+import com.construction.material.security.ProjectContext;
 import com.construction.material.security.TenantContext;
 import com.construction.material.service.OrderService;
 import jakarta.persistence.criteria.Predicate;
@@ -214,12 +215,16 @@ public class OrderServiceImpl implements OrderService {
 
     private Specification<Order> buildSpecification(Long projectId, Order.OrderStatus status) {
         Long companyId = TenantContext.get();
+        Long scopedProjectId = ProjectContext.get();
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (companyId != null) {
                 predicates.add(cb.equal(root.get("project").get("company").get("id"), companyId));
             }
-            if (projectId != null) {
+            if (scopedProjectId != null) {
+                // A project-scoped user can never see another project - this overrides any client-supplied projectId.
+                predicates.add(cb.equal(root.get("project").get("id"), scopedProjectId));
+            } else if (projectId != null) {
                 predicates.add(cb.equal(root.get("project").get("id"), projectId));
             }
             if (status != null) {
@@ -262,7 +267,12 @@ public class OrderServiceImpl implements OrderService {
 
     private boolean belongsToCurrentTenant(Project project) {
         Long companyId = TenantContext.get();
-        return companyId == null || (project.getCompany() != null && companyId.equals(project.getCompany().getId()));
+        boolean sameCompany = companyId == null || (project.getCompany() != null && companyId.equals(project.getCompany().getId()));
+        if (!sameCompany) {
+            return false;
+        }
+        Long scopedProjectId = ProjectContext.get();
+        return scopedProjectId == null || scopedProjectId.equals(project.getId());
     }
 
     private User currentUser() {

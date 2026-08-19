@@ -1,5 +1,6 @@
 package com.construction.material.security.jwt;
 
+import com.construction.material.security.ProjectContext;
 import com.construction.material.security.TenantContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,6 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 TenantContext.set(jwtUtils.getCompanyIdFromJwtToken(jwt));
+                ProjectContext.set(jwtUtils.getAssignedProjectIdFromJwtToken(jwt));
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
@@ -47,6 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } finally {
             TenantContext.clear();
+            ProjectContext.clear();
         }
     }
 

@@ -13,6 +13,8 @@ export interface UserManagement {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+  assignedProjectId?: number;
+  assignedProjectName?: string;
 }
 
 export interface Role {

@@ -74,7 +74,7 @@
     "ROLE_PROJECT_MANAGER": "Chef de Projet",
     "ROLE_SITE_MANAGER": "Chef de Chantier",
     "ROLE_INVENTORY_MANAGER": "Gestionnaire d'Inventaire",
-    "ROLE_READ_ONLY": "Lecture Seule"
+    "ROLE_READ_ONLY": "Employé"
   },
   "common": {
     "save": "Enregistrer",
