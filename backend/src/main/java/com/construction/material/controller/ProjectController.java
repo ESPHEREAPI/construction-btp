@@ -34,7 +34,7 @@ public class ProjectController {
 
     @Operation(summary = "Create a new project")
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('PROJECT_CREATE', 'ROLE_ADMIN', 'ROLE_PROJECT_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('PROJECT_CREATE', 'ROLE_ADMIN')")
     public ResponseEntity<ProjectResponse> create(@Valid @RequestBody ProjectRequest request) {
         moduleAccessGuard.require(LicenseModule.PROJECTS);
         return new ResponseEntity<>(projectService.create(request), HttpStatus.CREATED);
@@ -42,7 +42,7 @@ public class ProjectController {
 
     @Operation(summary = "Update a project")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('PROJECT_UPDATE', 'ROLE_ADMIN', 'ROLE_PROJECT_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('PROJECT_UPDATE', 'ROLE_ADMIN')")
     public ResponseEntity<ProjectResponse> update(@PathVariable Long id, @Valid @RequestBody ProjectRequest request) {
         moduleAccessGuard.require(LicenseModule.PROJECTS);
         return ResponseEntity.ok(projectService.update(id, request));

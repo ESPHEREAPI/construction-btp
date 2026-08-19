@@ -9,7 +9,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-title">{{ project.name }}</h5>
-            <div>
+            <div *ngIf="canManageProjects">
               <button class="btn btn-warning btn-sm me-2" [routerLink]="['/projects', project.id, 'edit']">
                 <i class="bi bi-pencil"></i> {{ 'common.edit' | translate }}
               </button>

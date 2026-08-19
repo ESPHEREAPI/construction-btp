@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectService } from '../../../core/services/project.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Project } from '../../../core/models/project.model';
+
+const PROJECT_MANAGEMENT_ROLES = ['ROLE_SUPER_ADMIN', 'ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'];
 
 @Component({
   selector: 'app-project-list',
@@ -17,7 +20,12 @@ export class ProjectListComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private projectService: ProjectService) {}
+  constructor(private projectService: ProjectService, private authService: AuthService) {}
+
+  /** Only Admin Compagnie/Administrateur/Super Admin create, edit or delete projects - everyone else just works within their assigned project. */
+  get canManageProjects(): boolean {
+    return this.authService.hasAnyRole(PROJECT_MANAGEMENT_ROLES);
+  }
 
   ngOnInit(): void {
     this.loadProjects();
