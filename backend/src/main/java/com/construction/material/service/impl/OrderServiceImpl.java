@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
         Project project = loadAccessibleProject(request.getProjectId());
 
         Order order = Order.builder()
+                .orderNumber(generateOrderNumber())
                 .project(project)
                 .supplier(request.getSupplier())
                 .orderDate(request.getOrderDate())
@@ -80,11 +82,7 @@ public class OrderServiceImpl implements OrderService {
         applyItems(order, request.getItems());
         order.calculateTotalAmount();
 
-        Order saved = orderRepository.save(order);
-        saved.setOrderNumber("CMD-" + String.format("%06d", saved.getId()));
-        saved = orderRepository.save(saved);
-
-        return toResponse(saved);
+        return toResponse(orderRepository.save(order));
     }
 
     @Override
@@ -184,6 +182,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // --- helpers -------------------------------------------------------
+
+    /** order_number is NOT NULL, so it must be ready before the first save - no DB-generated id to lean on yet. */
+    private String generateOrderNumber() {
+        int random = ThreadLocalRandom.current().nextInt(100, 1000);
+        return "CMD-" + System.currentTimeMillis() + "-" + random;
+    }
 
     private void applyItems(Order order, List<OrderItemRequest> itemRequests) {
         List<OrderItem> items = new ArrayList<>();
