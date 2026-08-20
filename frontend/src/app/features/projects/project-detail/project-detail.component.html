@@ -4,7 +4,7 @@
 
 <section class="section" *ngIf="!loading && project">
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
@@ -32,6 +32,88 @@
               <p *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget | number }} FCFA</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <!-- Stock -->
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title"><i class="bi bi-stack me-1"></i> Stock</h6>
+          <div *ngIf="loadingStocks" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+          </div>
+          <div *ngIf="!loadingStocks && stocks.length === 0" class="text-muted small">Aucun stock pour ce projet.</div>
+          <table class="table table-sm" *ngIf="!loadingStocks && stocks.length > 0">
+            <thead>
+              <tr><th>Matériau</th><th>Dispo.</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of stocks">
+                <td>
+                  {{ s.materialName }}
+                  <span class="badge bg-warning ms-1" *ngIf="s.lowStockAlert" title="Stock faible"><i class="bi bi-exclamation-triangle"></i></span>
+                </td>
+                <td>{{ s.availableQuantity }} {{ s.unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <a [routerLink]="['/stocks']" class="small">Voir tout le stock →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commandes -->
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title"><i class="bi bi-cart me-1"></i> Commandes récentes</h6>
+          <div *ngIf="loadingOrders" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+          </div>
+          <div *ngIf="!loadingOrders && orders.length === 0" class="text-muted small">Aucune commande pour ce projet.</div>
+          <table class="table table-sm" *ngIf="!loadingOrders && orders.length > 0">
+            <thead>
+              <tr><th>Commande</th><th>Statut</th><th>Montant</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let o of orders">
+                <td>{{ o.supplier }}</td>
+                <td><span class="badge" [ngClass]="'bg-' + orderStatusColors[o.status]">{{ orderStatusLabels[o.status] }}</span></td>
+                <td>{{ o.totalAmount | number:'1.2-2' }} FCFA</td>
+              </tr>
+            </tbody>
+          </table>
+          <a [routerLink]="['/orders']" class="small">Voir toutes les commandes →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Utilisation -->
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title"><i class="bi bi-graph-up me-1"></i> Utilisation récente</h6>
+          <div *ngIf="loadingUsages" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+          </div>
+          <div *ngIf="!loadingUsages && usages.length === 0" class="text-muted small">Aucune utilisation enregistrée.</div>
+          <table class="table table-sm" *ngIf="!loadingUsages && usages.length > 0">
+            <thead>
+              <tr><th>Matériau</th><th>Qté</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of usages">
+                <td>{{ u.materialName }}</td>
+                <td>{{ u.quantity }} {{ u.unit }}</td>
+                <td>{{ u.usageDate | date:'dd/MM/yy' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <a [routerLink]="['/usages']" class="small">Voir toute l'utilisation →</a>
         </div>
       </div>
     </div>
