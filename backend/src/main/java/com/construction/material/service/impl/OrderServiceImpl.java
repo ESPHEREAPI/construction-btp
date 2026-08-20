@@ -98,7 +98,6 @@ public class OrderServiceImpl implements OrderService {
         order.setExpectedDeliveryDate(request.getExpectedDeliveryDate());
         order.setNotes(request.getNotes());
 
-        order.getItems().clear();
         applyItems(order, request.getItems());
         order.calculateTotalAmount();
 
@@ -190,8 +189,15 @@ public class OrderServiceImpl implements OrderService {
         return "CMD-" + System.currentTimeMillis() + "-" + random;
     }
 
+    /**
+     * Mutates order.getItems() in place rather than replacing it with a new List - on an
+     * update, order.getItems() is a Hibernate-managed collection tracked by the
+     * orphanRemoval cascade, and swapping it for a new instance via setItems() breaks
+     * that tracking ("collection with cascade=all-delete-orphan was no longer referenced").
+     */
     private void applyItems(Order order, List<OrderItemRequest> itemRequests) {
-        List<OrderItem> items = new ArrayList<>();
+        List<OrderItem> items = order.getItems();
+        items.clear();
         for (OrderItemRequest itemRequest : itemRequests) {
             Material material = loadAccessibleMaterial(itemRequest.getMaterialId());
             OrderItem item = OrderItem.builder()
@@ -204,7 +210,6 @@ public class OrderServiceImpl implements OrderService {
             item.calculateTotalPrice();
             items.add(item);
         }
-        order.setItems(items);
     }
 
     private void requireStatus(Order order, Order.OrderStatus expected) {
