@@ -35,11 +35,11 @@
               <div class="col-12 mb-3">
                 <label class="form-label d-block">Permissions</label>
                 <div class="permission-group mb-3" *ngFor="let group of permissionGroups">
-                  <div class="fw-bold text-muted small text-uppercase mb-1">{{ group.category }}</div>
+                  <div class="fw-bold text-muted small text-uppercase mb-1">{{ 'permissionCategories.' + group.category | translate }}</div>
                   <div class="form-check form-check-inline" *ngFor="let permission of group.permissions">
                     <input type="checkbox" class="form-check-input" [id]="'perm-' + permission.id"
                       [checked]="role.permissionIds.includes(permission.id)" (change)="togglePermission(permission.id)">
-                    <label class="form-check-label" [for]="'perm-' + permission.id">{{ permission.name }}</label>
+                    <label class="form-check-label" [for]="'perm-' + permission.id">{{ 'permissions.' + permission.name | translate }}</label>
                   </div>
                 </div>
               </div>
