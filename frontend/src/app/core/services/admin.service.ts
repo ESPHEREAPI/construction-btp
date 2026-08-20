@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserManagement, Role } from '../models/admin.model';
+import { UserManagement, Role, RoleRequest, Permission } from '../models/admin.model';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -50,5 +50,25 @@ export class AdminService {
   // Roles
   getAssignableRoles(): Observable<Role[]> {
     return this.api.get<Role[]>(`${this.apiUrl}/roles`);
+  }
+
+  getAllPermissions(): Observable<Permission[]> {
+    return this.api.get<Permission[]>(`${this.apiUrl}/roles/permissions`);
+  }
+
+  getRoleById(id: number): Observable<Role> {
+    return this.api.get<Role>(`${this.apiUrl}/roles/${id}`);
+  }
+
+  createRole(role: RoleRequest): Observable<Role> {
+    return this.api.post<Role>(`${this.apiUrl}/roles`, role);
+  }
+
+  updateRole(id: number, role: RoleRequest): Observable<Role> {
+    return this.api.put<Role>(`${this.apiUrl}/roles/${id}`, role);
+  }
+
+  deleteRole(id: number): Observable<void> {
+    return this.api.delete<void>(`${this.apiUrl}/roles/${id}`);
   }
 }

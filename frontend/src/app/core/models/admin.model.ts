@@ -21,7 +21,19 @@ export interface Role {
   id: number;
   name: string;
   description: string;
+  nameFr?: string;
+  nameEn?: string;
+  namePt?: string;
+  systemRole?: boolean;
+  custom?: boolean;
   permissions: Permission[];
+}
+
+export interface RoleRequest {
+  nameFr: string;
+  nameEn?: string;
+  namePt?: string;
+  permissionIds: number[];
 }
 
 export interface Permission {

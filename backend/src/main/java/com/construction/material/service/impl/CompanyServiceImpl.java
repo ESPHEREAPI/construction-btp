@@ -1,15 +1,18 @@
 package com.construction.material.service.impl;
 
+import com.construction.material.config.DefaultRolePermissions;
 import com.construction.material.dto.request.CreateCompanyWithAdminRequest;
 import com.construction.material.dto.response.CompanyResponse;
 import com.construction.material.entity.Company;
 import com.construction.material.entity.License;
+import com.construction.material.entity.Permission;
 import com.construction.material.entity.Role;
 import com.construction.material.entity.User;
 import com.construction.material.exception.BusinessException;
 import com.construction.material.exception.ResourceNotFoundException;
 import com.construction.material.repository.CompanyRepository;
 import com.construction.material.repository.LicenseRepository;
+import com.construction.material.repository.PermissionRepository;
 import com.construction.material.repository.ProjectRepository;
 import com.construction.material.repository.RoleRepository;
 import com.construction.material.repository.UserRepository;
@@ -26,6 +29,9 @@ import java.text.Normalizer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +46,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PermissionRepository permissionRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -81,6 +90,8 @@ public class CompanyServiceImpl implements CompanyService {
         }
         // else: Super-Admin-initiated creation - no License row yet, generated separately.
 
+        cloneOperationalRoles(company);
+
         Role adminRole = roleRepository.findByName("ROLE_COMPANY_ADMIN")
                 .orElseThrow(() -> new BusinessException(messageSource.getMessage("role.not.found", null, LocaleContextHolder.getLocale())));
 
@@ -116,6 +127,37 @@ public class CompanyServiceImpl implements CompanyService {
         company.setActive(active);
         companyRepository.save(company);
         return toResponse(company);
+    }
+
+    /**
+     * Gives a newly created company its own editable copy of the 4 operational roles,
+     * seeded with the default permission matrix - the company's admin can then change
+     * them freely through the Role management screen without ever needing a code change.
+     * Mirrors DataInitializer.migrateOperationalRolesToPerCompany() for existing companies.
+     */
+    private void cloneOperationalRoles(Company company) {
+        Map<String, Permission> permissionsByName = permissionRepository.findAll().stream()
+                .collect(Collectors.toMap(Permission::getName, p -> p));
+
+        for (Role.RoleName roleName : DefaultRolePermissions.OPERATIONAL_ROLES) {
+            DefaultRolePermissions.Labels labels = DefaultRolePermissions.labelsFor(roleName);
+            Set<Permission> permissions = DefaultRolePermissions.permissionsFor(roleName).stream()
+                    .map(pn -> permissionsByName.get(pn.name()))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            roleRepository.save(Role.builder()
+                    .name(roleName.name())
+                    .description(roleName.name())
+                    .nameFr(labels.fr())
+                    .nameEn(labels.en())
+                    .namePt(labels.pt())
+                    .company(company)
+                    .systemRole(false)
+                    .custom(false)
+                    .permissions(permissions)
+                    .build());
+        }
     }
 
     private String generateUniqueCode(String companyName) {

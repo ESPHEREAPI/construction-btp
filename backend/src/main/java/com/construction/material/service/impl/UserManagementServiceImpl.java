@@ -63,8 +63,10 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     public List<RoleResponse> listAssignableRoles() {
+        Long companyId = isSuperAdmin() ? null : requireCompanyId();
         return roleRepository.findAll().stream()
                 .filter(r -> !SUPER_ADMIN_AUTHORITY.equals(r.getName()))
+                .filter(r -> r.getCompany() == null || r.getCompany().getId().equals(companyId))
                 .map(this::toRoleResponse)
                 .sorted(Comparator.comparing(RoleResponse::getName))
                 .collect(Collectors.toList());
@@ -189,6 +191,12 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (assignsSuperAdmin) {
             throw new BusinessException(msg("user.role.super.admin.forbidden"));
         }
+        Long companyId = requireCompanyId();
+        boolean assignsForeignRole = roles.stream()
+                .anyMatch(r -> r.getCompany() != null && !companyId.equals(r.getCompany().getId()));
+        if (assignsForeignRole) {
+            throw new BusinessException(msg("role.not.found"));
+        }
         return new HashSet<>(roles);
     }
 
@@ -297,6 +305,11 @@ public class UserManagementServiceImpl implements UserManagementService {
                 .id(role.getId())
                 .name(role.getName())
                 .description(role.getDescription())
+                .nameFr(role.getNameFr())
+                .nameEn(role.getNameEn())
+                .namePt(role.getNamePt())
+                .systemRole(role.getSystemRole())
+                .custom(role.getCustom())
                 .permissions(permissions)
                 .build();
     }

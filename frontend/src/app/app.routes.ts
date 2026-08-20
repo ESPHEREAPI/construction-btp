@@ -180,6 +180,16 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/role-list/role-list.component')
           .then(m => m.RoleListComponent)
       },
+      {
+        path: 'admin/roles/new',
+        loadComponent: () => import('./features/admin/role-form/role-form.component')
+          .then(m => m.RoleFormComponent)
+      },
+      {
+        path: 'admin/roles/:id/edit',
+        loadComponent: () => import('./features/admin/role-form/role-form.component')
+          .then(m => m.RoleFormComponent)
+      },
 
       // Super Admin
       {

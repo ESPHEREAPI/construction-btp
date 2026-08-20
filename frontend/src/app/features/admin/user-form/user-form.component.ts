@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { ProjectService } from '../../../core/services/project.service';
 import { Role } from '../../../core/models/admin.model';
+import { RoleNamePipe } from '../../../shared/pipes/role-name.pipe';
 
 /** Roles that scope a user to a single assigned project - Super Admin/Company Admin/Admin see everything. */
 const PROJECT_SCOPED_ROLE_NAMES = ['ROLE_PROJECT_MANAGER', 'ROLE_SITE_MANAGER', 'ROLE_INVENTORY_MANAGER', 'ROLE_READ_ONLY'];
@@ -14,7 +15,7 @@ const PROJECT_SCOPED_ROLE_NAMES = ['ROLE_PROJECT_MANAGER', 'ROLE_SITE_MANAGER', 
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule, RoleNamePipe],
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss']
 })
@@ -60,10 +61,6 @@ export class UserFormComponent implements OnInit {
       this.isEditMode = true;
       this.loadUser(+id);
     }
-  }
-
-  roleLabelKey(roleName: string): string {
-    return 'roles.' + roleName;
   }
 
   toggleRole(roleId: number): void {

@@ -1,5 +1,6 @@
 package com.construction.material.config;
 
+import com.construction.material.entity.Company;
 import com.construction.material.entity.LicenseModule;
 import com.construction.material.entity.LicensePlan;
 import com.construction.material.entity.Material;
@@ -7,6 +8,7 @@ import com.construction.material.entity.Permission;
 import com.construction.material.entity.Role;
 import com.construction.material.entity.SystemSetting;
 import com.construction.material.entity.User;
+import com.construction.material.repository.CompanyRepository;
 import com.construction.material.repository.LicensePlanRepository;
 import com.construction.material.repository.MaterialRepository;
 import com.construction.material.repository.PermissionRepository;
@@ -22,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private final PermissionRepository permissionRepository;
     private final RoleRepository roleRepository;
+    private final CompanyRepository companyRepository;
     private final LicensePlanRepository licensePlanRepository;
     private final SystemSettingRepository systemSettingRepository;
     private final UserRepository userRepository;
@@ -67,12 +69,17 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         seedPermissionsAndRoles();
         backfillRolePermissions();
+        migrateOperationalRolesToPerCompany();
         seedLicensePlans();
         backfillLicensePlanDefaultModules();
         seedSelfRegistrationSetting();
         seedSuperAdmin();
         seedSystemMaterials();
     }
+
+    private static final Role.RoleName[] SYSTEM_ROLES = {
+            Role.RoleName.ROLE_SUPER_ADMIN, Role.RoleName.ROLE_COMPANY_ADMIN, Role.RoleName.ROLE_ADMIN
+    };
 
     private void seedPermissionsAndRoles() {
         if (roleRepository.count() > 0) {
@@ -87,114 +94,93 @@ public class DataInitializer implements CommandLineRunner {
         }
         Set<Permission> allPermissions = new HashSet<>(permissionRepository.findAll());
 
-        Set<Permission> readOnlyPermissions = allPermissions.stream()
-                .filter(p -> p.getName().endsWith("_READ"))
-                .collect(Collectors.toSet());
-
-        for (Role.RoleName name : Role.RoleName.values()) {
-            Set<Permission> permissions = switch (name) {
-                case ROLE_SUPER_ADMIN, ROLE_COMPANY_ADMIN, ROLE_ADMIN -> allPermissions;
-                case ROLE_READ_ONLY -> readOnlyPermissions;
-                default -> allPermissions;
-            };
-
+        for (Role.RoleName name : SYSTEM_ROLES) {
             roleRepository.save(Role.builder()
                     .name(name.name())
                     .description(name.name())
-                    .permissions(new HashSet<>(permissions))
+                    .systemRole(true)
+                    .permissions(new HashSet<>(allPermissions))
                     .build());
         }
 
-        log.info("Seeded {} permissions and {} roles", allPermissions.size(), Role.RoleName.values().length);
+        log.info("Seeded {} permissions and {} system roles", allPermissions.size(), SYSTEM_ROLES.length);
     }
 
     /**
      * seedPermissionsAndRoles() only runs once (roleRepository.count() > 0 guard), so a
-     * company already deployed before this permission matrix existed would otherwise be
-     * stuck on the original "every operational role gets everything" seed. Roles are
-     * system-managed, not user-customizable, so unconditionally reapplying the intended
-     * set on every boot is safe and self-healing - same pattern as
-     * backfillLicensePlanDefaultModules() below.
+     * deployment seeded before systemRole existed would otherwise be stuck without it.
+     * Super Admin/Company Admin/Administrateur are fixed and never user-editable, so
+     * unconditionally reapplying full access to them on every boot is safe and
+     * self-healing - same pattern as backfillLicensePlanDefaultModules() below. The 4
+     * operational roles are no longer touched here: they are per-company and editable
+     * (see migrateOperationalRolesToPerCompany()).
      */
     private void backfillRolePermissions() {
-        Set<Permission.PermissionName> all = Set.of(Permission.PermissionName.values());
+        Set<Permission> all = new HashSet<>(permissionRepository.findAll());
 
-        Map<Role.RoleName, Set<Permission.PermissionName>> matrix = new EnumMap<>(Role.RoleName.class);
-        matrix.put(Role.RoleName.ROLE_SUPER_ADMIN, all);
-        matrix.put(Role.RoleName.ROLE_COMPANY_ADMIN, all);
-        matrix.put(Role.RoleName.ROLE_ADMIN, all);
-        matrix.put(Role.RoleName.ROLE_PROJECT_MANAGER, Set.of(
-                Permission.PermissionName.PROJECT_READ,
-                Permission.PermissionName.MATERIAL_READ,
-                Permission.PermissionName.QUANTIFICATION_CREATE,
-                Permission.PermissionName.QUANTIFICATION_READ,
-                Permission.PermissionName.QUANTIFICATION_UPDATE,
-                Permission.PermissionName.QUANTIFICATION_DELETE,
-                Permission.PermissionName.ORDER_CREATE,
-                Permission.PermissionName.ORDER_READ,
-                Permission.PermissionName.ORDER_UPDATE,
-                Permission.PermissionName.ORDER_APPROVE,
-                Permission.PermissionName.USAGE_CREATE,
-                Permission.PermissionName.USAGE_READ,
-                Permission.PermissionName.USAGE_UPDATE,
-                Permission.PermissionName.STOCK_READ,
-                Permission.PermissionName.STOCK_UPDATE
-        ));
-        matrix.put(Role.RoleName.ROLE_SITE_MANAGER, Set.of(
-                Permission.PermissionName.PROJECT_READ,
-                Permission.PermissionName.MATERIAL_READ,
-                Permission.PermissionName.ORDER_READ,
-                Permission.PermissionName.ORDER_UPDATE,
-                Permission.PermissionName.USAGE_CREATE,
-                Permission.PermissionName.USAGE_READ,
-                Permission.PermissionName.STOCK_READ,
-                Permission.PermissionName.STOCK_UPDATE
-        ));
-        matrix.put(Role.RoleName.ROLE_INVENTORY_MANAGER, Set.of(
-                Permission.PermissionName.PROJECT_READ,
-                Permission.PermissionName.MATERIAL_CREATE,
-                Permission.PermissionName.MATERIAL_READ,
-                Permission.PermissionName.MATERIAL_UPDATE,
-                Permission.PermissionName.MATERIAL_DELETE,
-                Permission.PermissionName.ORDER_CREATE,
-                Permission.PermissionName.ORDER_READ,
-                Permission.PermissionName.ORDER_UPDATE,
-                Permission.PermissionName.USAGE_READ,
-                Permission.PermissionName.STOCK_READ,
-                Permission.PermissionName.STOCK_UPDATE
-        ));
-        matrix.put(Role.RoleName.ROLE_READ_ONLY, Set.of(
-                Permission.PermissionName.PROJECT_READ,
-                Permission.PermissionName.STOCK_READ
-        ));
+        for (Role.RoleName name : SYSTEM_ROLES) {
+            Role role = roleRepository.findByNameAndCompanyIsNull(name.name()).orElse(null);
+            if (role == null) {
+                continue;
+            }
+            if (!Boolean.TRUE.equals(role.getSystemRole())) {
+                role.setSystemRole(true);
+            }
+            Set<String> currentNames = role.getPermissions().stream().map(Permission::getName).collect(Collectors.toSet());
+            Set<String> targetNames = all.stream().map(Permission::getName).collect(Collectors.toSet());
+            if (!currentNames.equals(targetNames)) {
+                role.setPermissions(new HashSet<>(all));
+            }
+            roleRepository.save(role);
+        }
+    }
 
-        Map<String, Permission> byName = permissionRepository.findAll().stream()
+    /**
+     * One-time-per-company migration: gives every company its own editable copy of the 4
+     * operational roles (previously global rows shared/force-synced across all companies),
+     * then moves each affected user from the old global role to the new company-owned
+     * clone. Unconditional and idempotent - safe to run on every boot, same pattern as
+     * backfillLicensePlanDefaultModules(). Old global rows are left in place (orphaned,
+     * inert) rather than deleted.
+     */
+    private void migrateOperationalRolesToPerCompany() {
+        Map<String, Permission> permissionsByName = permissionRepository.findAll().stream()
                 .collect(Collectors.toMap(Permission::getName, p -> p));
 
-        roleRepository.findAll().forEach(role -> {
-            Role.RoleName roleName;
-            try {
-                roleName = Role.RoleName.valueOf(role.getName());
-            } catch (IllegalArgumentException e) {
-                return;
-            }
-            Set<Permission.PermissionName> target = matrix.get(roleName);
-            if (target == null) {
-                return;
-            }
-            Set<Permission> targetPermissions = target.stream()
-                    .map(pn -> byName.get(pn.name()))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
+        for (Company company : companyRepository.findAll()) {
+            for (Role.RoleName roleName : DefaultRolePermissions.OPERATIONAL_ROLES) {
+                if (roleRepository.existsByNameAndCompanyId(roleName.name(), company.getId())) {
+                    continue;
+                }
 
-            Set<String> currentNames = role.getPermissions().stream().map(Permission::getName).collect(Collectors.toSet());
-            Set<String> targetNames = targetPermissions.stream().map(Permission::getName).collect(Collectors.toSet());
-            if (!currentNames.equals(targetNames)) {
-                role.setPermissions(targetPermissions);
-                roleRepository.save(role);
-                log.info("Backfilled permissions for role {} ({} permissions)", role.getName(), targetPermissions.size());
+                DefaultRolePermissions.Labels labels = DefaultRolePermissions.labelsFor(roleName);
+                Set<Permission> permissions = DefaultRolePermissions.permissionsFor(roleName).stream()
+                        .map(pn -> permissionsByName.get(pn.name()))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
+
+                Role clone = roleRepository.save(Role.builder()
+                        .name(roleName.name())
+                        .description(roleName.name())
+                        .nameFr(labels.fr())
+                        .nameEn(labels.en())
+                        .namePt(labels.pt())
+                        .company(company)
+                        .systemRole(false)
+                        .custom(false)
+                        .permissions(permissions)
+                        .build());
+
+                List<User> usersOnGlobalRole = userRepository.findByCompanyIdAndGlobalRoleName(company.getId(), roleName.name());
+                for (User user : usersOnGlobalRole) {
+                    user.getRoles().removeIf(r -> roleName.name().equals(r.getName()) && r.getCompany() == null);
+                    user.getRoles().add(clone);
+                    userRepository.save(user);
+                }
+
+                log.info("Migrated role {} to company {} ({} users re-pointed)", roleName, company.getId(), usersOnGlobalRole.size());
             }
-        });
+        }
     }
 
     private void seedLicensePlans() {

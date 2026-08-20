@@ -4,11 +4,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Company } from '../../../core/models/company.model';
 import { UserManagement } from '../../../core/models/admin.model';
 import { AdminService } from '../../../core/services/admin.service';
+import { RoleNamePipe } from '../../../shared/pipes/role-name.pipe';
 
 @Component({
   selector: 'app-company-detail-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, RoleNamePipe],
   templateUrl: './company-detail-modal.component.html',
   styleUrls: ['./company-detail-modal.component.scss']
 })

@@ -12,5 +12,10 @@ public class RoleResponse {
     private Long id;
     private String name;
     private String description;
+    private String nameFr;
+    private String nameEn;
+    private String namePt;
+    private Boolean systemRole;
+    private Boolean custom;
     private List<PermissionResponse> permissions;
 }

@@ -3,33 +3,65 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="mb-0">
-            <i class="bi bi-shield me-2"></i>Gestion des Rôles
-          </h5>
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-shield me-2"></i>Gestion des Rôles
+            </h5>
+            <a routerLink="/admin/roles/new" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-1"></i>Nouveau rôle
+            </a>
+          </div>
         </div>
 
         <div class="card-body">
-          <div class="table-responsive">
-            <table class="table">
+          <!-- Loading -->
+          <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+
+          <!-- Error -->
+          <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+          <!-- Table -->
+          <div *ngIf="!loading && !error" class="table-responsive">
+            <table class="table table-hover">
               <thead>
                 <tr>
                   <th>Rôle</th>
-                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Permissions</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let role of roles">
-                  <td><strong>{{ role.name }}</strong></td>
-                  <td>{{ role.description }}</td>
+                  <td><strong>{{ role | roleName }}</strong></td>
                   <td>
-                    <button class="btn btn-sm btn-info">
-                      <i class="bi bi-eye"></i> Voir
-                    </button>
+                    <span *ngIf="role.custom" class="badge bg-secondary">Personnalisé</span>
+                    <span *ngIf="!role.custom" class="badge bg-light text-dark border">Standard</span>
+                  </td>
+                  <td>{{ role.permissions.length }} permission(s)</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a [routerLink]="['/admin/roles', role.id, 'edit']" class="btn btn-warning" title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <button *ngIf="role.custom" (click)="deleteRole(role)" class="btn btn-danger" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               </tbody>
             </table>
+
+            <!-- Empty state -->
+            <div *ngIf="roles.length === 0" class="text-center py-5">
+              <i class="bi bi-shield-x" style="font-size: 3rem; color: #ccc;"></i>
+              <p class="mt-3 text-muted">Aucun rôle trouvé</p>
+            </div>
           </div>
         </div>
       </div>

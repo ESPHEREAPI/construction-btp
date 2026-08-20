@@ -43,6 +43,7 @@ export class SidebarComponent implements OnInit {
     { path: '/usages', icon: 'bi-graph-up', label: 'nav.usage', roles: this.NON_EMPLOYEE_ROLES, companyScoped: true, module: 'USAGE' },
     { path: '/stocks', icon: 'bi-stack', label: 'nav.stock', companyScoped: true, module: 'STOCK' },
     { path: '/admin/users', icon: 'bi-gear', label: 'nav.admin', roles: ['ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'], companyScoped: true, module: 'ADMIN' },
+    { path: '/admin/roles', icon: 'bi-shield', label: 'nav.roles', roles: ['ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'], companyScoped: true, module: 'ADMIN' },
   ];
 
   private superAdminMenuItems: MenuItem[] = [

@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserManagement } from '../../../core/models/admin.model';
 import { AdminService } from '../../../core/services/admin.service';
+import { RoleNamePipe } from '../../../shared/pipes/role-name.pipe';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule, RoleNamePipe],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
