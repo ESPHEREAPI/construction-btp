@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Usage } from '../../../core/models/usage.model';
 import { UsageService } from '../../../core/services/usage.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 
 @Component({
@@ -26,7 +27,19 @@ export class UsageListComponent implements OnInit {
   filterProjectId: number | null = null;
   filterMaterialId: number | null = null;
 
-  constructor(private usageService: UsageService) {}
+  constructor(private usageService: UsageService, private authService: AuthService) {}
+
+  get canCreate(): boolean {
+    return this.authService.hasPermission('USAGE_CREATE');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPermission('USAGE_UPDATE');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPermission('USAGE_DELETE');
+  }
 
   ngOnInit(): void {
     this.loadUsages();

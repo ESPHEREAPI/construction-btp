@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Order, ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from '../../../core/models/order.model';
 import { OrderService } from '../../../core/services/order.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-order-list',
@@ -32,7 +33,23 @@ export class OrderListComponent implements OnInit {
   statusLabels = ORDER_STATUS_LABELS;
   statusColors = ORDER_STATUS_COLORS;
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private authService: AuthService) {}
+
+  get canCreate(): boolean {
+    return this.authService.hasPermission('ORDER_CREATE');
+  }
+
+  get canApprove(): boolean {
+    return this.authService.hasPermission('ORDER_APPROVE');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPermission('ORDER_UPDATE');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPermission('ORDER_DELETE');
+  }
 
   ngOnInit(): void {
     this.loadOrders();

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MaterialService } from '../../../core/services/material.service';
 import { Material } from '../../../core/models/material.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-material-list',
@@ -19,7 +20,19 @@ export class MaterialListComponent implements OnInit {
   showHidden = false;
   error = '';
 
-  constructor(private materialService: MaterialService) {}
+  constructor(private materialService: MaterialService, private authService: AuthService) {}
+
+  get canCreate(): boolean {
+    return this.authService.hasPermission('MATERIAL_CREATE');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPermission('MATERIAL_UPDATE');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPermission('MATERIAL_DELETE');
+  }
 
   ngOnInit(): void {
     this.loadMaterials();

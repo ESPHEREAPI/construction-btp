@@ -20,7 +20,7 @@
                 <i class="bi" [ngClass]="showHidden ? 'bi-eye-slash' : 'bi-eye'"></i>
                 {{ showHidden ? 'Masquer la liste des masqués' : 'Matériaux masqués' }}
               </button>
-              <button class="btn btn-primary" routerLink="/materials/new">
+              <button *ngIf="canCreate" class="btn btn-primary" routerLink="/materials/new">
                 <i class="bi bi-plus-circle"></i> {{ 'materials.add' | translate }}
               </button>
             </div>
@@ -34,7 +34,7 @@
                   <td>{{ material.code }}</td>
                   <td>{{ material.name }}</td>
                   <td class="text-end">
-                    <button class="btn btn-sm btn-outline-primary" (click)="unhideMaterial(material.id!)">
+                    <button *ngIf="canUpdate" class="btn btn-sm btn-outline-primary" (click)="unhideMaterial(material.id!)">
                       <i class="bi bi-eye"></i> Réafficher
                     </button>
                   </td>
@@ -69,15 +69,15 @@
                 <td>{{ material.unitPrice | number:'1.2-2' }} FCFA</td>
                 <td>
                   <ng-container *ngIf="!isSystemMaterial(material); else systemActions">
-                    <button class="btn btn-sm btn-warning me-1" [routerLink]="['/materials', material.id, 'edit']">
+                    <button *ngIf="canUpdate" class="btn btn-sm btn-warning me-1" [routerLink]="['/materials', material.id, 'edit']">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" (click)="deleteMaterial(material.id!)">
+                    <button *ngIf="canDelete" class="btn btn-sm btn-danger" (click)="deleteMaterial(material.id!)">
                       <i class="bi bi-trash"></i>
                     </button>
                   </ng-container>
                   <ng-template #systemActions>
-                    <button class="btn btn-sm btn-outline-secondary" title="Masquer ce matériau de ma liste" (click)="hideMaterial(material.id!)">
+                    <button *ngIf="canUpdate" class="btn btn-sm btn-outline-secondary" title="Masquer ce matériau de ma liste" (click)="hideMaterial(material.id!)">
                       <i class="bi bi-eye-slash"></i>
                     </button>
                   </ng-template>

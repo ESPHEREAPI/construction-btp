@@ -7,7 +7,7 @@
             <h5 class="mb-0">
               <i class="bi bi-bar-chart me-2"></i>Utilisation des Matériaux
             </h5>
-            <a routerLink="/usages/new" class="btn btn-primary">
+            <a *ngIf="canCreate" routerLink="/usages/new" class="btn btn-primary">
               <i class="bi bi-plus-circle me-1"></i>Nouvelle utilisation
             </a>
           </div>
@@ -58,10 +58,10 @@
                   <td>{{ usage.usedBy || '-' }}</td>
                   <td>
                     <div class="btn-group btn-group-sm">
-                      <a [routerLink]="['/usages', usage.id, 'edit']" class="btn btn-warning" title="Modifier">
+                      <a *ngIf="canUpdate" [routerLink]="['/usages', usage.id, 'edit']" class="btn btn-warning" title="Modifier">
                         <i class="bi bi-pencil"></i>
                       </a>
-                      <button (click)="deleteUsage(usage.id)" class="btn btn-danger" title="Supprimer">
+                      <button *ngIf="canDelete" (click)="deleteUsage(usage.id)" class="btn btn-danger" title="Supprimer">
                         <i class="bi bi-trash"></i>
                       </button>
                     </div>

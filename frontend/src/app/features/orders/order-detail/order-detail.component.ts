@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { Order, ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from '../../../core/models/order.model';
 import { OrderService } from '../../../core/services/order.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 
 @Component({
@@ -22,9 +23,18 @@ export class OrderDetailComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
+
+  get canApprove(): boolean {
+    return this.authService.hasPermission('ORDER_APPROVE');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPermission('ORDER_UPDATE');
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

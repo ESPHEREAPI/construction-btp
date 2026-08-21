@@ -22,13 +22,13 @@
               <button class="btn btn-secondary me-2" (click)="goBack()">
                 <i class="bi bi-arrow-left"></i> Retour
               </button>
-              <button *ngIf="order.status === 'PENDING'" 
-                      class="btn btn-success me-2" 
+              <button *ngIf="order.status === 'PENDING' && canApprove"
+                      class="btn btn-success me-2"
                       (click)="approveOrder()">
                 <i class="bi bi-check-circle"></i> Approuver
               </button>
-              <button *ngIf="order.status === 'APPROVED'" 
-                      class="btn btn-primary" 
+              <button *ngIf="order.status === 'APPROVED' && canUpdate"
+                      class="btn btn-primary"
                       (click)="receiveOrder()">
                 <i class="bi bi-box-seam"></i> Réceptionner
               </button>

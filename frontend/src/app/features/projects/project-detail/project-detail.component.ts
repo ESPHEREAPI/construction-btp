@@ -11,8 +11,6 @@ import { Project } from '../../../core/models/project.model';
 import { Order, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '../../../core/models/order.model';
 import { Usage } from '../../../core/models/usage.model';
 
-const PROJECT_MANAGEMENT_ROLES = ['ROLE_SUPER_ADMIN', 'ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'];
-
 @Component({
   selector: 'app-project-detail',
   standalone: true,
@@ -44,8 +42,17 @@ export class ProjectDetailComponent implements OnInit {
     private router: Router
   ) {}
 
+  /** Permission-based, not a hardcoded role list - see project-list.component.ts for why. */
+  get canEdit(): boolean {
+    return this.authService.hasPermission('PROJECT_UPDATE');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPermission('PROJECT_DELETE');
+  }
+
   get canManageProjects(): boolean {
-    return this.authService.hasAnyRole(PROJECT_MANAGEMENT_ROLES);
+    return this.canEdit || this.canDelete;
   }
 
   ngOnInit(): void {

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { StockService } from '../../../core/services/stock.service';
 import { Stock } from '../../../core/models/stock.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 
 @Component({
@@ -26,7 +27,11 @@ export class StockListComponent implements OnInit {
   filterProjectId: number | null = null;
   showLowStockOnly = false;
 
-  constructor(private stockService: StockService) {}
+  constructor(private stockService: StockService, private authService: AuthService) {}
+
+  get canUpdate(): boolean {
+    return this.authService.hasPermission('STOCK_UPDATE');
+  }
 
   ngOnInit(): void {
     this.loadStocks();

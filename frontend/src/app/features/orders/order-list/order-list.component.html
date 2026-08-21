@@ -7,7 +7,7 @@
             <h5 class="mb-0">
               <i class="bi bi-cart me-2"></i>Commandes
             </h5>
-            <a routerLink="/orders/new" class="btn btn-primary">
+            <a *ngIf="canCreate" routerLink="/orders/new" class="btn btn-primary">
               <i class="bi bi-plus-circle me-1"></i>Nouvelle commande
             </a>
           </div>
@@ -114,27 +114,27 @@
                       <a [routerLink]="['/orders', order.id]" class="btn btn-info" title="Détails">
                         <i class="bi bi-eye"></i>
                       </a>
-                      <button *ngIf="order.status === 'PENDING'" 
-                              (click)="approveOrder(order.id)" 
-                              class="btn btn-success" 
+                      <button *ngIf="order.status === 'PENDING' && canApprove"
+                              (click)="approveOrder(order.id)"
+                              class="btn btn-success"
                               title="Approuver">
                         <i class="bi bi-check-circle"></i>
                       </button>
-                      <button *ngIf="order.status === 'APPROVED'" 
-                              (click)="receiveOrder(order.id)" 
-                              class="btn btn-primary" 
+                      <button *ngIf="order.status === 'APPROVED' && canUpdate"
+                              (click)="receiveOrder(order.id)"
+                              class="btn btn-primary"
                               title="Réceptionner">
                         <i class="bi bi-box-seam"></i>
                       </button>
-                      <a *ngIf="order.status === 'PENDING'" 
-                         [routerLink]="['/orders', order.id, 'edit']" 
-                         class="btn btn-warning" 
+                      <a *ngIf="order.status === 'PENDING' && canUpdate"
+                         [routerLink]="['/orders', order.id, 'edit']"
+                         class="btn btn-warning"
                          title="Modifier">
                         <i class="bi bi-pencil"></i>
                       </a>
-                      <button *ngIf="order.status === 'PENDING'" 
-                              (click)="deleteOrder(order.id)" 
-                              class="btn btn-danger" 
+                      <button *ngIf="order.status === 'PENDING' && canDelete"
+                              (click)="deleteOrder(order.id)"
+                              class="btn btn-danger"
                               title="Supprimer">
                         <i class="bi bi-trash"></i>
                       </button>

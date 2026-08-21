@@ -6,8 +6,6 @@ import { ProjectService } from '../../../core/services/project.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Project } from '../../../core/models/project.model';
 
-const PROJECT_MANAGEMENT_ROLES = ['ROLE_SUPER_ADMIN', 'ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'];
-
 @Component({
   selector: 'app-project-list',
   standalone: true,
@@ -22,9 +20,27 @@ export class ProjectListComponent implements OnInit {
 
   constructor(private projectService: ProjectService, private authService: AuthService) {}
 
-  /** Only Admin Compagnie/Administrateur/Super Admin create, edit or delete projects - everyone else just works within their assigned project. */
+  /**
+   * By default only Admin Compagnie/Administrateur/Super Admin have PROJECT_CREATE/
+   * UPDATE/DELETE (system roles hold every permission; operational roles don't get
+   * these by default) - but a company can now grant them to another role via Role
+   * management, so this checks the actual permission rather than a hardcoded role list,
+   * matching the backend's ProjectController @PreAuthorize checks.
+   */
+  get canCreate(): boolean {
+    return this.authService.hasPermission('PROJECT_CREATE');
+  }
+
+  get canEdit(): boolean {
+    return this.authService.hasPermission('PROJECT_UPDATE');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPermission('PROJECT_DELETE');
+  }
+
   get canManageProjects(): boolean {
-    return this.authService.hasAnyRole(PROJECT_MANAGEMENT_ROLES);
+    return this.canEdit || this.canDelete;
   }
 
   ngOnInit(): void {

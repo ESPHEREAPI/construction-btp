@@ -89,6 +89,23 @@ export class AuthService {
     return user ? roles.some(role => user.roles.includes(role)) : false;
   }
 
+  /**
+   * user.roles actually holds the full Spring Security authorities list from the JWT -
+   * role names AND permission names (e.g. ORDER_APPROVE) mixed together, since a role's
+   * permissions are granted as authorities alongside the role itself. This checks a
+   * permission name specifically, so action gating reflects a company's own customized
+   * role permissions instead of a hardcoded role name.
+   */
+  hasPermission(permission: string): boolean {
+    const user = this.currentUserValue;
+    return user ? user.roles.includes(permission) : false;
+  }
+
+  hasAnyPermission(permissions: string[]): boolean {
+    const user = this.currentUserValue;
+    return user ? permissions.some(p => user.roles.includes(p)) : false;
+  }
+
   isSuperAdmin(): boolean {
     return this.hasRole('ROLE_SUPER_ADMIN');
   }
