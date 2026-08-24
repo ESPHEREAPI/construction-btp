@@ -77,6 +77,12 @@
     "ROLE_INVENTORY_MANAGER": "Gestionnaire d'Inventaire",
     "ROLE_READ_ONLY": "Employé"
   },
+  "projectStatuses": {
+    "PLANNED": "Planifié",
+    "IN_PROGRESS": "En cours",
+    "ON_HOLD": "En pause",
+    "COMPLETED": "Terminé"
+  },
   "permissionCategories": {
     "USER": "Utilisateurs",
     "PROJECT": "Projets",

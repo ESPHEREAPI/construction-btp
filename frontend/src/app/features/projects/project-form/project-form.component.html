@@ -49,7 +49,7 @@
               <label class="col-sm-3 col-form-label">{{ 'projects.status' | translate }} *</label>
               <div class="col-sm-9">
                 <select class="form-select" formControlName="status">
-                  <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+                  <option *ngFor="let status of statuses" [value]="status">{{ 'projectStatuses.' + status | translate }}</option>
                 </select>
               </div>
             </div>

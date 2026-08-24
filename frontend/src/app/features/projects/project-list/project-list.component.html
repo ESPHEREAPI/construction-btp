@@ -50,7 +50,7 @@
                     'bg-warning': project.status === 'ON_HOLD',
                     'bg-primary': project.status === 'COMPLETED'
                   }">
-                    {{ project.status }}
+                    {{ 'projectStatuses.' + project.status | translate }}
                   </span>
                 </td>
                 <td>

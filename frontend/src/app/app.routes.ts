@@ -145,8 +145,8 @@ export const routes: Routes = [
       },
       {
         path: 'stocks/:id',
-        loadComponent: () => import('./features/stock/stock-list/stock-list.component')
-          .then(m => m.StockListComponent)
+        loadComponent: () => import('./features/stock/stock-detail/stock-detail.component')
+          .then(m => m.StockDetailComponent)
       },
       {
         path: 'stocks/:id/movements',

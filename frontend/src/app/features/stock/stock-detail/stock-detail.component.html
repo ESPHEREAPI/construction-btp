@@ -1,0 +1,118 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <!-- Stock Details -->
+      <div *ngIf="stock && !loading" class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-stack me-2"></i>{{ stock.materialName }}
+              <span class="badge bg-secondary ms-2">{{ stock.materialCode }}</span>
+            </h5>
+            <div>
+              <button class="btn btn-secondary me-2" (click)="goBack()">
+                <i class="bi bi-arrow-left"></i> Retour
+              </button>
+              <button *ngIf="canUpdate && !editingThresholds" class="btn btn-primary" (click)="startEditThresholds()">
+                <i class="bi bi-sliders"></i> Modifier les seuils
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6>Informations générales</h6>
+              <table class="table table-sm">
+                <tr>
+                  <th width="40%">Projet:</th>
+                  <td>{{ stock.projectName }}</td>
+                </tr>
+                <tr>
+                  <th>Matériau:</th>
+                  <td>{{ stock.materialName }} ({{ stock.materialCode }})</td>
+                </tr>
+                <tr>
+                  <th>Emplacement:</th>
+                  <td>{{ stock.location || '-' }}</td>
+                </tr>
+                <tr>
+                  <th>Statut:</th>
+                  <td>
+                    <span *ngIf="stock.lowStockAlert" class="badge bg-warning">
+                      <i class="bi bi-exclamation-triangle"></i> Stock faible
+                    </span>
+                    <span *ngIf="!stock.lowStockAlert" class="badge bg-success">
+                      <i class="bi bi-check-circle"></i> OK
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="col-md-6">
+              <h6>Quantités</h6>
+              <table class="table table-sm">
+                <tr>
+                  <th width="40%">Quantité actuelle:</th>
+                  <td><strong>{{ stock.currentQuantity }} {{ stock.unit }}</strong></td>
+                </tr>
+                <tr>
+                  <th>Réservé:</th>
+                  <td>{{ stock.reservedQuantity }} {{ stock.unit }}</td>
+                </tr>
+                <tr>
+                  <th>Disponible:</th>
+                  <td>{{ stock.availableQuantity }} {{ stock.unit }}</td>
+                </tr>
+                <tr>
+                  <th>Seuil minimum:</th>
+                  <td>{{ stock.minimumQuantity != null ? (stock.minimumQuantity + ' ' + stock.unit) : '-' }}</td>
+                </tr>
+                <tr>
+                  <th>Seuil maximum:</th>
+                  <td>{{ stock.maximumQuantity != null ? (stock.maximumQuantity + ' ' + stock.unit) : '-' }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Threshold edit form -->
+          <div *ngIf="editingThresholds" class="card bg-light">
+            <div class="card-body">
+              <h6>Modifier les seuils de stock</h6>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Seuil minimum ({{ stock.unit }})</label>
+                  <input type="number" class="form-control" [(ngModel)]="thresholds.minimumQuantity" name="minimumQuantity">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Seuil maximum ({{ stock.unit }})</label>
+                  <input type="number" class="form-control" [(ngModel)]="thresholds.maximumQuantity" name="maximumQuantity">
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-secondary" (click)="cancelEditThresholds()" [disabled]="savingThresholds">Annuler</button>
+                <button class="btn btn-primary" (click)="saveThresholds()" [disabled]="savingThresholds">
+                  <span *ngIf="savingThresholds" class="spinner-border spinner-border-sm me-1"></span>
+                  Enregistrer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

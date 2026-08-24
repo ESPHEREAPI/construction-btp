@@ -24,7 +24,7 @@
               <p><strong>Code:</strong> {{ project.code }}</p>
               <p><strong>Location:</strong> {{ project.location }}</p>
               <p><strong>Client:</strong> {{ project.client }}</p>
-              <p><strong>Status:</strong> <span class="badge bg-info">{{ project.status }}</span></p>
+              <p><strong>Status:</strong> <span class="badge bg-info">{{ 'projectStatuses.' + project.status | translate }}</span></p>
             </div>
             <div class="col-md-6">
               <p><strong>Start:</strong> {{ project.startDate | date }}</p>
