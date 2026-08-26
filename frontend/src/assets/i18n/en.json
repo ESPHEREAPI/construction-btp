@@ -52,7 +52,24 @@
     "start_date": "Start Date",
     "end_date": "End Date",
     "budget": "Budget",
-    "manager": "Project Manager"
+    "manager": "Project Manager",
+    "spentAmount": "Spent",
+    "pendingAmount": "Pending",
+    "activity": {
+      "title": "Validation history",
+      "empty": "No validation recorded.",
+      "APPROVE": "Order approved",
+      "RECEIVE": "Order received",
+      "CANCEL": "Order cancelled",
+      "UPDATE": "Status changed"
+    },
+    "conclusion": {
+      "title": "Conclusion",
+      "budgetExceeded": "Budget exceeded by {{pct}}%",
+      "staleOrders": "{{count}} order(s) pending for more than 14 days",
+      "lowStock": "{{count}} material(s) low on stock",
+      "onTrack": "No issues detected - the project is on track."
+    }
   },
   "materials": {
     "title": "Material Management",

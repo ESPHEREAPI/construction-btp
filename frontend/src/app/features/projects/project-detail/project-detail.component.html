@@ -30,8 +30,65 @@
               <p><strong>Start:</strong> {{ project.startDate | date }}</p>
               <p><strong>End:</strong> {{ project.endDate | date }}</p>
               <p *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget | number }} FCFA</p>
+              <ng-container *ngIf="project.spentAmount != null">
+                <p class="mb-1">
+                  <strong>{{ 'projects.spentAmount' | translate }}:</strong> {{ project.spentAmount | number }} FCFA
+                  <span class="text-muted ms-2" *ngIf="project.pendingAmount">
+                    ({{ 'projects.pendingAmount' | translate }}: {{ project.pendingAmount | number }} FCFA)
+                  </span>
+                </p>
+                <div class="progress mb-2" style="height: 8px;" *ngIf="project.budget">
+                  <div class="progress-bar"
+                       [ngClass]="project.spentAmount > project.budget ? 'bg-danger' : 'bg-success'"
+                       [style.width.%]="(project.spentAmount / project.budget) * 100 > 100 ? 100 : (project.spentAmount / project.budget) * 100">
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <!-- Conclusion -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title"><i class="bi bi-lightbulb me-1"></i> {{ 'projects.conclusion.title' | translate }}</h6>
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let c of conclusions" class="mb-1">
+              <i class="bi" [ngClass]="c.key === 'projects.conclusion.onTrack' ? 'bi-check-circle text-success' : 'bi-exclamation-triangle text-warning'"></i>
+              {{ c.key | translate: c.params }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historique des validations -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title"><i class="bi bi-clock-history me-1"></i> {{ 'projects.activity.title' | translate }}</h6>
+          <div *ngIf="loadingActivities" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+          </div>
+          <div *ngIf="!loadingActivities && activities.length === 0" class="text-muted small">{{ 'projects.activity.empty' | translate }}</div>
+          <table class="table table-sm" *ngIf="!loadingActivities && activities.length > 0">
+            <thead>
+              <tr><th>Action</th><th>Description</th><th>Par</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let a of activities">
+                <td>{{ 'projects.activity.' + a.action | translate }}</td>
+                <td>{{ a.description }}</td>
+                <td>{{ a.performedBy || '-' }}</td>
+                <td>{{ a.timestamp | date:'dd/MM/yy HH:mm' }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

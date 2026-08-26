@@ -10,6 +10,10 @@ export interface Project {
   endDate?: Date;
   estimatedEndDate?: Date;
   budget?: number;
+  spentAmount?: number;
+  pendingAmount?: number;
+  pendingOrdersCount?: number;
+  staleOrdersCount?: number;
   projectManagerName?: string;
   siteManagerName?: string;
   createdAt?: Date;

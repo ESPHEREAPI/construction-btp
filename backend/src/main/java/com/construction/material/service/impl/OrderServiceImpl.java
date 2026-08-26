@@ -4,6 +4,7 @@ import com.construction.material.dto.request.OrderItemRequest;
 import com.construction.material.dto.request.OrderRequest;
 import com.construction.material.dto.response.OrderItemResponse;
 import com.construction.material.dto.response.OrderResponse;
+import com.construction.material.entity.AuditLog;
 import com.construction.material.entity.Material;
 import com.construction.material.entity.Order;
 import com.construction.material.entity.OrderItem;
@@ -21,6 +22,7 @@ import com.construction.material.repository.StockRepository;
 import com.construction.material.repository.UserRepository;
 import com.construction.material.security.ProjectContext;
 import com.construction.material.security.TenantContext;
+import com.construction.material.service.AuditLogService;
 import com.construction.material.service.OrderService;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private StockMovementRepository stockMovementRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @Autowired
     private MessageSource messageSource;
@@ -129,7 +134,9 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Order.OrderStatus.APPROVED);
         order.setApprovedBy(currentUser());
         order.setApprovedAt(LocalDateTime.now());
-        return toResponse(orderRepository.save(order));
+        OrderResponse response = toResponse(orderRepository.save(order));
+        auditLogService.record(AuditLog.EntityType.ORDER, order.getId(), AuditLog.Action.APPROVE, order.getProject(), order.getOrderNumber());
+        return response;
     }
 
     @Override
@@ -168,7 +175,9 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(Order.OrderStatus.RECEIVED);
         order.setActualDeliveryDate(LocalDate.now());
-        return toResponse(orderRepository.save(order));
+        OrderResponse response = toResponse(orderRepository.save(order));
+        auditLogService.record(AuditLog.EntityType.ORDER, order.getId(), AuditLog.Action.RECEIVE, order.getProject(), order.getOrderNumber());
+        return response;
     }
 
     @Override
@@ -178,7 +187,9 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(msg("order.status.invalid.transition"));
         }
         order.setStatus(Order.OrderStatus.CANCELLED);
-        return toResponse(orderRepository.save(order));
+        OrderResponse response = toResponse(orderRepository.save(order));
+        auditLogService.record(AuditLog.EntityType.ORDER, order.getId(), AuditLog.Action.CANCEL, order.getProject(), order.getOrderNumber());
+        return response;
     }
 
     // --- helpers -------------------------------------------------------

@@ -2,18 +2,22 @@ package com.construction.material.service.impl;
 
 import com.construction.material.dto.request.ProjectRequest;
 import com.construction.material.dto.response.ProjectResponse;
+import com.construction.material.entity.AuditLog;
 import com.construction.material.entity.Company;
 import com.construction.material.entity.License;
+import com.construction.material.entity.Order;
 import com.construction.material.entity.Project;
 import com.construction.material.entity.User;
 import com.construction.material.exception.BusinessException;
 import com.construction.material.exception.ResourceNotFoundException;
 import com.construction.material.repository.CompanyRepository;
 import com.construction.material.repository.LicenseRepository;
+import com.construction.material.repository.OrderRepository;
 import com.construction.material.repository.ProjectRepository;
 import com.construction.material.repository.UserRepository;
 import com.construction.material.security.ProjectContext;
 import com.construction.material.security.TenantContext;
+import com.construction.material.service.AuditLogService;
 import com.construction.material.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -26,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,7 +52,16 @@ public class ProjectServiceImpl implements ProjectService {
     private LicenseRepository licenseRepository;
 
     @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
+
+    @Autowired
     private MessageSource messageSource;
+
+    private static final int STALE_ORDER_DAYS = 14;
+    private static final List<Order.OrderStatus> PENDING_STATUSES = List.of(Order.OrderStatus.PENDING, Order.OrderStatus.APPROVED);
 
     @Override
     public ProjectResponse create(ProjectRequest request) {
@@ -101,6 +115,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .filter(this::belongsToCurrentTenant)
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage("project.not.found", null, LocaleContextHolder.getLocale())));
 
+        Project.ProjectStatus previousStatus = project.getStatus();
+
         project.setCode(request.getCode());
         project.setName(request.getName());
         project.setDescription(request.getDescription());
@@ -114,6 +130,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setBudget(request.getBudget());
 
         Project updated = projectRepository.save(project);
+
+        if (previousStatus != updated.getStatus()) {
+            auditLogService.record(AuditLog.EntityType.PROJECT, updated.getId(), AuditLog.Action.UPDATE, updated,
+                    previousStatus + " -> " + updated.getStatus());
+        }
+
         return toResponse(updated);
     }
 
@@ -181,7 +203,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private ProjectResponse toResponse(Project project) {
-        return ProjectResponse.builder()
+        LocalDate staleCutoff = LocalDate.now().minusDays(STALE_ORDER_DAYS);
+
+        ProjectResponse.ProjectResponseBuilder builder = ProjectResponse.builder()
                 .id(project.getId())
                 .code(project.getCode())
                 .name(project.getName())
@@ -192,12 +216,20 @@ public class ProjectServiceImpl implements ProjectService {
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
                 .estimatedEndDate(project.getEstimatedEndDate())
-                .budget(canSeeBudget() ? project.getBudget() : null)
                 .projectManagerName(project.getProjectManager() != null ? project.getProjectManager().getFullName() : null)
                 .siteManagerName(project.getSiteManager() != null ? project.getSiteManager().getFullName() : null)
                 .createdAt(project.getCreatedAt())
                 .updatedAt(project.getUpdatedAt())
-                .build();
+                .pendingOrdersCount((int) orderRepository.countByProjectIdAndStatusIn(project.getId(), PENDING_STATUSES))
+                .staleOrdersCount((int) orderRepository.countStaleOrders(project.getId(), PENDING_STATUSES, staleCutoff));
+
+        if (canSeeBudget()) {
+            builder.budget(project.getBudget())
+                    .spentAmount(orderRepository.sumTotalAmountByProjectIdAndStatus(project.getId(), Order.OrderStatus.RECEIVED))
+                    .pendingAmount(orderRepository.sumTotalAmountByProjectIdAndStatusIn(project.getId(), PENDING_STATUSES));
+        }
+
+        return builder.build();
     }
 
     private static final Set<String> BUDGET_VISIBLE_AUTHORITIES = Set.of(

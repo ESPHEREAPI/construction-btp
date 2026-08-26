@@ -29,6 +29,11 @@ public class AuditLog {
     @Column(nullable = false)
     private Long entityId;
 
+    /** Denormalized project reference so a project's activity journal is a single query. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Action action;
@@ -97,6 +102,7 @@ public class AuditLog {
         APPROVE,
         REJECT,
         SUBMIT,
-        CANCEL
+        CANCEL,
+        RECEIVE
     }
 }

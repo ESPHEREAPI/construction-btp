@@ -52,7 +52,24 @@
     "start_date": "Data de Início",
     "end_date": "Data de Término",
     "budget": "Orçamento",
-    "manager": "Gerente de Projeto"
+    "manager": "Gerente de Projeto",
+    "spentAmount": "Gasto",
+    "pendingAmount": "Pendente",
+    "activity": {
+      "title": "Histórico de validações",
+      "empty": "Nenhuma validação registrada.",
+      "APPROVE": "Pedido aprovado",
+      "RECEIVE": "Pedido recebido",
+      "CANCEL": "Pedido cancelado",
+      "UPDATE": "Status alterado"
+    },
+    "conclusion": {
+      "title": "Conclusão",
+      "budgetExceeded": "Orçamento excedido em {{pct}}%",
+      "staleOrders": "{{count}} pedido(s) pendente(s) há mais de 14 dias",
+      "lowStock": "{{count}} material(is) com estoque baixo",
+      "onTrack": "Nenhum ponto de atenção detectado - o projeto segue normalmente."
+    }
   },
   "materials": {
     "title": "Gestão de Materiais",

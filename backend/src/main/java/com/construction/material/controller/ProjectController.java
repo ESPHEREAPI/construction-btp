@@ -2,9 +2,11 @@ package com.construction.material.controller;
 
 import com.construction.material.dto.request.ProjectRequest;
 import com.construction.material.dto.response.MessageResponse;
+import com.construction.material.dto.response.ProjectActivityResponse;
 import com.construction.material.dto.response.ProjectResponse;
 import com.construction.material.entity.LicenseModule;
 import com.construction.material.security.ModuleAccessGuard;
+import com.construction.material.service.AuditLogService;
 import com.construction.material.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,9 @@ public class ProjectController {
 
     @Autowired
     private ModuleAccessGuard moduleAccessGuard;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @Operation(summary = "Create a new project")
     @PostMapping
@@ -79,6 +85,17 @@ public class ProjectController {
         moduleAccessGuard.require(LicenseModule.PROJECTS);
         projectService.delete(id);
         return ResponseEntity.ok(new MessageResponse("Project deleted successfully"));
+    }
+
+    @Operation(summary = "Get key-validation activity history for a project")
+    @GetMapping("/{id}/activity")
+    @PreAuthorize("hasAnyAuthority('PROJECT_READ', 'ROLE_ADMIN', 'ROLE_PROJECT_MANAGER', 'ROLE_SITE_MANAGER')")
+    public ResponseEntity<Page<ProjectActivityResponse>> getActivity(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        moduleAccessGuard.require(LicenseModule.PROJECTS);
+        return ResponseEntity.ok(auditLogService.findProjectActivity(id, PageRequest.of(page, size)));
     }
 
     @Operation(summary = "Get projects by status")

@@ -82,4 +82,15 @@ export class ProjectService {
   getStatistics(id: number): Observable<any> {
     return this.api.get<any>(`${this.apiUrl}/${id}/statistics`);
   }
+
+  /**
+   * Historique des validations clés d'un projet (approbations/réceptions/annulations
+   * de commandes, changements de statut du projet)
+   */
+  getActivity(projectId: number, page: number = 0, size: number = 10): Observable<any> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.api.get<any>(`${this.apiUrl}/${projectId}/activity`, params);
+  }
 }

@@ -52,7 +52,24 @@
     "start_date": "Date de Début",
     "end_date": "Date de Fin",
     "budget": "Budget",
-    "manager": "Chef de Projet"
+    "manager": "Chef de Projet",
+    "spentAmount": "Dépensé",
+    "pendingAmount": "En attente",
+    "activity": {
+      "title": "Historique des validations",
+      "empty": "Aucune validation enregistrée.",
+      "APPROVE": "Commande approuvée",
+      "RECEIVE": "Commande réceptionnée",
+      "CANCEL": "Commande annulée",
+      "UPDATE": "Statut modifié"
+    },
+    "conclusion": {
+      "title": "Conclusion",
+      "budgetExceeded": "Budget dépassé de {{pct}}%",
+      "staleOrders": "{{count}} commande(s) en attente depuis plus de 14 jours",
+      "lowStock": "{{count}} matériau(x) en stock faible",
+      "onTrack": "Aucun point d'attention détecté - le projet suit son cours normal."
+    }
   },
   "materials": {
     "title": "Gestion des Matériaux",

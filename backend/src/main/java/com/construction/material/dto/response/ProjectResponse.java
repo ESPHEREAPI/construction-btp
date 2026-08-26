@@ -21,6 +21,10 @@ public class ProjectResponse {
     private LocalDate endDate;
     private LocalDate estimatedEndDate;
     private BigDecimal budget;
+    private BigDecimal spentAmount;
+    private BigDecimal pendingAmount;
+    private Integer pendingOrdersCount;
+    private Integer staleOrdersCount;
     private String projectManagerName;
     private String siteManagerName;
     private LocalDateTime createdAt;

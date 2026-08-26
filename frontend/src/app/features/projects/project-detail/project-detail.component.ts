@@ -10,6 +10,7 @@ import { StockService } from '../../../core/services/stock.service';
 import { Project } from '../../../core/models/project.model';
 import { Order, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '../../../core/models/order.model';
 import { Usage } from '../../../core/models/usage.model';
+import { ProjectActivity } from '../../../core/models/project-activity.model';
 
 @Component({
   selector: 'app-project-detail',
@@ -28,6 +29,8 @@ export class ProjectDetailComponent implements OnInit {
   loadingOrders = true;
   usages: Usage[] = [];
   loadingUsages = true;
+  activities: ProjectActivity[] = [];
+  loadingActivities = true;
 
   readonly orderStatusLabels = ORDER_STATUS_LABELS;
   readonly orderStatusColors = ORDER_STATUS_COLORS;
@@ -55,6 +58,35 @@ export class ProjectDetailComponent implements OnInit {
     return this.canEdit || this.canDelete;
   }
 
+  /** Pure, computed from already-fetched data - no HTTP call. */
+  get conclusions(): { key: string; params: any }[] {
+    const list: { key: string; params: any }[] = [];
+    if (!this.project) {
+      return list;
+    }
+
+    if (this.project.budget != null && this.project.spentAmount != null && this.project.budget > 0
+        && this.project.spentAmount > this.project.budget) {
+      const pct = Math.round((this.project.spentAmount / this.project.budget) * 100) - 100;
+      list.push({ key: 'projects.conclusion.budgetExceeded', params: { pct } });
+    }
+
+    if (this.project.staleOrdersCount) {
+      list.push({ key: 'projects.conclusion.staleOrders', params: { count: this.project.staleOrdersCount } });
+    }
+
+    const lowStockCount = this.stocks.filter((s: any) => s.lowStockAlert).length;
+    if (lowStockCount > 0) {
+      list.push({ key: 'projects.conclusion.lowStock', params: { count: lowStockCount } });
+    }
+
+    if (list.length === 0) {
+      list.push({ key: 'projects.conclusion.onTrack', params: {} });
+    }
+
+    return list;
+  }
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -63,6 +95,7 @@ export class ProjectDetailComponent implements OnInit {
         this.loadStocks(id);
         this.loadOrders(id);
         this.loadUsages(id);
+        this.loadActivity(id);
       }
     });
   }
@@ -107,6 +140,17 @@ export class ProjectDetailComponent implements OnInit {
         this.loadingUsages = false;
       },
       error: () => (this.loadingUsages = false)
+    });
+  }
+
+  loadActivity(projectId: number): void {
+    this.loadingActivities = true;
+    this.projectService.getActivity(projectId, 0, 10).subscribe({
+      next: (data) => {
+        this.activities = data.content ?? data;
+        this.loadingActivities = false;
+      },
+      error: () => (this.loadingActivities = false)
     });
   }
 
