@@ -190,6 +190,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/role-form/role-form.component')
           .then(m => m.RoleFormComponent)
       },
+      {
+        path: 'settings',
+        loadComponent: () => import('./features/settings/company-settings/company-settings.component')
+          .then(m => m.CompanySettingsComponent)
+      },
 
       // Super Admin
       {

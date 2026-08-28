@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ActiveModulesService } from '../../../../core/services/active-modules.service';
+import { CurrencyService } from '../../../../core/services/currency.service';
 import { LicenseModule } from '../../../../core/models/license.model';
 
 interface MenuItem {
@@ -44,6 +45,7 @@ export class SidebarComponent implements OnInit {
     { path: '/stocks', icon: 'bi-stack', label: 'nav.stock', companyScoped: true, module: 'STOCK' },
     { path: '/admin/users', icon: 'bi-gear', label: 'nav.admin', roles: ['ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'], companyScoped: true, module: 'ADMIN' },
     { path: '/admin/roles', icon: 'bi-shield', label: 'nav.roles', roles: ['ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'], companyScoped: true, module: 'ADMIN' },
+    { path: '/settings', icon: 'bi-gear', label: 'nav.settings', roles: ['ROLE_COMPANY_ADMIN', 'ROLE_ADMIN'], companyScoped: true },
   ];
 
   private superAdminMenuItems: MenuItem[] = [
@@ -55,7 +57,8 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private activeModulesService: ActiveModulesService
+    private activeModulesService: ActiveModulesService,
+    private currencyService: CurrencyService
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +69,7 @@ export class SidebarComponent implements OnInit {
         this.activeModules = modules;
       });
       this.activeModulesService.refresh().subscribe();
+      this.currencyService.refresh().subscribe();
     }
   }
 

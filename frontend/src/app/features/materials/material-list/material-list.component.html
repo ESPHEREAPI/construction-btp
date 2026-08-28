@@ -66,7 +66,7 @@
                 </td>
                 <td>{{ material.name }}</td>
                 <td>{{ material.unit }}</td>
-                <td>{{ material.unitPrice | number:'1.2-2' }} FCFA</td>
+                <td>{{ material.unitPrice | appCurrency:'1.2-2' }}</td>
                 <td>
                   <ng-container *ngIf="!isSystemMaterial(material); else systemActions">
                     <button *ngIf="canUpdate" class="btn btn-sm btn-warning me-1" [routerLink]="['/materials', material.id, 'edit']">

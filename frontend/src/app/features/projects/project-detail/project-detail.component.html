@@ -36,12 +36,12 @@
             <div class="col-md-6">
               <p><strong>Start:</strong> {{ project.startDate | date }}</p>
               <p><strong>End:</strong> {{ project.endDate | date }}</p>
-              <p *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget | number }} FCFA</p>
+              <p *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget | appCurrency }}</p>
               <ng-container *ngIf="project.spentAmount != null">
                 <p class="mb-1">
-                  <strong>{{ 'projects.spentAmount' | translate }}:</strong> {{ project.spentAmount | number }} FCFA
+                  <strong>{{ 'projects.spentAmount' | translate }}:</strong> {{ project.spentAmount | appCurrency }}
                   <span class="text-muted ms-2" *ngIf="project.pendingAmount">
-                    ({{ 'projects.pendingAmount' | translate }}: {{ project.pendingAmount | number }} FCFA)
+                    ({{ 'projects.pendingAmount' | translate }}: {{ project.pendingAmount | appCurrency }})
                   </span>
                 </p>
                 <div class="progress mb-2" style="height: 8px;" *ngIf="project.budget">
@@ -150,7 +150,7 @@
               <tr *ngFor="let o of orders">
                 <td>{{ o.supplier }}</td>
                 <td><span class="badge" [ngClass]="'bg-' + orderStatusColors[o.status]">{{ orderStatusLabels[o.status] }}</span></td>
-                <td>{{ o.totalAmount | number:'1.2-2' }} FCFA</td>
+                <td>{{ o.totalAmount | appCurrency:'1.2-2' }}</td>
               </tr>
             </tbody>
           </table>

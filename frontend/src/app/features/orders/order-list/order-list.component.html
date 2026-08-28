@@ -103,7 +103,7 @@
                   <td>{{ order.supplier }}</td>
                   <td>{{ order.orderDate | date:'dd/MM/yyyy' }}</td>
                   <td>{{ order.expectedDeliveryDate | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ order.totalAmount | number:'1.0-0' }} FCFA</td>
+                  <td>{{ order.totalAmount | appCurrency:'1.0-0' }}</td>
                   <td>
                     <span [class]="'badge bg-' + statusColors[order.status]">
                       {{ statusLabels[order.status] }}

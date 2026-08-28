@@ -5,11 +5,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MaterialService } from '../../../core/services/material.service';
 import { Material } from '../../../core/models/material.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../../shared/pipes/app-currency.pipe';
 
 @Component({
   selector: 'app-material-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, AppCurrencyPipe],
   templateUrl: './material-list.component.html',
   styleUrls: ['./material-list.component.scss']
 })

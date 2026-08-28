@@ -36,6 +36,10 @@ public class Company {
     @Builder.Default
     private Boolean selfRegistered = false;
 
+    /** Display label for monetary amounts across the app (e.g. "FCFA", "Naira") - company-configurable, not an enforced ISO code. */
+    @Column(length = 20)
+    private String currency;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -1,7 +1,9 @@
 package com.construction.material.service;
 
+import com.construction.material.dto.request.CompanySettingsRequest;
 import com.construction.material.dto.request.CreateCompanyWithAdminRequest;
 import com.construction.material.dto.response.CompanyResponse;
+import com.construction.material.dto.response.CompanySettingsResponse;
 
 import java.util.List;
 
@@ -12,4 +14,8 @@ public interface CompanyService {
     List<CompanyResponse> findAll();
 
     CompanyResponse setActive(Long companyId, boolean active);
+
+    CompanySettingsResponse getSettings(Long companyId);
+
+    CompanySettingsResponse updateSettings(Long companyId, CompanySettingsRequest request);
 }

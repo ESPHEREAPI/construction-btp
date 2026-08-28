@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-gear me-2"></i>{{ 'nav.settings' | translate }}</h5>
+        </div>
+
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border" role="status"></div>
+          </div>
+
+          <ng-container *ngIf="!loading">
+            <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+            <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+            <label class="form-label">Devise utilisée pour les montants</label>
+            <select class="form-select mb-2" [(ngModel)]="selectedPreset">
+              <option *ngFor="let preset of presets" [value]="preset.value">{{ preset.label }}</option>
+              <option value="__custom__">Autre (préciser)...</option>
+            </select>
+
+            <input *ngIf="isCustom" type="text" class="form-control mb-2"
+                   [(ngModel)]="customCurrency" placeholder="Ex: Livre égyptienne, Kwacha...">
+
+            <div class="form-text mb-3">Ce libellé s'affiche à côté de tous les montants (commandes, budgets, matériaux...).</div>
+
+            <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+              <span *ngIf="saving" class="spinner-border spinner-border-sm me-1"></span>
+              {{ 'common.save' | translate }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

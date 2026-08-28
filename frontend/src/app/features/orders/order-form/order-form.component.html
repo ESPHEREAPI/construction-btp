@@ -239,17 +239,17 @@
                           step="0.01"
                           (input)="calculateItemTotal(i)"
                           placeholder="0.00">
-                        <span class="input-group-text">FCFA</span>
+                        <span class="input-group-text">{{ currencyLabel }}</span>
                       </div>
                       <small *ngIf="item.materialId && getMaterialById(item.materialId)?.unitPrice" class="text-muted">
-                        Prix catalogue: {{ getMaterialById(item.materialId)?.unitPrice | number:'1.2-2' }} FCFA
+                        Prix catalogue: {{ getMaterialById(item.materialId)?.unitPrice | appCurrency:'1.2-2' }}
                       </small>
                     </td>
 
                     <!-- Total -->
                     <td class="align-middle">
                       <strong class="text-primary">
-                        {{ getItemTotal(i) | number:'1.2-2' }} FCFA
+                        {{ getItemTotal(i) | appCurrency:'1.2-2' }}
                       </strong>
                     </td>
 
@@ -281,7 +281,7 @@
                     <td colspan="5" class="text-end fw-bold">Total général:</td>
                     <td colspan="2">
                       <h5 class="text-primary mb-0">
-                        {{ getTotalAmount() | number:'1.2-2' }} FCFA
+                        {{ getTotalAmount() | appCurrency:'1.2-2' }}
                       </h5>
                     </td>
                   </tr>

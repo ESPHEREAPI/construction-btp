@@ -11,11 +11,12 @@ import { Project } from '../../../core/models/project.model';
 import { Order, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '../../../core/models/order.model';
 import { Usage } from '../../../core/models/usage.model';
 import { ProjectActivity } from '../../../core/models/project-activity.model';
+import { AppCurrencyPipe } from '../../../shared/pipes/app-currency.pipe';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, AppCurrencyPipe],
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss']
 })

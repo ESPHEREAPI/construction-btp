@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { Order, ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from '../../../core/models/order.model';
 import { OrderService } from '../../../core/services/order.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../../shared/pipes/app-currency.pipe';
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, AppCurrencyPipe],
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss']
 })

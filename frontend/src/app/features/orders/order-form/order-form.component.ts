@@ -5,12 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../../core/services/order.service';
 import { ProjectService } from '../../../core/services/project.service';
 import { MaterialService } from '../../../core/services/material.service';
+import { CurrencyService } from '../../../core/services/currency.service';
+import { AppCurrencyPipe } from '../../../shared/pipes/app-currency.pipe';
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, AppCurrencyPipe],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
@@ -49,11 +51,16 @@ export class OrderFormComponent implements OnInit {
     private orderService: OrderService,
     private projectService: ProjectService,
     private materialService: MaterialService,
+    private currencyService: CurrencyService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     // Date maximale pour la commande (aujourd'hui)
     this.maxDate = new Date().toISOString().split('T')[0];
+  }
+
+  get currencyLabel(): string {
+    return this.currencyService.current;
   }
 
   ngOnInit(): void {

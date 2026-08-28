@@ -1,7 +1,9 @@
 package com.construction.material.service.impl;
 
 import com.construction.material.config.DefaultRolePermissions;
+import com.construction.material.dto.request.CompanySettingsRequest;
 import com.construction.material.dto.request.CreateCompanyWithAdminRequest;
+import com.construction.material.dto.response.CompanySettingsResponse;
 import com.construction.material.dto.response.CompanyResponse;
 import com.construction.material.entity.Company;
 import com.construction.material.entity.License;
@@ -127,6 +129,22 @@ public class CompanyServiceImpl implements CompanyService {
         company.setActive(active);
         companyRepository.save(company);
         return toResponse(company);
+    }
+
+    @Override
+    public CompanySettingsResponse getSettings(Long companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage("company.not.found", null, LocaleContextHolder.getLocale())));
+        return CompanySettingsResponse.builder().currency(company.getCurrency()).build();
+    }
+
+    @Override
+    public CompanySettingsResponse updateSettings(Long companyId, CompanySettingsRequest request) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage("company.not.found", null, LocaleContextHolder.getLocale())));
+        company.setCurrency(request.getCurrency());
+        companyRepository.save(company);
+        return CompanySettingsResponse.builder().currency(company.getCurrency()).build();
     }
 
     /**
