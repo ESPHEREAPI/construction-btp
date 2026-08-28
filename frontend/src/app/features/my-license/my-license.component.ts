@@ -19,6 +19,8 @@ export class MyLicenseComponent implements OnInit {
   history: License[] = [];
   loading = true;
   loadingHistory = true;
+  loadError = '';
+  historyError = '';
 
   keyToActivate = '';
   activating = false;
@@ -48,26 +50,30 @@ export class MyLicenseComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.loadError = '';
     this.myLicenseService.getMine().subscribe({
       next: (data) => {
         this.mine = data;
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
+        this.loadError = err?.error?.message || 'Erreur lors du chargement de la licence';
       }
     });
   }
 
   loadHistory(): void {
     this.loadingHistory = true;
+    this.historyError = '';
     this.myLicenseService.getHistory().subscribe({
       next: (data) => {
         this.history = data;
         this.loadingHistory = false;
       },
-      error: () => {
+      error: (err) => {
         this.loadingHistory = false;
+        this.historyError = err?.error?.message || "Erreur lors du chargement de l'historique";
       }
     });
   }

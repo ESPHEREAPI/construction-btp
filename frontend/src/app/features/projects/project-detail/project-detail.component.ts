@@ -22,15 +22,20 @@ import { ProjectActivity } from '../../../core/models/project-activity.model';
 export class ProjectDetailComponent implements OnInit {
   project?: Project;
   loading = true;
+  error = '';
 
   stocks: any[] = [];
   loadingStocks = true;
+  stocksError = '';
   orders: Order[] = [];
   loadingOrders = true;
+  ordersError = '';
   usages: Usage[] = [];
   loadingUsages = true;
+  usagesError = '';
   activities: ProjectActivity[] = [];
   loadingActivities = true;
+  activitiesError = '';
 
   readonly orderStatusLabels = ORDER_STATUS_LABELS;
   readonly orderStatusColors = ORDER_STATUS_COLORS;
@@ -106,7 +111,10 @@ export class ProjectDetailComponent implements OnInit {
         this.project = data;
         this.loading = false;
       },
-      error: () => this.router.navigate(['/projects'])
+      error: (err) => {
+        this.loading = false;
+        this.error = err?.error?.message || 'Projet introuvable ou accès refusé';
+      }
     });
   }
 
@@ -117,7 +125,10 @@ export class ProjectDetailComponent implements OnInit {
         this.stocks = data.content ?? data;
         this.loadingStocks = false;
       },
-      error: () => (this.loadingStocks = false)
+      error: (err) => {
+        this.loadingStocks = false;
+        this.stocksError = err?.error?.message || 'Erreur lors du chargement du stock';
+      }
     });
   }
 
@@ -128,7 +139,10 @@ export class ProjectDetailComponent implements OnInit {
         this.orders = data.content ?? data;
         this.loadingOrders = false;
       },
-      error: () => (this.loadingOrders = false)
+      error: (err) => {
+        this.loadingOrders = false;
+        this.ordersError = err?.error?.message || 'Erreur lors du chargement des commandes';
+      }
     });
   }
 
@@ -139,7 +153,10 @@ export class ProjectDetailComponent implements OnInit {
         this.usages = data.content ?? data;
         this.loadingUsages = false;
       },
-      error: () => (this.loadingUsages = false)
+      error: (err) => {
+        this.loadingUsages = false;
+        this.usagesError = err?.error?.message || "Erreur lors du chargement de l'utilisation";
+      }
     });
   }
 
@@ -150,14 +167,21 @@ export class ProjectDetailComponent implements OnInit {
         this.activities = data.content ?? data;
         this.loadingActivities = false;
       },
-      error: () => (this.loadingActivities = false)
+      error: (err) => {
+        this.loadingActivities = false;
+        this.activitiesError = err?.error?.message || "Erreur lors du chargement de l'historique";
+      }
     });
   }
 
   deleteProject(): void {
     if (confirm('Êtes-vous sûr ?') && this.project?.id) {
       this.projectService.delete(this.project.id).subscribe({
-        next: () => this.router.navigate(['/projects'])
+        next: () => this.router.navigate(['/projects']),
+        error: (err) => {
+          alert(err?.error?.message || 'Erreur lors de la suppression du projet');
+          console.error(err);
+        }
       });
     }
   }

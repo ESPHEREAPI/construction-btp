@@ -20,6 +20,7 @@ export class LicenseConfigComponent implements OnInit {
 
   selfRegistrationEnabled = true;
   loadingSetting = true;
+  settingError = '';
 
   readonly allModules = ALL_LICENSE_MODULES;
 
@@ -47,13 +48,15 @@ export class LicenseConfigComponent implements OnInit {
 
   loadSelfRegistrationSetting(): void {
     this.loadingSetting = true;
+    this.settingError = '';
     this.licenseService.getSelfRegistrationEnabled().subscribe({
       next: (data) => {
         this.selfRegistrationEnabled = data.enabled;
         this.loadingSetting = false;
       },
-      error: () => {
+      error: (err) => {
         this.loadingSetting = false;
+        this.settingError = err?.error?.message || 'Erreur lors du chargement du paramètre';
       }
     });
   }

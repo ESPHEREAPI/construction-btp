@@ -18,6 +18,7 @@ export class ProjectFormComponent implements OnInit {
   isEditMode = false;
   projectId?: number;
   loading = false;
+  error = '';
   statuses = Object.values(ProjectStatus);
 
   constructor(
@@ -56,6 +57,10 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.getById(id).subscribe({
       next: (project) => {
         this.projectForm.patchValue(project);
+      },
+      error: (err) => {
+        this.error = err?.error?.message || 'Erreur lors du chargement du projet';
+        console.error(err);
       }
     });
   }
@@ -64,6 +69,7 @@ export class ProjectFormComponent implements OnInit {
     if (this.projectForm.invalid) return;
 
     this.loading = true;
+    this.error = '';
     const project: Project = this.projectForm.value;
 
     const operation = this.isEditMode && this.projectId
@@ -73,8 +79,9 @@ export class ProjectFormComponent implements OnInit {
     operation.subscribe({
       next: () => this.router.navigate(['/projects']),
       error: (err) => {
-        this.loading = false
-        console.log(err)
+        this.loading = false;
+        this.error = err?.error?.message || "Erreur lors de l'enregistrement du projet";
+        console.error(err);
       }
     });
   }

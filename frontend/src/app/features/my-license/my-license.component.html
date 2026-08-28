@@ -11,6 +11,8 @@
 <section class="section">
   <div *ngIf="loading" class="text-center"><div class="spinner-border" role="status"></div></div>
 
+  <div *ngIf="!loading && loadError" class="alert alert-danger">{{ loadError }}</div>
+
   <div class="row" *ngIf="!loading && mine">
     <div class="col-lg-12 mb-4">
 
@@ -69,6 +71,7 @@
         <div class="card-body">
           <h5 class="card-title">Historique de mes licences</h5>
           <div *ngIf="loadingHistory" class="text-center"><div class="spinner-border spinner-border-sm"></div></div>
+          <div *ngIf="historyError" class="alert alert-danger">{{ historyError }}</div>
           <table class="table table-sm" *ngIf="!loadingHistory && history.length > 0">
             <thead>
               <tr><th>Statut</th><th>Type</th><th>Début</th><th>Expiration</th><th>Max util.</th><th>Max projets</th><th>Essai</th></tr>
@@ -91,7 +94,7 @@
               </tr>
             </tbody>
           </table>
-          <div *ngIf="!loadingHistory && history.length === 0" class="text-muted">Aucun historique.</div>
+          <div *ngIf="!loadingHistory && !historyError && history.length === 0" class="text-muted">Aucun historique.</div>
         </div>
       </div>
     </div>

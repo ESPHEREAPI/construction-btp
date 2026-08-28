@@ -18,10 +18,11 @@
               <h5 class="card-title mb-1">Auto-inscription publique</h5>
               <p class="text-muted small mb-0">Autorise n'importe qui à créer sa propre compagnie via /register.</p>
             </div>
-            <div class="form-check form-switch" *ngIf="!loadingSetting">
+            <div class="form-check form-switch" *ngIf="!loadingSetting && !settingError">
               <input class="form-check-input" type="checkbox" role="switch"
                 [checked]="selfRegistrationEnabled" (change)="toggleSelfRegistration()" style="width: 3em; height: 1.5em;">
             </div>
+            <div *ngIf="settingError" class="text-danger small">{{ settingError }}</div>
           </div>
         </div>
       </div>

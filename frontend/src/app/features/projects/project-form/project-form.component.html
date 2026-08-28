@@ -9,6 +9,8 @@
         <div class="card-body">
           <h5 class="card-title">{{ (isEditMode ? 'projects.edit' : 'projects.add') | translate }}</h5>
 
+          <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
           <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
             <div class="row mb-3">
               <label class="col-sm-3 col-form-label">{{ 'projects.code' | translate }} *</label>

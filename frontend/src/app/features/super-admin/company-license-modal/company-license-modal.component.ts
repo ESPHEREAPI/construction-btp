@@ -73,9 +73,10 @@ export class CompanyLicenseModalComponent implements OnChanges {
         this.history = data;
         this.loadingHistory = false;
       },
-      error: () => {
+      error: (err) => {
         this.history = [];
         this.loadingHistory = false;
+        this.error = err?.error?.message || "Erreur lors du chargement de l'historique des licences";
       }
     });
   }
@@ -124,7 +125,7 @@ export class CompanyLicenseModalComponent implements OnChanges {
     this.actionBusy = true;
     this.licenseService.revokeLicense(this.company.id).subscribe({
       next: () => { this.actionBusy = false; this.changed.emit(); this.loadHistory(); },
-      error: () => { this.actionBusy = false; alert('Erreur lors de la révocation'); }
+      error: (err) => { this.actionBusy = false; alert(err?.error?.message || 'Erreur lors de la révocation'); }
     });
   }
 
@@ -132,7 +133,7 @@ export class CompanyLicenseModalComponent implements OnChanges {
     this.actionBusy = true;
     this.licenseService.suspendLicense(this.company.id).subscribe({
       next: () => { this.actionBusy = false; this.changed.emit(); this.loadHistory(); },
-      error: () => { this.actionBusy = false; alert('Erreur lors de la suspension'); }
+      error: (err) => { this.actionBusy = false; alert(err?.error?.message || 'Erreur lors de la suspension'); }
     });
   }
 
@@ -140,7 +141,7 @@ export class CompanyLicenseModalComponent implements OnChanges {
     this.actionBusy = true;
     this.licenseService.reactivateLicense(this.company.id).subscribe({
       next: () => { this.actionBusy = false; this.changed.emit(); this.loadHistory(); },
-      error: () => { this.actionBusy = false; alert('Erreur lors de la réactivation'); }
+      error: (err) => { this.actionBusy = false; alert(err?.error?.message || 'Erreur lors de la réactivation'); }
     });
   }
 
