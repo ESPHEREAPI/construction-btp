@@ -1,9 +1,9 @@
 <div class="pagetitle">
-  <h1>Compagnies</h1>
+  <h1>{{ 'companies.title' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">{{ 'common.home' | translate }}</a></li>
-      <li class="breadcrumb-item active">Compagnies</li>
+      <li class="breadcrumb-item active">{{ 'companies.title' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -14,37 +14,37 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title">Suivi des compagnies</h5>
+            <h5 class="card-title">{{ 'companies.tracking' | translate }}</h5>
             <button class="btn btn-primary" (click)="toggleCreateForm()">
-              <i class="bi bi-plus-circle"></i> Nouvelle compagnie
+              <i class="bi bi-plus-circle"></i> {{ 'companies.newCompany' | translate }}
             </button>
           </div>
 
           <form *ngIf="showCreateForm" (ngSubmit)="createCompany()" class="border rounded p-3 mt-3 mb-4">
-            <p class="text-muted small">La compagnie est créée sans licence — utilisez « Gérer la licence » ensuite pour en générer une.</p>
+            <p class="text-muted small">{{ 'companies.createHint' | translate }}</p>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label">Nom de la compagnie</label>
+                <label class="form-label">{{ 'companies.companyName' | translate }}</label>
                 <input class="form-control" [(ngModel)]="newCompany.companyName" name="companyName" required>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Nom d'utilisateur admin</label>
+                <label class="form-label">{{ 'companies.adminUsername' | translate }}</label>
                 <input class="form-control" [(ngModel)]="newCompany.adminUsername" name="adminUsername" required>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Prénom admin</label>
+                <label class="form-label">{{ 'companies.adminFirstName' | translate }}</label>
                 <input class="form-control" [(ngModel)]="newCompany.adminFirstName" name="adminFirstName">
               </div>
               <div class="col-md-6">
-                <label class="form-label">Nom admin</label>
+                <label class="form-label">{{ 'companies.adminLastName' | translate }}</label>
                 <input class="form-control" [(ngModel)]="newCompany.adminLastName" name="adminLastName">
               </div>
               <div class="col-md-6">
-                <label class="form-label">Email admin</label>
+                <label class="form-label">{{ 'companies.adminEmail' | translate }}</label>
                 <input type="email" class="form-control" [(ngModel)]="newCompany.adminEmail" name="adminEmail" required>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Mot de passe temporaire</label>
+                <label class="form-label">{{ 'companies.adminPassword' | translate }}</label>
                 <input type="password" class="form-control" [(ngModel)]="newCompany.adminPassword" name="adminPassword" required minlength="6">
               </div>
             </div>
@@ -54,9 +54,9 @@
             <div class="mt-3">
               <button class="btn btn-success" type="submit" [disabled]="creating">
                 <span *ngIf="creating" class="spinner-border spinner-border-sm me-2"></span>
-                Créer
+                {{ 'companies.create' | translate }}
               </button>
-              <button class="btn btn-secondary ms-2" type="button" (click)="toggleCreateForm()">Annuler</button>
+              <button class="btn btn-secondary ms-2" type="button" (click)="toggleCreateForm()">{{ 'common.cancel' | translate }}</button>
             </div>
           </form>
 
@@ -69,13 +69,13 @@
           <table class="table" *ngIf="!loading && companies.length > 0">
             <thead>
               <tr>
-                <th>Nom</th>
-                <th>Code</th>
-                <th>Licence</th>
-                <th>Utilisateurs</th>
-                <th>Projets</th>
-                <th>Statut compagnie</th>
-                <th>Actions</th>
+                <th>{{ 'companies.name' | translate }}</th>
+                <th>{{ 'companies.code' | translate }}</th>
+                <th>{{ 'companies.license' | translate }}</th>
+                <th>{{ 'companies.users' | translate }}</th>
+                <th>{{ 'companies.projects' | translate }}</th>
+                <th>{{ 'companies.companyStatus' | translate }}</th>
+                <th>{{ 'common.actions' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -83,7 +83,7 @@
                 <td>{{ company.name }}</td>
                 <td>{{ company.code }}</td>
                 <td>
-                  <span *ngIf="!company.licenseStatus" class="badge bg-secondary">Aucune licence</span>
+                  <span *ngIf="!company.licenseStatus" class="badge bg-secondary">{{ 'companies.noLicense' | translate }}</span>
                   <span *ngIf="company.licenseStatus" class="badge" [ngClass]="{
                     'bg-success': company.licenseStatus === 'ACTIVE',
                     'bg-warning': company.licenseStatus === 'GENERATED' || company.licenseStatus === 'SUSPENDED',
@@ -94,18 +94,18 @@
                 <td>{{ company.currentProjectCount }} / {{ company.maxProjects ?? '—' }}</td>
                 <td>
                   <span class="badge" [ngClass]="company.active ? 'bg-success' : 'bg-secondary'">
-                    {{ company.active ? 'Active' : 'Suspendue' }}
+                    {{ (company.active ? 'companies.active' : 'companies.suspended') | translate }}
                   </span>
                 </td>
                 <td>
                   <button class="btn btn-sm btn-outline-secondary me-1" (click)="openDetailModal(company)">
-                    <i class="bi bi-eye"></i> Détails
+                    <i class="bi bi-eye"></i> {{ 'companies.details' | translate }}
                   </button>
                   <button class="btn btn-sm btn-outline-primary me-1" (click)="openLicenseModal(company)">
-                    <i class="bi bi-key"></i> Gérer la licence
+                    <i class="bi bi-key"></i> {{ 'companies.manageLicense' | translate }}
                   </button>
                   <button class="btn btn-sm" [ngClass]="company.active ? 'btn-warning' : 'btn-success'" (click)="toggleStatus(company)">
-                    {{ company.active ? 'Suspendre' : 'Activer' }}
+                    {{ (company.active ? 'companies.suspend' : 'companies.activate') | translate }}
                   </button>
                 </td>
               </tr>
@@ -113,7 +113,7 @@
           </table>
 
           <div *ngIf="!loading && companies.length === 0" class="alert alert-info">
-            Aucune compagnie pour le moment.
+            {{ 'companies.noCompanies' | translate }}
           </div>
         </div>
       </div>

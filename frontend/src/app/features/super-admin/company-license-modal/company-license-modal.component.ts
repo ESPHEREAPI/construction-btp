@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { LicenseService } from '../../../core/services/license.service';
 import { Company } from '../../../core/models/company.model';
 import {
@@ -14,7 +15,7 @@ import {
 @Component({
   selector: 'app-company-license-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './company-license-modal.component.html',
   styleUrls: ['./company-license-modal.component.scss']
 })

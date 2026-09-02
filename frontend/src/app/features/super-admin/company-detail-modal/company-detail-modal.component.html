@@ -4,9 +4,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
-          Détails — {{ company.name }}
+          {{ 'companyDetailModal.detailsFor' | translate: { name: company.name } }}
           <span class="badge ms-2" [ngClass]="company.active ? 'bg-success' : 'bg-secondary'">
-            {{ company.active ? 'Active' : 'Suspendue' }}
+            {{ (company.active ? 'companyDetailModal.active' : 'companyDetailModal.suspended') | translate }}
           </span>
         </h5>
         <button type="button" class="btn-close" (click)="close()"></button>
@@ -14,21 +14,21 @@
 
       <div class="modal-body">
         <dl class="row small mb-4">
-          <dt class="col-sm-3">Code</dt>
+          <dt class="col-sm-3">{{ 'companyDetailModal.code' | translate }}</dt>
           <dd class="col-sm-9">{{ company.code }}</dd>
-          <dt class="col-sm-3">Licence</dt>
+          <dt class="col-sm-3">{{ 'companyDetailModal.license' | translate }}</dt>
           <dd class="col-sm-9">
-            <span *ngIf="!company.licenseStatus" class="badge bg-secondary">Aucune licence</span>
+            <span *ngIf="!company.licenseStatus" class="badge bg-secondary">{{ 'companyDetailModal.noLicense' | translate }}</span>
             <span *ngIf="company.licenseStatus">{{ company.licenseType }} — {{ company.licenseStatus }}</span>
           </dd>
-          <dt class="col-sm-3">Utilisateurs</dt>
+          <dt class="col-sm-3">{{ 'companyDetailModal.users' | translate }}</dt>
           <dd class="col-sm-9">{{ company.currentUserCount }} / {{ company.maxUsers ?? '—' }}</dd>
         </dl>
 
         <!-- One-time temporary password display after a reset -->
         <div *ngIf="resetPasswordResult" class="alert alert-success alert-dismissible">
-          <strong>Mot de passe réinitialisé pour {{ resetPasswordResult.username }}.</strong>
-          À communiquer une seule fois — l'utilisateur devra le changer à sa prochaine connexion.
+          <strong>{{ 'companyDetailModal.passwordResetFor' | translate: { username: resetPasswordResult.username } }}</strong>
+          {{ 'companyDetailModal.passwordResetNotice' | translate }}
           <div class="input-group mt-2" style="max-width: 400px;">
             <input type="text" class="form-control font-monospace small" [value]="resetPasswordResult.tempPassword" readonly>
             <button class="btn btn-outline-secondary" type="button" (click)="copyTempPassword()">
@@ -38,7 +38,7 @@
           <button type="button" class="btn-close" (click)="resetPasswordResult = null"></button>
         </div>
 
-        <h6>Utilisateurs de la compagnie</h6>
+        <h6>{{ 'companyDetailModal.companyUsers' | translate }}</h6>
 
         <div *ngIf="loading" class="text-center py-4">
           <div class="spinner-border spinner-border-sm" role="status"></div>
@@ -50,13 +50,13 @@
           <table class="table table-sm table-hover">
             <thead>
               <tr>
-                <th>Identifiant de connexion</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Rôles</th>
-                <th>Statut</th>
-                <th>Dernière connexion</th>
-                <th>Actions</th>
+                <th>{{ 'companyDetailModal.loginId' | translate }}</th>
+                <th>{{ 'companyDetailModal.name' | translate }}</th>
+                <th>{{ 'companyDetailModal.email' | translate }}</th>
+                <th>{{ 'companyDetailModal.roles' | translate }}</th>
+                <th>{{ 'companyDetailModal.status' | translate }}</th>
+                <th>{{ 'companyDetailModal.lastLogin' | translate }}</th>
+                <th>{{ 'common.actions' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -68,12 +68,12 @@
                   <span *ngFor="let role of user.roles" class="badge bg-info me-1">{{ role | roleName }}</span>
                 </td>
                 <td>
-                  <span *ngIf="user.active" class="badge bg-success">Actif</span>
-                  <span *ngIf="!user.active" class="badge bg-danger">Inactif</span>
+                  <span *ngIf="user.active" class="badge bg-success">{{ 'companyDetailModal.userActive' | translate }}</span>
+                  <span *ngIf="!user.active" class="badge bg-danger">{{ 'companyDetailModal.userInactive' | translate }}</span>
                 </td>
-                <td><small>{{ user.lastLoginAt ? (user.lastLoginAt | date:'dd/MM/yyyy HH:mm') : 'Jamais' }}</small></td>
+                <td><small>{{ user.lastLoginAt ? (user.lastLoginAt | date:'dd/MM/yyyy HH:mm') : ('companyDetailModal.never' | translate) }}</small></td>
                 <td>
-                  <button class="btn btn-sm btn-outline-primary" (click)="resetPassword(user)" title="Réinitialiser le mot de passe">
+                  <button class="btn btn-sm btn-outline-primary" (click)="resetPassword(user)" [title]="'companyDetailModal.resetPassword' | translate">
                     <i class="bi bi-key"></i>
                   </button>
                 </td>
@@ -82,13 +82,13 @@
           </table>
 
           <div *ngIf="users.length === 0" class="text-center py-4 text-muted">
-            Aucun utilisateur pour cette compagnie.
+            {{ 'companyDetailModal.noUsers' | translate }}
           </div>
         </div>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button class="btn btn-secondary" (click)="close()">{{ 'companyDetailModal.close' | translate }}</button>
       </div>
     </div>
   </div>

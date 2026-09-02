@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Licence — {{ company.name }}</h5>
+        <h5 class="modal-title">{{ 'companyLicenseModal.licenseFor' | translate: { name: company.name } }}</h5>
         <button type="button" class="btn-close" (click)="close()"></button>
       </div>
 
@@ -11,7 +11,7 @@
 
         <!-- One-time key display after a successful generation -->
         <div *ngIf="generationResult" class="alert alert-success">
-          <strong>Licence générée.</strong> Transmettez cette clé à la compagnie — elle ne sera plus jamais affichée.
+          <strong>{{ 'companyLicenseModal.generatedNotice' | translate }}</strong>
           <div class="input-group mt-2">
             <input type="text" class="form-control font-monospace small" [value]="generationResult.licenseKey" readonly>
             <button class="btn btn-outline-secondary" type="button" (click)="copyKey()">
@@ -21,7 +21,7 @@
         </div>
 
         <div *ngIf="!loadingHistory && !latest" class="alert alert-info">
-          Aucune licence pour cette compagnie.
+          {{ 'companyLicenseModal.noLicense' | translate }}
         </div>
 
         <!-- Current license summary + actions -->
@@ -33,51 +33,51 @@
                 'bg-warning': latest.status === 'GENERATED' || latest.status === 'SUSPENDED',
                 'bg-danger': latest.status === 'REVOKED' || latest.status === 'EXPIRED'
               }">{{ latest.status }}</span>
-              <span class="ms-2">{{ latest.type }} — {{ latest.maxUsers }} util. / {{ latest.maxProjects }} projets</span>
+              <span class="ms-2">{{ latest.type }} — {{ latest.maxUsers }} {{ 'companyLicenseModal.usersUnit' | translate }} / {{ latest.maxProjects }} {{ 'companyLicenseModal.projectsUnit' | translate }}</span>
             </div>
             <div>
-              <button class="btn btn-sm btn-warning me-1" *ngIf="latest.status === 'ACTIVE'" [disabled]="actionBusy" (click)="suspend()">Suspendre</button>
-              <button class="btn btn-sm btn-success me-1" *ngIf="latest.status === 'SUSPENDED'" [disabled]="actionBusy" (click)="reactivate()">Réactiver</button>
-              <button class="btn btn-sm btn-danger" *ngIf="latest.status !== 'REVOKED'" [disabled]="actionBusy" (click)="revoke()">Révoquer</button>
+              <button class="btn btn-sm btn-warning me-1" *ngIf="latest.status === 'ACTIVE'" [disabled]="actionBusy" (click)="suspend()">{{ 'companyLicenseModal.suspend' | translate }}</button>
+              <button class="btn btn-sm btn-success me-1" *ngIf="latest.status === 'SUSPENDED'" [disabled]="actionBusy" (click)="reactivate()">{{ 'companyLicenseModal.reactivate' | translate }}</button>
+              <button class="btn btn-sm btn-danger" *ngIf="latest.status !== 'REVOKED'" [disabled]="actionBusy" (click)="revoke()">{{ 'companyLicenseModal.revoke' | translate }}</button>
             </div>
           </div>
-          <div class="small text-muted mt-1">Modules : {{ latest.activeModules.join(', ') || '—' }} · Expiration : {{ latest.endDate || 'illimitée' }}</div>
+          <div class="small text-muted mt-1">{{ 'companyLicenseModal.modules' | translate }} : {{ latest.activeModules.join(', ') || '—' }} · {{ 'companyLicenseModal.expiration' | translate }} : {{ latest.endDate || ('companyLicenseModal.unlimited' | translate) }}</div>
         </div>
 
         <!-- Generate a new license -->
-        <h6>Générer une nouvelle licence</h6>
+        <h6>{{ 'companyLicenseModal.generateNew' | translate }}</h6>
         <form (ngSubmit)="generate()">
           <div class="row g-3">
             <div class="col-md-4">
-              <label class="form-label">Type</label>
+              <label class="form-label">{{ 'companyLicenseModal.type' | translate }}</label>
               <select class="form-select" [(ngModel)]="form.type" name="type">
                 <option value="PAYANT">PAYANT</option>
                 <option value="TRIAL">TRIAL</option>
               </select>
             </div>
             <div class="col-md-4">
-              <label class="form-label">Durée (jours)</label>
+              <label class="form-label">{{ 'companyLicenseModal.durationDays' | translate }}</label>
               <input type="number" class="form-control" [(ngModel)]="durationDays" name="durationDays"
                 min="1" [disabled]="noExpiration" (ngModelChange)="applyDuration()">
               <div class="form-check mt-1">
                 <input type="checkbox" class="form-check-input" id="noExpiration"
                   [(ngModel)]="noExpiration" name="noExpiration" (ngModelChange)="applyDuration()">
-                <label class="form-check-label small" for="noExpiration">Sans expiration</label>
+                <label class="form-check-label small" for="noExpiration">{{ 'companyLicenseModal.noExpiration' | translate }}</label>
               </div>
-              <div class="form-text" *ngIf="!noExpiration">Expire le : {{ form.endDate || '—' }}</div>
+              <div class="form-text" *ngIf="!noExpiration">{{ 'companyLicenseModal.expiresOn' | translate }} : {{ form.endDate || '—' }}</div>
             </div>
             <div class="col-md-2">
-              <label class="form-label">Max utilisateurs</label>
+              <label class="form-label">{{ 'companyLicenseModal.maxUsers' | translate }}</label>
               <input type="number" class="form-control" [(ngModel)]="form.maxUsers" name="maxUsers" min="1">
             </div>
             <div class="col-md-2">
-              <label class="form-label">Max projets</label>
+              <label class="form-label">{{ 'companyLicenseModal.maxProjects' | translate }}</label>
               <input type="number" class="form-control" [(ngModel)]="form.maxProjects" name="maxProjects" min="1">
             </div>
           </div>
 
           <div class="mt-3">
-            <label class="form-label d-block">Modules actifs</label>
+            <label class="form-label d-block">{{ 'companyLicenseModal.activeModules' | translate }}</label>
             <div class="form-check form-check-inline" *ngFor="let module of allModules">
               <input type="checkbox" class="form-check-input" [id]="'module-' + module.value"
                 [checked]="form.modules.includes(module.value)" (change)="toggleModule(module.value)">
@@ -90,7 +90,7 @@
           <div class="mt-3">
             <button class="btn btn-primary" type="submit" [disabled]="generating">
               <span *ngIf="generating" class="spinner-border spinner-border-sm me-2"></span>
-              Générer
+              {{ 'companyLicenseModal.generate' | translate }}
             </button>
           </div>
         </form>
@@ -98,18 +98,25 @@
         <hr>
 
         <!-- History -->
-        <h6>Historique</h6>
+        <h6>{{ 'companyLicenseModal.history' | translate }}</h6>
         <div *ngIf="loadingHistory" class="text-center"><div class="spinner-border spinner-border-sm"></div></div>
         <table class="table table-sm" *ngIf="!loadingHistory && history.length > 0">
           <thead>
-            <tr><th>Statut</th><th>Type</th><th>Modules</th><th>Expiration</th><th>Créée par</th><th>Créée le</th></tr>
+            <tr>
+              <th>{{ 'companyLicenseModal.status' | translate }}</th>
+              <th>{{ 'companyLicenseModal.type' | translate }}</th>
+              <th>{{ 'companyLicenseModal.modules' | translate }}</th>
+              <th>{{ 'companyLicenseModal.expiration' | translate }}</th>
+              <th>{{ 'companyLicenseModal.createdBy' | translate }}</th>
+              <th>{{ 'companyLicenseModal.createdAt' | translate }}</th>
+            </tr>
           </thead>
           <tbody>
             <tr *ngFor="let entry of history">
               <td>{{ entry.status }}</td>
               <td>{{ entry.type }}</td>
               <td>{{ entry.activeModules.join(', ') }}</td>
-              <td>{{ entry.endDate || 'illimitée' }}</td>
+              <td>{{ entry.endDate || ('companyLicenseModal.unlimited' | translate) }}</td>
               <td>{{ entry.createdBy }}</td>
               <td>{{ entry.createdAt | date: 'short' }}</td>
             </tr>
@@ -118,7 +125,7 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button class="btn btn-secondary" (click)="close()">{{ 'companyLicenseModal.close' | translate }}</button>
       </div>
     </div>
   </div>
