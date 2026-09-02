@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { OrderService } from '../../../core/services/order.service';
 import { ProjectService } from '../../../core/services/project.service';
 import { MaterialService } from '../../../core/services/material.service';
@@ -12,7 +13,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, AppCurrencyPipe],
+  imports: [CommonModule, RouterModule, FormsModule, AppCurrencyPipe, TranslateModule],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })

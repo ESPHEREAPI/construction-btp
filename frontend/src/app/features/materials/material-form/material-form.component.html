@@ -13,7 +13,7 @@
 
           <form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
             <div class="row mb-3">
-              <label class="col-sm-3 col-form-label">Code *</label>
+              <label class="col-sm-3 col-form-label">{{ 'materials.code' | translate }} *</label>
               <div class="col-sm-9">
                 <input type="text" class="form-control" formControlName="code" [readonly]="isEditMode">
               </div>
@@ -27,7 +27,7 @@
             </div>
 
             <div class="row mb-3">
-              <label class="col-sm-3 col-form-label">Description</label>
+              <label class="col-sm-3 col-form-label">{{ 'common.description' | translate }}</label>
               <div class="col-sm-9">
                 <textarea class="form-control" formControlName="description" rows="2"></textarea>
               </div>
@@ -50,13 +50,13 @@
                     <option value="">—</option>
                     <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
                   </select>
-                  <button type="button" class="btn btn-outline-secondary" title="Nouvelle catégorie" (click)="showCustomCategory = true">
+                  <button type="button" class="btn btn-outline-secondary" [title]="'materials.newCategory' | translate" (click)="showCustomCategory = true">
                     <i class="bi bi-plus-lg"></i>
                   </button>
                 </div>
                 <div class="input-group" *ngIf="showCustomCategory">
-                  <input type="text" class="form-control" formControlName="category" placeholder="Nouvelle catégorie">
-                  <button type="button" class="btn btn-outline-secondary" title="Choisir dans la liste" (click)="showCustomCategory = false">
+                  <input type="text" class="form-control" formControlName="category" [placeholder]="'materials.newCategory' | translate">
+                  <button type="button" class="btn btn-outline-secondary" [title]="'materials.chooseFromList' | translate" (click)="showCustomCategory = false">
                     <i class="bi bi-list"></i>
                   </button>
                 </div>
@@ -78,13 +78,13 @@
                     <option value="">—</option>
                     <option *ngFor="let s of suppliers" [value]="s">{{ s }}</option>
                   </select>
-                  <button type="button" class="btn btn-outline-secondary" title="Nouveau fournisseur" (click)="showCustomSupplier = true">
+                  <button type="button" class="btn btn-outline-secondary" [title]="'materials.newSupplier' | translate" (click)="showCustomSupplier = true">
                     <i class="bi bi-plus-lg"></i>
                   </button>
                 </div>
                 <div class="input-group" *ngIf="showCustomSupplier">
-                  <input type="text" class="form-control" formControlName="supplier" placeholder="Nouveau fournisseur">
-                  <button type="button" class="btn btn-outline-secondary" title="Choisir dans la liste" (click)="showCustomSupplier = false">
+                  <input type="text" class="form-control" formControlName="supplier" [placeholder]="'materials.newSupplier' | translate">
+                  <button type="button" class="btn btn-outline-secondary" [title]="'materials.chooseFromList' | translate" (click)="showCustomSupplier = false">
                     <i class="bi bi-list"></i>
                   </button>
                 </div>
@@ -92,7 +92,7 @@
             </div>
 
             <div class="row mb-3">
-              <label class="col-sm-3 col-form-label">Actif</label>
+              <label class="col-sm-3 col-form-label">{{ 'materials.active' | translate }}</label>
               <div class="col-sm-9">
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" formControlName="active">

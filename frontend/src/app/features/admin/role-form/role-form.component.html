@@ -5,7 +5,7 @@
         <div class="card-header">
           <h5 class="mb-0">
             <i class="bi bi-shield me-2"></i>
-            {{ isEditMode ? 'Modifier le rôle' : 'Nouveau rôle' }}
+            {{ (isEditMode ? 'roleForm.editRole' : 'roleForm.newRole') | translate }}
           </h5>
         </div>
 
@@ -23,17 +23,17 @@
               <div class="col-md-4 mb-3">
                 <label class="form-label">Name (EN)</label>
                 <input type="text" class="form-control" [(ngModel)]="role.nameEn"
-                       name="nameEn" placeholder="Repli sur le FR si vide">
+                       name="nameEn" [placeholder]="'roleForm.fallbackToFr' | translate">
               </div>
 
               <div class="col-md-4 mb-3">
                 <label class="form-label">Nome (PT)</label>
                 <input type="text" class="form-control" [(ngModel)]="role.namePt"
-                       name="namePt" placeholder="Repli sur le FR si vide">
+                       name="namePt" [placeholder]="'roleForm.fallbackToFr' | translate">
               </div>
 
               <div class="col-12 mb-3">
-                <label class="form-label d-block">Permissions</label>
+                <label class="form-label d-block">{{ 'roleForm.permissions' | translate }}</label>
                 <div class="permission-group mb-3" *ngFor="let group of permissionGroups">
                   <div class="fw-bold text-muted small text-uppercase mb-1">{{ 'permissionCategories.' + group.category | translate }}</div>
                   <div class="form-check form-check-inline" *ngFor="let permission of group.permissions">
@@ -47,11 +47,11 @@
 
             <div class="d-flex justify-content-end gap-2">
               <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                Annuler
+                {{ 'common.cancel' | translate }}
               </button>
               <button type="submit" class="btn btn-primary" [disabled]="!roleForm.valid || loading">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-                {{ isEditMode ? 'Modifier' : 'Créer' }}
+                {{ (isEditMode ? 'roleForm.edit' : 'roleForm.create') | translate }}
               </button>
             </div>
           </form>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { MOVEMENT_TYPE_LABELS, MovementType } from '../../../core/models/stock.model';
 import { StockService } from '../../../core/services/stock.service';
 import { ProjectService } from '../../../core/services/project.service';
@@ -10,7 +11,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-stock-movement',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './stock-movement.component.html',
   styleUrls: ['./stock-movement.component.scss']
 })

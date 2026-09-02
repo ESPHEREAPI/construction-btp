@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { UsageService } from '../../../core/services/usage.service';
 import { ProjectService } from '../../../core/services/project.service';
 import { StockService } from '../../../core/services/stock.service';
@@ -10,7 +11,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-usage-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './usage-form.component.html',
   styleUrls: ['./usage-form.component.scss']
 })

@@ -15,16 +15,16 @@
             <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
             <div *ngIf="success" class="alert alert-success">{{ success }}</div>
 
-            <label class="form-label">Devise utilisée pour les montants</label>
+            <label class="form-label">{{ 'companySettings.currencyLabel' | translate }}</label>
             <select class="form-select mb-2" [(ngModel)]="selectedPreset">
               <option *ngFor="let preset of presets" [value]="preset.value">{{ preset.label }}</option>
-              <option value="__custom__">Autre (préciser)...</option>
+              <option value="__custom__">{{ 'companySettings.otherOption' | translate }}</option>
             </select>
 
             <input *ngIf="isCustom" type="text" class="form-control mb-2"
-                   [(ngModel)]="customCurrency" placeholder="Ex: Livre égyptienne, Kwacha...">
+                   [(ngModel)]="customCurrency" [placeholder]="'companySettings.customPlaceholder' | translate">
 
-            <div class="form-text mb-3">Ce libellé s'affiche à côté de tous les montants (commandes, budgets, matériaux...).</div>
+            <div class="form-text mb-3">{{ 'companySettings.hint' | translate }}</div>
 
             <button class="btn btn-primary" (click)="save()" [disabled]="saving">
               <span *ngIf="saving" class="spinner-border spinner-border-sm me-1"></span>

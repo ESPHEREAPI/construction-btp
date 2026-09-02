@@ -4,7 +4,7 @@
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <h5 class="mb-0">
-            <i class="bi bi-arrow-left-right me-2"></i>Nouveau Mouvement de Stock
+            <i class="bi bi-arrow-left-right me-2"></i>{{ 'stockMovement.title' | translate }}
           </h5>
         </div>
 
@@ -21,7 +21,7 @@
 
           <div *ngIf="loadingData" class="text-center py-5">
             <div class="spinner-border text-primary"></div>
-            <p class="mt-2 text-muted">Chargement...</p>
+            <p class="mt-2 text-muted">{{ 'common.loading' | translate }}</p>
           </div>
 
           <form *ngIf="!loadingData" (ngSubmit)="onSubmit()" #movementForm="ngForm">
@@ -29,16 +29,16 @@
               <!-- Type de mouvement -->
               <div class="col-md-12 mb-4">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-arrow-repeat me-1"></i>Type de mouvement *
+                  <i class="bi bi-arrow-repeat me-1"></i>{{ 'stockMovement.movementType' | translate }} *
                 </label>
-                <select 
-                  class="form-select form-select-lg" 
-                  [(ngModel)]="movement.movementType" 
-                  name="movementType" 
+                <select
+                  class="form-select form-select-lg"
+                  [(ngModel)]="movement.movementType"
+                  name="movementType"
                   required
                   (change)="onMovementTypeChange()">
                   <option *ngFor="let type of movementTypes" [value]="type">
-                    {{ movementTypeLabels[type] }}
+                    {{ 'stockMovement.type.' + type | translate }}
                   </option>
                 </select>
               </div>
@@ -47,21 +47,21 @@
               <div class="col-12 mb-3">
                 <h6 class="border-bottom pb-2">
                   <i class="bi bi-box-arrow-up me-2"></i>
-                  {{ isTransferType() ? 'Source (De)' : 'Stock concerné' }}
+                  {{ (isTransferType() ? 'stockMovement.source' : 'stockMovement.concernedStock') | translate }}
                 </h6>
               </div>
 
               <!-- Projet source (filtre) -->
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-building me-1"></i>Projet (filtre)
+                  <i class="bi bi-building me-1"></i>{{ 'stockMovement.projectFilter' | translate }}
                 </label>
-                <select 
-                  class="form-select" 
-                  [(ngModel)]="selectedProject" 
+                <select
+                  class="form-select"
+                  [(ngModel)]="selectedProject"
                   name="projectFilter"
                   (change)="onProjectChange()">
-                  <option [ngValue]="null">Tous les projets</option>
+                  <option [ngValue]="null">{{ 'stockMovement.allProjects' | translate }}</option>
                   <option *ngFor="let project of projects" [ngValue]="project.id">
                     {{ project.code }} - {{ project.name }}
                   </option>
@@ -71,18 +71,18 @@
               <!-- Stock source -->
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-box-seam me-1"></i>Stock *
+                  <i class="bi bi-box-seam me-1"></i>{{ 'stockMovement.stock' | translate }} *
                 </label>
-                <select 
-                  class="form-select" 
-                  [(ngModel)]="movement.stockId" 
-                  name="stockId" 
+                <select
+                  class="form-select"
+                  [(ngModel)]="movement.stockId"
+                  name="stockId"
                   required
                   (change)="onStockChange()">
                   <option [ngValue]="null" disabled>
-                    {{ selectedProject 
-                       ? (sourceStocks.length > 0 ? 'Sélectionnez' : 'Aucun stock')
-                       : 'Sélectionnez' }}
+                    {{ (selectedProject
+                       ? (sourceStocks.length > 0 ? 'stockMovement.select' : 'stockMovement.noStock')
+                       : 'stockMovement.select') | translate }}
                   </option>
                   <option *ngFor="let stock of (selectedProject ? sourceStocks : allStocks)" [ngValue]="stock.id">
                     {{ getStockLabel(stock) }}
@@ -96,22 +96,22 @@
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-3">
-                        <strong>Projet:</strong><br>
+                        <strong>{{ 'stockMovement.project' | translate }}:</strong><br>
                         <span class="text-primary">{{ getProjectName(selectedStock.projectId) }}</span>
                       </div>
                       <div class="col-md-3">
-                        <strong>Matériau:</strong><br>
+                        <strong>{{ 'stockMovement.material' | translate }}:</strong><br>
                         <span class="text-primary">{{ selectedStock.materialName }}</span>
                       </div>
                       <div class="col-md-3">
-                        <strong>Stock actuel:</strong><br>
+                        <strong>{{ 'stockMovement.currentStock' | translate }}:</strong><br>
                         <span class="badge bg-success fs-6">
                           {{ selectedStock.currentQuantity }} {{ selectedStock.materialUnit }}
                         </span>
                       </div>
                       <div class="col-md-3">
-                        <strong>Localisation:</strong><br>
-                        {{ selectedStock.location || 'N/A' }}
+                        <strong>{{ 'stockMovement.location' | translate }}:</strong><br>
+                        {{ selectedStock.location || ('stockMovement.notApplicable' | translate) }}
                       </div>
                     </div>
                   </div>
@@ -121,20 +121,20 @@
               <!-- DESTINATION (uniquement pour TRANSFER) -->
               <div *ngIf="isTransferType() && selectedStock" class="col-12 mb-3">
                 <h6 class="border-bottom pb-2">
-                  <i class="bi bi-box-arrow-in-down me-2"></i>Destination (Vers)
+                  <i class="bi bi-box-arrow-in-down me-2"></i>{{ 'stockMovement.destination' | translate }}
                 </h6>
               </div>
 
               <div *ngIf="isTransferType() && selectedStock" class="col-md-6 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-building me-1"></i>Projet destination (filtre)
+                  <i class="bi bi-building me-1"></i>{{ 'stockMovement.destinationProjectFilter' | translate }}
                 </label>
-                <select 
-                  class="form-select" 
-                  [(ngModel)]="destinationProject" 
+                <select
+                  class="form-select"
+                  [(ngModel)]="destinationProject"
                   name="destinationProjectFilter"
                   (change)="onDestinationProjectChange()">
-                  <option [ngValue]="null">Tous les projets</option>
+                  <option [ngValue]="null">{{ 'stockMovement.allProjects' | translate }}</option>
                   <option *ngFor="let project of projects" [ngValue]="project.id">
                     {{ project.code }} - {{ project.name }}
                   </option>
@@ -143,17 +143,17 @@
 
               <div *ngIf="isTransferType() && selectedStock" class="col-md-6 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-box-seam me-1"></i>Stock destination *
+                  <i class="bi bi-box-seam me-1"></i>{{ 'stockMovement.destinationStock' | translate }} *
                 </label>
-                <select 
-                  class="form-select" 
-                  [(ngModel)]="movement.destinationStockId" 
-                  name="destinationStockId" 
+                <select
+                  class="form-select"
+                  [(ngModel)]="movement.destinationStockId"
+                  name="destinationStockId"
                   required>
                   <option [ngValue]="null" disabled>
-                    {{ destinationStocks.length > 0 
-                       ? 'Sélectionnez la destination' 
-                       : 'Aucun stock compatible' }}
+                    {{ (destinationStocks.length > 0
+                       ? 'stockMovement.selectDestination'
+                       : 'stockMovement.noCompatibleStock') | translate }}
                   </option>
                   <option *ngFor="let stock of destinationStocks" [ngValue]="stock.id">
                     {{ getStockLabel(stock) }}
@@ -161,30 +161,30 @@
                 </select>
                 <div class="form-text text-info">
                   <i class="bi bi-info-circle me-1"></i>
-                  Seuls les stocks du même matériau ({{ selectedStock.materialName }}) sont affichés
+                  {{ 'stockMovement.sameMaterialOnly' | translate: { material: selectedStock.materialName } }}
                 </div>
               </div>
 
               <!-- DÉTAILS -->
               <div class="col-12 mb-3">
                 <h6 class="border-bottom pb-2">
-                  <i class="bi bi-clipboard-data me-2"></i>Détails du mouvement
+                  <i class="bi bi-clipboard-data me-2"></i>{{ 'stockMovement.movementDetails' | translate }}
                 </h6>
               </div>
 
               <!-- Quantité -->
               <div class="col-md-4 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-123 me-1"></i>Quantité *
+                  <i class="bi bi-123 me-1"></i>{{ 'stockMovement.quantity' | translate }} *
                 </label>
                 <div class="input-group">
-                  <input 
-                    type="number" 
-                    class="form-control" 
-                    [(ngModel)]="movement.quantity" 
-                    name="quantity" 
-                    required 
-                    min="0.01" 
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="movement.quantity"
+                    name="quantity"
+                    required
+                    min="0.01"
                     step="0.01"
                     placeholder="0.00">
                   <span *ngIf="selectedStock" class="input-group-text">
@@ -193,92 +193,92 @@
                 </div>
                 <div *ngIf="movement.quantity && !isQuantityValid()" class="text-danger small mt-1">
                   <i class="bi bi-exclamation-circle me-1"></i>
-                  Stock insuffisant
+                  {{ 'stockMovement.insufficientStock' | translate }}
                 </div>
               </div>
 
               <!-- Référence -->
               <div class="col-md-4 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-hash me-1"></i>Référence
+                  <i class="bi bi-hash me-1"></i>{{ 'stockMovement.reference' | translate }}
                 </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  [(ngModel)]="movement.reference" 
-                  name="reference" 
-                  placeholder="N° bon...">
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="movement.reference"
+                  name="reference"
+                  [placeholder]="'stockMovement.referencePlaceholder' | translate">
               </div>
 
               <!-- Effectué par -->
               <div class="col-md-4 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-person me-1"></i>Effectué par
+                  <i class="bi bi-person me-1"></i>{{ 'stockMovement.performedBy' | translate }}
                 </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  [(ngModel)]="movement.performedBy" 
-                  name="performedBy" 
-                  placeholder="Nom">
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="movement.performedBy"
+                  name="performedBy"
+                  [placeholder]="'stockMovement.namePlaceholder' | translate">
               </div>
 
               <!-- Raison -->
               <div class="col-md-12 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-clipboard-check me-1"></i>Raison
+                  <i class="bi bi-clipboard-check me-1"></i>{{ 'stockMovement.reason' | translate }}
                 </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  [(ngModel)]="movement.reason" 
-                  name="reason" 
-                  placeholder="Ex: Réception, Utilisation...">
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="movement.reason"
+                  name="reason"
+                  [placeholder]="'stockMovement.reasonPlaceholder' | translate">
               </div>
 
               <!-- Notes -->
               <div class="col-12 mb-3">
                 <label class="form-label fw-bold">
-                  <i class="bi bi-journal-text me-1"></i>Notes
+                  <i class="bi bi-journal-text me-1"></i>{{ 'stockMovement.notes' | translate }}
                 </label>
-                <textarea 
-                  class="form-control" 
-                  [(ngModel)]="movement.notes" 
-                  name="notes" 
+                <textarea
+                  class="form-control"
+                  [(ngModel)]="movement.notes"
+                  name="notes"
                   rows="2"
-                  placeholder="Commentaires..."></textarea>
+                  [placeholder]="'stockMovement.notesPlaceholder' | translate"></textarea>
               </div>
             </div>
 
             <!-- Récapitulatif -->
             <div *ngIf="selectedStock && movement.quantity" class="alert alert-light border">
               <h6 class="mb-2">
-                <i class="bi bi-clipboard-check me-2"></i>Récapitulatif
+                <i class="bi bi-clipboard-check me-2"></i>{{ 'stockMovement.summary' | translate }}
               </h6>
               <div class="row">
                 <div class="col-md-3">
-                  <strong>Type:</strong><br>
-                  <span [class]="'badge ' + 
-                    (movement.movementType === 'IN' ? 'bg-success' : 
-                     movement.movementType === 'OUT' ? 'bg-danger' : 
+                  <strong>{{ 'stockMovement.movementType' | translate }}:</strong><br>
+                  <span [class]="'badge ' +
+                    (movement.movementType === 'IN' ? 'bg-success' :
+                     movement.movementType === 'OUT' ? 'bg-danger' :
                      movement.movementType === 'TRANSFER' ? 'bg-info' : 'bg-warning')">
-                    {{ movementTypes }}
+                    {{ 'stockMovement.type.' + movement.movementType | translate }}
                   </span>
                 </div>
                 <div class="col-md-3">
-                  <strong>Stock:</strong><br>{{ selectedStock.materialName }}
+                  <strong>{{ 'stockMovement.stock' | translate }}:</strong><br>{{ selectedStock.materialName }}
                 </div>
                 <div class="col-md-3">
-                  <strong>Quantité:</strong><br>
+                  <strong>{{ 'stockMovement.quantity' | translate }}:</strong><br>
                   <span [class]="movement.movementType === 'IN' ? 'text-success' : 'text-danger'">
                     {{ movement.movementType === 'IN' ? '+' : '-' }}{{ movement.quantity }} {{ selectedStock.materialUnit }}
                   </span>
                 </div>
                 <div class="col-md-3">
-                  <strong>Nouveau stock:</strong><br>
-                  {{ movement.movementType === 'IN' 
+                  <strong>{{ 'stockMovement.newStock' | translate }}:</strong><br>
+                  {{ movement.movementType === 'IN'
                      ? (selectedStock.currentQuantity + movement.quantity)
-                     : (selectedStock.currentQuantity - movement.quantity) 
+                     : (selectedStock.currentQuantity - movement.quantity)
                   }} {{ selectedStock.materialUnit }}
                 </div>
               </div>
@@ -287,18 +287,18 @@
             <!-- Boutons -->
             <div class="d-flex justify-content-between mt-4">
               <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
-                <i class="bi bi-x-circle me-1"></i>Annuler
+                <i class="bi bi-x-circle me-1"></i>{{ 'common.cancel' | translate }}
               </button>
               <div class="d-flex gap-2">
                 <button type="button" class="btn btn-outline-primary" (click)="resetForm()" [disabled]="loading">
-                  <i class="bi bi-arrow-clockwise me-1"></i>Réinitialiser
+                  <i class="bi bi-arrow-clockwise me-1"></i>{{ 'stockMovement.reset' | translate }}
                 </button>
-                <button type="submit" class="btn btn-primary" 
-                  [disabled]="!movementForm.valid || loading || !isQuantityValid() || 
+                <button type="submit" class="btn btn-primary"
+                  [disabled]="!movementForm.valid || loading || !isQuantityValid() ||
                              (isTransferType() && !movement.destinationStockId)">
                   <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
                   <i *ngIf="!loading" class="bi bi-save me-1"></i>
-                  Enregistrer
+                  {{ 'stockMovement.save' | translate }}
                 </button>
               </div>
             </div>

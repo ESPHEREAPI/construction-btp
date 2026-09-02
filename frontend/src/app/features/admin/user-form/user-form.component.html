@@ -5,7 +5,7 @@
         <div class="card-header">
           <h5 class="mb-0">
             <i class="bi bi-person me-2"></i>
-            {{ isEditMode ? "Modifier l'utilisateur" : 'Nouvel utilisateur' }}
+            {{ (isEditMode ? 'userForm.editUser' : 'userForm.newUser') | translate }}
           </h5>
         </div>
 
@@ -15,68 +15,68 @@
           <form (ngSubmit)="onSubmit()" #userForm="ngForm">
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label">Nom d'utilisateur *</label>
-                <input type="text" class="form-control" [(ngModel)]="user.username" 
+                <label class="form-label">{{ 'userForm.username' | translate }} *</label>
+                <input type="text" class="form-control" [(ngModel)]="user.username"
                        name="username" required>
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="form-label">Email *</label>
-                <input type="email" class="form-control" [(ngModel)]="user.email" 
+                <label class="form-label">{{ 'userForm.email' | translate }} *</label>
+                <input type="email" class="form-control" [(ngModel)]="user.email"
                        name="email" required>
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="form-label">Prénom *</label>
-                <input type="text" class="form-control" [(ngModel)]="user.firstName" 
+                <label class="form-label">{{ 'userForm.firstName' | translate }} *</label>
+                <input type="text" class="form-control" [(ngModel)]="user.firstName"
                        name="firstName" required>
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="form-label">Nom *</label>
-                <input type="text" class="form-control" [(ngModel)]="user.lastName" 
+                <label class="form-label">{{ 'userForm.lastName' | translate }} *</label>
+                <input type="text" class="form-control" [(ngModel)]="user.lastName"
                        name="lastName" required>
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="form-label">Téléphone</label>
-                <input type="tel" class="form-control" [(ngModel)]="user.phone" 
+                <label class="form-label">{{ 'userForm.phone' | translate }}</label>
+                <input type="tel" class="form-control" [(ngModel)]="user.phone"
                        name="phone">
               </div>
 
               <div class="col-md-6 mb-3" *ngIf="!isEditMode">
-                <label class="form-label">Mot de passe *</label>
+                <label class="form-label">{{ 'userForm.password' | translate }} *</label>
                 <input type="password" class="form-control" [(ngModel)]="user.password"
                        name="password" [required]="!isEditMode">
               </div>
 
               <div class="col-12 mb-3">
-                <label class="form-label d-block">Rôles *</label>
+                <label class="form-label d-block">{{ 'userForm.roles' | translate }} *</label>
                 <div class="form-check form-check-inline" *ngFor="let role of availableRoles">
                   <input type="checkbox" class="form-check-input" [id]="'role-' + role.id"
                     [checked]="user.roleIds.includes(role.id)" (change)="toggleRole(role.id)">
                   <label class="form-check-label" [for]="'role-' + role.id">{{ role | roleName }}</label>
                 </div>
-                <div class="form-text text-danger" *ngIf="user.roleIds.length === 0">Sélectionnez au moins un rôle</div>
+                <div class="form-text text-danger" *ngIf="user.roleIds.length === 0">{{ 'userForm.selectAtLeastOneRole' | translate }}</div>
               </div>
 
               <div class="col-md-6 mb-3" *ngIf="showProjectAssignment">
-                <label class="form-label">Projet affecté</label>
+                <label class="form-label">{{ 'userForm.assignedProject' | translate }}</label>
                 <select class="form-select" [(ngModel)]="user.assignedProjectId" name="assignedProjectId">
-                  <option [ngValue]="null">— Aucun —</option>
+                  <option [ngValue]="null">{{ 'userForm.noneOption' | translate }}</option>
                   <option *ngFor="let project of availableProjects" [ngValue]="project.id">{{ project.code }} - {{ project.name }}</option>
                 </select>
-                <div class="form-text">Cet utilisateur ne verra que les données de ce projet.</div>
+                <div class="form-text">{{ 'userForm.assignedProjectHint' | translate }}</div>
               </div>
             </div>
 
             <div class="d-flex justify-content-end gap-2">
               <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                Annuler
+                {{ 'common.cancel' | translate }}
               </button>
               <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid || loading || user.roleIds.length === 0">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-                {{ isEditMode ? 'Modifier' : 'Créer' }}
+                {{ (isEditMode ? 'userForm.edit' : 'userForm.create') | translate }}
               </button>
             </div>
           </form>
