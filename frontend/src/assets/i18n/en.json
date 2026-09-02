@@ -156,6 +156,8 @@
     "yes": "Yes",
     "no": "No",
     "confirm": "Confirm",
-    "actions": "Actions"
+    "actions": "Actions",
+    "home": "Home",
+    "loading": "Loading..."
   }
 }

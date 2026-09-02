@@ -156,6 +156,8 @@
     "yes": "Sim",
     "no": "Não",
     "confirm": "Confirmar",
-    "actions": "Ações"
+    "actions": "Ações",
+    "home": "Início",
+    "loading": "Carregando..."
   }
 }

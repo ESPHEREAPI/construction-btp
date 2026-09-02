@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { MyLicenseService } from '../../core/services/my-license.service';
 import { ActiveModulesService } from '../../core/services/active-modules.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -10,7 +11,7 @@ import { License, LicenseMine } from '../../core/models/license.model';
 @Component({
   selector: 'app-my-license',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './my-license.component.html',
   styleUrls: ['./my-license.component.scss']
 })

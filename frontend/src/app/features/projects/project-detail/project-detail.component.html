@@ -28,15 +28,15 @@
 
           <div class="row mt-3">
             <div class="col-md-6">
-              <p><strong>Code:</strong> {{ project.code }}</p>
-              <p><strong>Location:</strong> {{ project.location }}</p>
-              <p><strong>Client:</strong> {{ project.client }}</p>
-              <p><strong>Status:</strong> <span class="badge bg-info">{{ 'projectStatuses.' + project.status | translate }}</span></p>
+              <p><strong>{{ 'projects.code' | translate }}:</strong> {{ project.code }}</p>
+              <p><strong>{{ 'projects.location' | translate }}:</strong> {{ project.location }}</p>
+              <p><strong>{{ 'projects.client' | translate }}:</strong> {{ project.client }}</p>
+              <p><strong>{{ 'projects.status' | translate }}:</strong> <span class="badge bg-info">{{ 'projectStatuses.' + project.status | translate }}</span></p>
             </div>
             <div class="col-md-6">
-              <p><strong>Start:</strong> {{ project.startDate | date }}</p>
-              <p><strong>End:</strong> {{ project.endDate | date }}</p>
-              <p *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget | appCurrency }}</p>
+              <p><strong>{{ 'projects.start_date' | translate }}:</strong> {{ project.startDate | date }}</p>
+              <p><strong>{{ 'projects.end_date' | translate }}:</strong> {{ project.endDate | date }}</p>
+              <p *ngIf="project.budget != null"><strong>{{ 'projects.budget' | translate }}:</strong> {{ project.budget | appCurrency }}</p>
               <ng-container *ngIf="project.spentAmount != null">
                 <p class="mb-1">
                   <strong>{{ 'projects.spentAmount' | translate }}:</strong> {{ project.spentAmount | appCurrency }}

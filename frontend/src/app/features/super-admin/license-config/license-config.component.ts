@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { LicenseService } from '../../../core/services/license.service';
 import { ALL_LICENSE_MODULES, LicenseModule, LicensePlan } from '../../../core/models/license.model';
 
 @Component({
   selector: 'app-license-config',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './license-config.component.html',
   styleUrls: ['./license-config.component.scss']
 })

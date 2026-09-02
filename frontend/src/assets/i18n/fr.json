@@ -156,6 +156,8 @@
     "yes": "Oui",
     "no": "Non",
     "confirm": "Confirmer",
-    "actions": "Actions"
+    "actions": "Actions",
+    "home": "Accueil",
+    "loading": "Chargement..."
   }
 }
