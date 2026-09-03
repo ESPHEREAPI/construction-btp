@@ -4,7 +4,7 @@
       <!-- Loading -->
       <div *ngIf="loading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Chargement...</span>
+          <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
         </div>
       </div>
 
@@ -16,21 +16,21 @@
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-              <i class="bi bi-cart me-2"></i>Commande {{ order.code }}
+              <i class="bi bi-cart me-2"></i>{{ 'orderDetail.orderPrefix' | translate }} {{ order.code }}
             </h5>
             <div>
               <button class="btn btn-secondary me-2" (click)="goBack()">
-                <i class="bi bi-arrow-left"></i> Retour
+                <i class="bi bi-arrow-left"></i> {{ 'orderDetail.back' | translate }}
               </button>
               <button *ngIf="order.status === 'PENDING' && canApprove"
                       class="btn btn-success me-2"
                       (click)="approveOrder()">
-                <i class="bi bi-check-circle"></i> Approuver
+                <i class="bi bi-check-circle"></i> {{ 'orderDetail.approve' | translate }}
               </button>
               <button *ngIf="order.status === 'APPROVED' && canUpdate"
                       class="btn btn-primary"
                       (click)="receiveOrder()">
-                <i class="bi bi-box-seam"></i> Réceptionner
+                <i class="bi bi-box-seam"></i> {{ 'orderDetail.receive' | translate }}
               </button>
             </div>
           </div>
@@ -39,68 +39,68 @@
         <div class="card-body">
           <div class="row mb-4">
             <div class="col-md-6">
-              <h6>Informations générales</h6>
+              <h6>{{ 'orderDetail.generalInfo' | translate }}</h6>
               <table class="table table-sm">
                 <tr>
-                  <th width="40%">Projet:</th>
+                  <th width="40%">{{ 'orderDetail.project' | translate }}:</th>
                   <td>{{ order.projectName }}</td>
                 </tr>
                 <tr>
-                  <th>Fournisseur:</th>
+                  <th>{{ 'orderDetail.supplier' | translate }}:</th>
                   <td>{{ order.supplier }}</td>
                 </tr>
                 <tr>
-                  <th>Statut:</th>
+                  <th>{{ 'orderDetail.status' | translate }}:</th>
                   <td>
                     <span [class]="'badge bg-' + statusColors[order.status]">
-                      {{ statusLabels[order.status] }}
+                      {{ 'orderStatuses.' + order.status | translate }}
                     </span>
                   </td>
                 </tr>
                 <tr>
-                  <th>Montant total:</th>
+                  <th>{{ 'orderDetail.totalAmount' | translate }}:</th>
                   <td><strong>{{ order.totalAmount | appCurrency:'1.0-0' }}</strong></td>
                 </tr>
               </table>
             </div>
 
             <div class="col-md-6">
-              <h6>Dates</h6>
+              <h6>{{ 'orderDetail.dates' | translate }}</h6>
               <table class="table table-sm">
                 <tr>
-                  <th width="40%">Date commande:</th>
+                  <th width="40%">{{ 'orderDetail.orderDate' | translate }}:</th>
                   <td>{{ order.orderDate | date:'dd/MM/yyyy' }}</td>
                 </tr>
                 <tr>
-                  <th>Livraison prévue:</th>
+                  <th>{{ 'orderDetail.expectedDelivery' | translate }}:</th>
                   <td>{{ order.expectedDeliveryDate | date:'dd/MM/yyyy' }}</td>
                 </tr>
                 <tr *ngIf="order.actualDeliveryDate">
-                  <th>Livraison réelle:</th>
+                  <th>{{ 'orderDetail.actualDelivery' | translate }}:</th>
                   <td>{{ order.actualDeliveryDate | date:'dd/MM/yyyy' }}</td>
                 </tr>
                 <tr>
-                  <th>Créé par:</th>
+                  <th>{{ 'orderDetail.createdBy' | translate }}:</th>
                   <td>{{ order.createdBy || '-' }}</td>
                 </tr>
                 <tr *ngIf="order.approvedBy">
-                  <th>Approuvé par:</th>
+                  <th>{{ 'orderDetail.approvedBy' | translate }}:</th>
                   <td>{{ order.approvedBy }}</td>
                 </tr>
               </table>
             </div>
           </div>
 
-          <h6>Articles commandés</h6>
+          <h6>{{ 'orderDetail.orderedItems' | translate }}</h6>
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th>Matériau</th>
-                  <th>Code</th>
-                  <th>Quantité</th>
-                  <th>Prix unitaire</th>
-                  <th>Total</th>
+                  <th>{{ 'orderDetail.material' | translate }}</th>
+                  <th>{{ 'orderDetail.code' | translate }}</th>
+                  <th>{{ 'orderDetail.quantity' | translate }}</th>
+                  <th>{{ 'orderDetail.unitPrice' | translate }}</th>
+                  <th>{{ 'orderDetail.total' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -116,7 +116,7 @@
           </div>
 
           <div *ngIf="order.notes" class="mt-3">
-            <h6>Notes</h6>
+            <h6>{{ 'orderDetail.notes' | translate }}</h6>
             <p class="text-muted">{{ order.notes }}</p>
           </div>
         </div>
