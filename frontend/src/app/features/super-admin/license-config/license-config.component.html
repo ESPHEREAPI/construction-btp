@@ -1,9 +1,9 @@
 <div class="pagetitle">
-  <h1>Licences</h1>
+  <h1>{{ 'licenseConfig.title' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">{{ 'common.home' | translate }}</a></li>
-      <li class="breadcrumb-item active">Licences</li>
+      <li class="breadcrumb-item active">{{ 'licenseConfig.title' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -15,8 +15,8 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <h5 class="card-title mb-1">Auto-inscription publique</h5>
-              <p class="text-muted small mb-0">Autorise n'importe qui à créer sa propre compagnie via /register.</p>
+              <h5 class="card-title mb-1">{{ 'licenseConfig.selfRegistration' | translate }}</h5>
+              <p class="text-muted small mb-0">{{ 'licenseConfig.selfRegistrationHint' | translate }}</p>
             </div>
             <div class="form-check form-switch" *ngIf="!loadingSetting && !settingError">
               <input class="form-check-input" type="checkbox" role="switch"
@@ -31,23 +31,23 @@
     <div class="col-lg-6" *ngFor="let plan of plans">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Plan {{ plan.type }}</h5>
+          <h5 class="card-title">{{ 'licenseConfig.plan' | translate }} {{ plan.type }}</h5>
 
           <div class="mb-3">
-            <label class="form-label">Durée (jours) — vide = illimité</label>
+            <label class="form-label">{{ 'licenseConfig.durationDays' | translate }}</label>
             <input type="number" class="form-control" [(ngModel)]="plan.durationDays" min="1">
           </div>
           <div class="mb-3">
-            <label class="form-label">Utilisateurs max</label>
+            <label class="form-label">{{ 'licenseConfig.maxUsers' | translate }}</label>
             <input type="number" class="form-control" [(ngModel)]="plan.maxUsers" min="1">
           </div>
           <div class="mb-3">
-            <label class="form-label">Projets max</label>
+            <label class="form-label">{{ 'licenseConfig.maxProjects' | translate }}</label>
             <input type="number" class="form-control" [(ngModel)]="plan.maxProjects" min="1">
           </div>
 
           <div class="mb-3">
-            <label class="form-label d-block">Modules inclus</label>
+            <label class="form-label d-block">{{ 'licenseConfig.includedModules' | translate }}</label>
             <div class="form-check form-check-inline" *ngFor="let module of allModules">
               <input type="checkbox" class="form-check-input" [id]="plan.type + '-module-' + module.value"
                 [checked]="plan.modules.includes(module.value)" (change)="toggleModule(plan, module.value)">
@@ -57,7 +57,7 @@
 
           <button class="btn btn-primary" (click)="savePlan(plan)" [disabled]="savingType === plan.type">
             <span *ngIf="savingType === plan.type" class="spinner-border spinner-border-sm me-2"></span>
-            Enregistrer
+            {{ 'licenseConfig.save' | translate }}
           </button>
         </div>
       </div>

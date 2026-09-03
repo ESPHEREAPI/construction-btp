@@ -9,7 +9,7 @@
   <!-- Context: which company/role this session belongs to -->
   <div class="header-context ms-3 d-none d-md-flex align-items-center">
     <span class="badge context-badge" *ngIf="isSuperAdmin">
-      <i class="bi bi-shield-lock-fill me-1"></i>Super Admin
+      <i class="bi bi-shield-lock-fill me-1"></i>{{ 'header.superAdmin' | translate }}
     </span>
     <span class="badge context-badge" *ngIf="!isSuperAdmin && currentUser?.companyName">
       <i class="bi bi-building me-1"></i>{{ currentUser?.companyName }}

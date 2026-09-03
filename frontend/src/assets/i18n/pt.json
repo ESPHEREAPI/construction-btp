@@ -558,6 +558,54 @@
     "delete": "Excluir",
     "noUsage": "Nenhuma utilização encontrada"
   },
+  "licenseConfig": {
+    "title": "Licenças",
+    "selfRegistration": "Auto-registro público",
+    "selfRegistrationHint": "Permite que qualquer pessoa crie sua própria empresa via /register.",
+    "plan": "Plano",
+    "durationDays": "Duração (dias) — vazio = ilimitado",
+    "maxUsers": "Máx. usuários",
+    "maxProjects": "Máx. projetos",
+    "includedModules": "Módulos incluídos",
+    "save": "Salvar"
+  },
+  "myLicense": {
+    "activeLicense": "Licença ativa",
+    "expiration": "Expiração",
+    "unlimited": "ilimitada",
+    "daysRemaining": "{{count}} dias restantes",
+    "maxUsers": "Máx. usuários",
+    "maxProjects": "Máx. projetos",
+    "modules": "Módulos",
+    "noActiveLicense": "Nenhuma licença ativa para sua empresa.",
+    "activatePendingKey": "Ative a chave recebida abaixo.",
+    "contactSuperAdmin": "Entre em contato com seu Super Admin.",
+    "pendingActivation": "Uma nova licença ({{type}}) está pendente de ativação.",
+    "activateLicense": "Ativar uma licença",
+    "licenseKey": "Chave de licença",
+    "licenseKeyPlaceholder": "Cole aqui a chave de licença recebida",
+    "activate": "Ativar",
+    "history": "Meu histórico de licenças",
+    "status": "Status",
+    "type": "Tipo",
+    "start": "Início",
+    "trial": "Teste",
+    "yes": "Sim",
+    "no": "Não",
+    "noHistory": "Nenhum histórico."
+  },
+  "header": {
+    "superAdmin": "Super Admin",
+    "licenseExpiresToday": "A licença expira hoje",
+    "licenseExpiresTomorrow": "A licença expira amanhã",
+    "licenseExpiresInDays": "A licença expira em {{days}} dias"
+  },
+  "licenseBanner": {
+    "suspended": "Sua empresa foi suspensa. Entre em contato com seu administrador.",
+    "required": "Nenhuma licença ativa. Entre em contato com seu administrador ou ative sua chave de licença na tela \"Minha Licença\".",
+    "moduleNotActive": "Este módulo não está incluído na sua licença atual.",
+    "expired": "Sua licença expirou. Os dados continuam visíveis, mas a criação/edição está bloqueada até a renovação."
+  },
   "common": {
     "save": "Salvar",
     "cancel": "Cancelar",

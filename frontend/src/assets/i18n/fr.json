@@ -558,6 +558,54 @@
     "delete": "Supprimer",
     "noUsage": "Aucune utilisation trouvée"
   },
+  "licenseConfig": {
+    "title": "Licences",
+    "selfRegistration": "Auto-inscription publique",
+    "selfRegistrationHint": "Autorise n'importe qui à créer sa propre compagnie via /register.",
+    "plan": "Plan",
+    "durationDays": "Durée (jours) — vide = illimité",
+    "maxUsers": "Utilisateurs max",
+    "maxProjects": "Projets max",
+    "includedModules": "Modules inclus",
+    "save": "Enregistrer"
+  },
+  "myLicense": {
+    "activeLicense": "Licence active",
+    "expiration": "Expiration",
+    "unlimited": "illimitée",
+    "daysRemaining": "{{count}} jours restants",
+    "maxUsers": "Max utilisateurs",
+    "maxProjects": "Max projets",
+    "modules": "Modules",
+    "noActiveLicense": "Aucune licence active pour votre compagnie.",
+    "activatePendingKey": "Activez la clé reçue ci-dessous.",
+    "contactSuperAdmin": "Contactez votre Super Admin.",
+    "pendingActivation": "Une nouvelle licence ({{type}}) est en attente d'activation.",
+    "activateLicense": "Activer une licence",
+    "licenseKey": "Clé de licence",
+    "licenseKeyPlaceholder": "Collez ici la clé de licence reçue",
+    "activate": "Activer",
+    "history": "Historique de mes licences",
+    "status": "Statut",
+    "type": "Type",
+    "start": "Début",
+    "trial": "Essai",
+    "yes": "Oui",
+    "no": "Non",
+    "noHistory": "Aucun historique."
+  },
+  "header": {
+    "superAdmin": "Super Admin",
+    "licenseExpiresToday": "Licence expire aujourd'hui",
+    "licenseExpiresTomorrow": "Licence expire demain",
+    "licenseExpiresInDays": "Licence expire dans {{days}} jours"
+  },
+  "licenseBanner": {
+    "suspended": "Votre compagnie a été suspendue. Contactez votre administrateur.",
+    "required": "Aucune licence active. Contactez votre administrateur ou activez votre clé de licence sur l'écran « Ma Licence ».",
+    "moduleNotActive": "Ce module n'est pas inclus dans votre licence actuelle.",
+    "expired": "Votre licence a expiré. Les données restent consultables mais la création/modification est bloquée jusqu'au renouvellement."
+  },
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",

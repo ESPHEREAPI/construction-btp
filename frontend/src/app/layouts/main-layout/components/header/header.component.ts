@@ -55,9 +55,9 @@ export class HeaderComponent implements OnInit {
 
   get licenseExpiryMessage(): string {
     const d = this.licenseDaysRemaining;
-    if (d === 0) return "Licence expire aujourd'hui";
-    if (d === 1) return 'Licence expire demain';
-    return `Licence expire dans ${d} jours`;
+    if (d === 0) return this.translate.instant('header.licenseExpiresToday');
+    if (d === 1) return this.translate.instant('header.licenseExpiresTomorrow');
+    return this.translate.instant('header.licenseExpiresInDays', { days: d });
   }
 
   get currentLangLabel(): string {

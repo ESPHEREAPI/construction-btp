@@ -558,6 +558,54 @@
     "delete": "Delete",
     "noUsage": "No usage found"
   },
+  "licenseConfig": {
+    "title": "Licenses",
+    "selfRegistration": "Public self-registration",
+    "selfRegistrationHint": "Allows anyone to create their own company via /register.",
+    "plan": "Plan",
+    "durationDays": "Duration (days) — empty = unlimited",
+    "maxUsers": "Max users",
+    "maxProjects": "Max projects",
+    "includedModules": "Included modules",
+    "save": "Save"
+  },
+  "myLicense": {
+    "activeLicense": "Active license",
+    "expiration": "Expiration",
+    "unlimited": "unlimited",
+    "daysRemaining": "{{count}} days remaining",
+    "maxUsers": "Max users",
+    "maxProjects": "Max projects",
+    "modules": "Modules",
+    "noActiveLicense": "No active license for your company.",
+    "activatePendingKey": "Activate the key received below.",
+    "contactSuperAdmin": "Contact your Super Admin.",
+    "pendingActivation": "A new license ({{type}}) is pending activation.",
+    "activateLicense": "Activate a license",
+    "licenseKey": "License key",
+    "licenseKeyPlaceholder": "Paste the received license key here",
+    "activate": "Activate",
+    "history": "My license history",
+    "status": "Status",
+    "type": "Type",
+    "start": "Start",
+    "trial": "Trial",
+    "yes": "Yes",
+    "no": "No",
+    "noHistory": "No history."
+  },
+  "header": {
+    "superAdmin": "Super Admin",
+    "licenseExpiresToday": "License expires today",
+    "licenseExpiresTomorrow": "License expires tomorrow",
+    "licenseExpiresInDays": "License expires in {{days}} days"
+  },
+  "licenseBanner": {
+    "suspended": "Your company has been suspended. Contact your administrator.",
+    "required": "No active license. Contact your administrator or activate your license key on the \"My License\" screen.",
+    "moduleNotActive": "This module is not included in your current license.",
+    "expired": "Your license has expired. Data remains viewable but creation/editing is blocked until renewal."
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
