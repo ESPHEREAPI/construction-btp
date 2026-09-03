@@ -5,10 +5,10 @@
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-              <i class="bi bi-bar-chart me-2"></i>Utilisation des Matériaux
+              <i class="bi bi-bar-chart me-2"></i>{{ 'usageList.title' | translate }}
             </h5>
             <a *ngIf="canCreate" routerLink="/usages/new" class="btn btn-primary">
-              <i class="bi bi-plus-circle me-1"></i>Nouvelle utilisation
+              <i class="bi bi-plus-circle me-1"></i>{{ 'usageList.newUsage' | translate }}
             </a>
           </div>
         </div>
@@ -18,7 +18,7 @@
           <div class="row mb-3">
             <div class="col-md-4 d-flex align-items-end">
               <button class="btn btn-secondary me-2" (click)="clearFilters()">
-                <i class="bi bi-x-circle me-1"></i>Réinitialiser
+                <i class="bi bi-x-circle me-1"></i>{{ 'usageList.reset' | translate }}
               </button>
             </div>
           </div>
@@ -26,7 +26,7 @@
           <!-- Loading -->
           <div *ngIf="loading" class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Chargement...</span>
+              <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
             </div>
           </div>
 
@@ -38,12 +38,12 @@
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Projet</th>
-                  <th>Matériau</th>
-                  <th>Quantité</th>
-                  <th>Utilisé par</th>
-                  <th>Actions</th>
+                  <th>{{ 'usageList.date' | translate }}</th>
+                  <th>{{ 'usageList.project' | translate }}</th>
+                  <th>{{ 'usageList.material' | translate }}</th>
+                  <th>{{ 'usageList.quantity' | translate }}</th>
+                  <th>{{ 'usageList.usedBy' | translate }}</th>
+                  <th>{{ 'common.actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -58,10 +58,10 @@
                   <td>{{ usage.usedBy || '-' }}</td>
                   <td>
                     <div class="btn-group btn-group-sm">
-                      <a *ngIf="canUpdate" [routerLink]="['/usages', usage.id, 'edit']" class="btn btn-warning" title="Modifier">
+                      <a *ngIf="canUpdate" [routerLink]="['/usages', usage.id, 'edit']" class="btn btn-warning" [title]="'usageList.edit' | translate">
                         <i class="bi bi-pencil"></i>
                       </a>
-                      <button *ngIf="canDelete" (click)="deleteUsage(usage.id)" class="btn btn-danger" title="Supprimer">
+                      <button *ngIf="canDelete" (click)="deleteUsage(usage.id)" class="btn btn-danger" [title]="'usageList.delete' | translate">
                         <i class="bi bi-trash"></i>
                       </button>
                     </div>
@@ -73,7 +73,7 @@
             <!-- Empty state -->
             <div *ngIf="usages.length === 0" class="text-center py-5">
               <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-              <p class="mt-3 text-muted">Aucune utilisation trouvée</p>
+              <p class="mt-3 text-muted">{{ 'usageList.noUsage' | translate }}</p>
             </div>
           </div>
 
@@ -81,15 +81,15 @@
           <nav *ngIf="totalPages > 1" class="mt-4">
             <ul class="pagination justify-content-center">
               <li class="page-item" [class.disabled]="currentPage === 0">
-                <a class="page-link" (click)="onPageChange(currentPage - 1)">Précédent</a>
+                <a class="page-link" (click)="onPageChange(currentPage - 1)">{{ 'common.previous' | translate }}</a>
               </li>
-              <li class="page-item" 
+              <li class="page-item"
                   *ngFor="let page of [].constructor(totalPages); let i = index"
                   [class.active]="i === currentPage">
                 <a class="page-link" (click)="onPageChange(i)">{{ i + 1 }}</a>
               </li>
               <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-                <a class="page-link" (click)="onPageChange(currentPage + 1)">Suivant</a>
+                <a class="page-link" (click)="onPageChange(currentPage + 1)">{{ 'common.next' | translate }}</a>
               </li>
             </ul>
           </nav>

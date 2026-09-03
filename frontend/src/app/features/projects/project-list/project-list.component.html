@@ -71,7 +71,7 @@
           </table>
 
           <div *ngIf="!loading && projects.length === 0" class="alert alert-info">
-            Aucun projet trouvé.
+            {{ 'projects.noProjects' | translate }}
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@
       <!-- Loading -->
       <div *ngIf="loading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Chargement...</span>
+          <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
         </div>
       </div>
 
@@ -21,10 +21,10 @@
             </h5>
             <div>
               <button class="btn btn-secondary me-2" (click)="goBack()">
-                <i class="bi bi-arrow-left"></i> Retour
+                <i class="bi bi-arrow-left"></i> {{ 'stockDetail.back' | translate }}
               </button>
               <button *ngIf="canUpdate && !editingThresholds" class="btn btn-primary" (click)="startEditThresholds()">
-                <i class="bi bi-sliders"></i> Modifier les seuils
+                <i class="bi bi-sliders"></i> {{ 'stockDetail.editThresholds' | translate }}
               </button>
             </div>
           </div>
@@ -33,28 +33,28 @@
         <div class="card-body">
           <div class="row mb-4">
             <div class="col-md-6">
-              <h6>Informations générales</h6>
+              <h6>{{ 'stockDetail.generalInfo' | translate }}</h6>
               <table class="table table-sm">
                 <tr>
-                  <th width="40%">Projet:</th>
+                  <th width="40%">{{ 'stockDetail.project' | translate }}:</th>
                   <td>{{ stock.projectName }}</td>
                 </tr>
                 <tr>
-                  <th>Matériau:</th>
+                  <th>{{ 'stockDetail.material' | translate }}:</th>
                   <td>{{ stock.materialName }} ({{ stock.materialCode }})</td>
                 </tr>
                 <tr>
-                  <th>Emplacement:</th>
+                  <th>{{ 'stockDetail.location' | translate }}:</th>
                   <td>{{ stock.location || '-' }}</td>
                 </tr>
                 <tr>
-                  <th>Statut:</th>
+                  <th>{{ 'stockDetail.status' | translate }}:</th>
                   <td>
                     <span *ngIf="stock.lowStockAlert" class="badge bg-warning">
-                      <i class="bi bi-exclamation-triangle"></i> Stock faible
+                      <i class="bi bi-exclamation-triangle"></i> {{ 'stockDetail.lowStock' | translate }}
                     </span>
                     <span *ngIf="!stock.lowStockAlert" class="badge bg-success">
-                      <i class="bi bi-check-circle"></i> OK
+                      <i class="bi bi-check-circle"></i> {{ 'stockDetail.ok' | translate }}
                     </span>
                   </td>
                 </tr>
@@ -62,26 +62,26 @@
             </div>
 
             <div class="col-md-6">
-              <h6>Quantités</h6>
+              <h6>{{ 'stockDetail.quantities' | translate }}</h6>
               <table class="table table-sm">
                 <tr>
-                  <th width="40%">Quantité actuelle:</th>
+                  <th width="40%">{{ 'stockDetail.currentQty' | translate }}:</th>
                   <td><strong>{{ stock.currentQuantity }} {{ stock.unit }}</strong></td>
                 </tr>
                 <tr>
-                  <th>Réservé:</th>
+                  <th>{{ 'stockDetail.reserved' | translate }}:</th>
                   <td>{{ stock.reservedQuantity }} {{ stock.unit }}</td>
                 </tr>
                 <tr>
-                  <th>Disponible:</th>
+                  <th>{{ 'stockDetail.available' | translate }}:</th>
                   <td>{{ stock.availableQuantity }} {{ stock.unit }}</td>
                 </tr>
                 <tr>
-                  <th>Seuil minimum:</th>
+                  <th>{{ 'stockDetail.minThreshold' | translate }}:</th>
                   <td>{{ stock.minimumQuantity != null ? (stock.minimumQuantity + ' ' + stock.unit) : '-' }}</td>
                 </tr>
                 <tr>
-                  <th>Seuil maximum:</th>
+                  <th>{{ 'stockDetail.maxThreshold' | translate }}:</th>
                   <td>{{ stock.maximumQuantity != null ? (stock.maximumQuantity + ' ' + stock.unit) : '-' }}</td>
                 </tr>
               </table>
@@ -91,22 +91,22 @@
           <!-- Threshold edit form -->
           <div *ngIf="editingThresholds" class="card bg-light">
             <div class="card-body">
-              <h6>Modifier les seuils de stock</h6>
+              <h6>{{ 'stockDetail.editThresholdsTitle' | translate }}</h6>
               <div class="row">
                 <div class="col-md-4 mb-3">
-                  <label class="form-label">Seuil minimum ({{ stock.unit }})</label>
+                  <label class="form-label">{{ 'stockDetail.minThreshold' | translate }} ({{ stock.unit }})</label>
                   <input type="number" class="form-control" [(ngModel)]="thresholds.minimumQuantity" name="minimumQuantity">
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label class="form-label">Seuil maximum ({{ stock.unit }})</label>
+                  <label class="form-label">{{ 'stockDetail.maxThreshold' | translate }} ({{ stock.unit }})</label>
                   <input type="number" class="form-control" [(ngModel)]="thresholds.maximumQuantity" name="maximumQuantity">
                 </div>
               </div>
               <div class="d-flex gap-2">
-                <button class="btn btn-secondary" (click)="cancelEditThresholds()" [disabled]="savingThresholds">Annuler</button>
+                <button class="btn btn-secondary" (click)="cancelEditThresholds()" [disabled]="savingThresholds">{{ 'common.cancel' | translate }}</button>
                 <button class="btn btn-primary" (click)="saveThresholds()" [disabled]="savingThresholds">
                   <span *ngIf="savingThresholds" class="spinner-border spinner-border-sm me-1"></span>
-                  Enregistrer
+                  {{ 'stockDetail.save' | translate }}
                 </button>
               </div>
             </div>

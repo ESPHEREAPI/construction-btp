@@ -18,7 +18,7 @@
             <div>
               <button class="btn btn-outline-secondary me-2" (click)="toggleShowHidden()">
                 <i class="bi" [ngClass]="showHidden ? 'bi-eye-slash' : 'bi-eye'"></i>
-                {{ showHidden ? 'Masquer la liste des masqués' : 'Matériaux masqués' }}
+                {{ (showHidden ? 'materials.hideList' : 'materials.hiddenMaterials') | translate }}
               </button>
               <button *ngIf="canCreate" class="btn btn-primary" routerLink="/materials/new">
                 <i class="bi bi-plus-circle"></i> {{ 'materials.add' | translate }}
@@ -27,7 +27,7 @@
           </div>
 
           <div class="mt-3" *ngIf="showHidden">
-            <h6>Matériaux masqués</h6>
+            <h6>{{ 'materials.hiddenMaterials' | translate }}</h6>
             <table class="table table-sm" *ngIf="hiddenMaterials.length > 0">
               <tbody>
                 <tr *ngFor="let material of hiddenMaterials">
@@ -35,13 +35,13 @@
                   <td>{{ material.name }}</td>
                   <td class="text-end">
                     <button *ngIf="canUpdate" class="btn btn-sm btn-outline-primary" (click)="unhideMaterial(material.id!)">
-                      <i class="bi bi-eye"></i> Réafficher
+                      <i class="bi bi-eye"></i> {{ 'materials.unhide' | translate }}
                     </button>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <div class="alert alert-info" *ngIf="hiddenMaterials.length === 0">Aucun matériau masqué.</div>
+            <div class="alert alert-info" *ngIf="hiddenMaterials.length === 0">{{ 'materials.noHiddenMaterials' | translate }}</div>
           </div>
 
           <div *ngIf="loading" class="text-center">
@@ -62,7 +62,7 @@
               <tr *ngFor="let material of materials">
                 <td>
                   {{ material.code }}
-                  <span class="badge bg-secondary ms-1" *ngIf="isSystemMaterial(material)" title="Catalogue partagé, visible par toutes les compagnies">Partagé</span>
+                  <span class="badge bg-secondary ms-1" *ngIf="isSystemMaterial(material)" [title]="'materials.sharedTooltip' | translate">{{ 'materials.shared' | translate }}</span>
                 </td>
                 <td>{{ material.name }}</td>
                 <td>{{ material.unit }}</td>
@@ -77,7 +77,7 @@
                     </button>
                   </ng-container>
                   <ng-template #systemActions>
-                    <button *ngIf="canUpdate" class="btn btn-sm btn-outline-secondary" title="Masquer ce matériau de ma liste" (click)="hideMaterial(material.id!)">
+                    <button *ngIf="canUpdate" class="btn btn-sm btn-outline-secondary" [title]="'materials.hideTooltip' | translate" (click)="hideMaterial(material.id!)">
                       <i class="bi bi-eye-slash"></i>
                     </button>
                   </ng-template>
@@ -87,7 +87,7 @@
           </table>
 
           <div *ngIf="!loading && materials.length === 0" class="alert alert-info">
-            Aucun matériau trouvé.
+            {{ 'materials.noMaterials' | translate }}
           </div>
         </div>
       </div>
